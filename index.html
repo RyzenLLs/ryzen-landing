@@ -21,7 +21,7 @@
         position: relative;
         overflow-x: hidden;
         line-height: 1.6;
-        transition: background 0.5s;
+        transition: background 0.5s, color 0.5s;
     }
 
     body.theme-black {
@@ -48,21 +48,52 @@
         transition: width 0.1s linear;
     }
 
-    .bg-glow {
+    /* NEW: Аврора-фон */
+    .aurora {
         position: fixed;
-        pointer-events: none;
+        inset: 0;
         z-index: 0;
-        opacity: 0.15;
-        filter: blur(120px);
-        transition: opacity 0.5s;
+        pointer-events: none;
+        overflow: hidden;
+        opacity: 0.5;
     }
-    .bg-glow.g1 { width: 500px; height: 500px; top: -100px; left: -100px; background: #4a4a4a; }
-    .bg-glow.g2 { width: 400px; height: 400px; bottom: -100px; right: -100px; background: #2a2a2a; }
+    .aurora span {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(90px);
+        animation: auroraMove 20s ease-in-out infinite;
+    }
+    .aurora span:nth-child(1) {
+        width: 400px; height: 400px;
+        background: #50c878;
+        top: -100px; left: -100px;
+        animation-delay: 0s;
+    }
+    .aurora span:nth-child(2) {
+        width: 350px; height: 350px;
+        background: #4a7ac8;
+        bottom: -80px; right: -80px;
+        animation-delay: -7s;
+    }
+    .aurora span:nth-child(3) {
+        width: 300px; height: 300px;
+        background: #8a4ac8;
+        top: 40%; left: 60%;
+        animation-delay: -14s;
+    }
+    @keyframes auroraMove {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(40px, -30px) scale(1.1); }
+        66% { transform: translate(-30px, 40px) scale(0.95); }
+    }
+    body.theme-black .aurora { opacity: 0.25; }
+
+    .bg-glow { display: none; }
 
     #weather-canvas {
         position: fixed;
         inset: 0;
-        z-index: 0;
+        z-index: 1;
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.5s;
@@ -75,7 +106,7 @@
         background: #ffffff;
         opacity: 0;
         pointer-events: none;
-        z-index: 1;
+        z-index: 2;
     }
     .lightning-flash.flash {
         animation: flash 0.3s ease;
@@ -91,17 +122,30 @@
         margin: 0 auto;
         padding: 0 24px;
         position: relative;
-        z-index: 1;
+        z-index: 3;
     }
 
-    /* ================== NAV ================== */
+    /* ================== NAV (sticky + blur) ================== */
     nav {
+        position: sticky;
+        top: 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 22px 0;
         border-bottom: 1px solid #232323;
-        position: relative;
+        z-index: 500;
+        transition: padding 0.3s, background 0.3s, border-color 0.3s;
+    }
+    nav.scrolled {
+        padding: 14px 0;
+        background: rgba(18, 18, 18, 0.85);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-color: #2e2e2e;
+    }
+    body.theme-black nav.scrolled {
+        background: rgba(5, 5, 5, 0.85);
     }
 
     nav .brand {
@@ -188,7 +232,7 @@
         border: 1px solid #2e2e2e;
         border-radius: 6px;
         padding: 12px;
-        width: 240px;
+        width: 260px;
         z-index: 100;
         opacity: 0;
         visibility: hidden;
@@ -242,6 +286,43 @@
         text-align: center;
     }
 
+    /* NEW: мини-график онлайна */
+    .online-chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 40px;
+        padding: 6px 4px;
+        background: #141414;
+        border: 1px solid #2a2a2a;
+        border-radius: 4px;
+        margin-top: 4px;
+    }
+    .online-chart .bar {
+        flex: 1;
+        background: linear-gradient(180deg, #50c878, #2a6a44);
+        border-radius: 1px 1px 0 0;
+        min-height: 2px;
+        transition: height 0.4s ease, opacity 0.2s;
+        opacity: 0.75;
+        cursor: help;
+    }
+    .online-chart .bar.current {
+        background: linear-gradient(180deg, #e6e6e6, #50c878);
+        opacity: 1;
+        box-shadow: 0 0 8px rgba(80, 200, 120, 0.6);
+    }
+    .online-chart .bar:hover { opacity: 1; }
+
+    .chart-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 9px;
+        color: #5a5a5a;
+        margin-top: 4px;
+        letter-spacing: 0.5px;
+    }
+
     /* ================== HERO ================== */
     .hero {
         text-align: center;
@@ -259,6 +340,7 @@
         padding: 6px 14px;
         border-radius: 20px;
         margin-bottom: 24px;
+        position: relative;
     }
     .hero .badge::before {
         content: '● ';
@@ -267,6 +349,21 @@
     @keyframes blink {
         0%, 49% { opacity: 1; }
         50%, 100% { opacity: 0.3; }
+    }
+
+    /* NEW: пульсирующее кольцо на badge */
+    .hero .badge::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 20px;
+        border: 1px solid rgba(80, 200, 120, 0.4);
+        animation: badgePulse 2.5s ease-out infinite;
+        pointer-events: none;
+    }
+    @keyframes badgePulse {
+        0% { transform: scale(1); opacity: 0.6; }
+        100% { transform: scale(1.15); opacity: 0; }
     }
 
     .hero h1 {
@@ -278,9 +375,18 @@
         line-height: 1.1;
         user-select: none;
         transition: transform 0.3s;
+        background: linear-gradient(135deg, #ffffff 0%, #8a8a8a 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     .hero h1:hover { transform: scale(1.02); }
-    .hero h1 .accent { color: #6a6a6a; }
+    .hero h1 .accent {
+        background: linear-gradient(135deg, #6a6a6a 0%, #3a3a3a 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
     .hero .tagline {
         font-size: 14px;
@@ -306,10 +412,24 @@
         letter-spacing: 1.5px;
         text-transform: uppercase;
         border-radius: 3px;
-        transition: all 0.15s;
+        transition: all 0.2s;
         cursor: pointer;
         border: 1px solid transparent;
+        position: relative;
+        overflow: hidden;
     }
+
+    /* NEW: блеск при hover */
+    .btn::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+        transition: left 0.5s;
+        pointer-events: none;
+    }
+    .btn:hover::after { left: 100%; }
 
     .btn-primary {
         background: #e6e6e6;
@@ -317,8 +437,8 @@
     }
     .btn-primary:hover {
         background: #ffffff;
-        box-shadow: 0 0 24px rgba(255, 255, 255, 0.2);
-        transform: translateY(-1px);
+        box-shadow: 0 0 24px rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
     }
 
     .btn-ghost {
@@ -329,6 +449,7 @@
     .btn-ghost:hover {
         border-color: #7a7a7a;
         color: #ffffff;
+        transform: translateY(-2px);
     }
 
     /* ================== STATS ================== */
@@ -347,15 +468,18 @@
         background: #161616;
         padding: 24px 20px;
         text-align: center;
-        transition: background 0.2s;
+        transition: background 0.2s, transform 0.2s;
+        position: relative;
     }
-    .stat:hover { background: #1d1d1d; }
+    .stat:hover { background: #1d1d1d; transform: translateY(-2px); }
 
     .stat .value {
         font-size: 26px;
         font-weight: 700;
         color: #ffffff;
+        transition: color 0.2s;
     }
+    .stat:hover .value { color: #50c878; }
 
     .stat .label {
         font-size: 11px;
@@ -379,12 +503,27 @@
         color: #ffffff;
         letter-spacing: 1px;
         margin-bottom: 10px;
+        background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .section-head p {
         color: #7a7a7a;
         font-size: 13px;
         letter-spacing: 1px;
+    }
+
+    /* NEW: анимация появления секций */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     /* ================== GAMES ================== */
@@ -416,6 +555,7 @@
         background: #202020;
         border-color: #4a4a4a;
         transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
 
     .game-card .game-head {
@@ -487,7 +627,8 @@
 
     .price-card:hover {
         border-color: #5a5a5a;
-        transform: translateY(-2px);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
     .price-card.featured {
@@ -498,7 +639,7 @@
     }
     @keyframes featuredGlow {
         0%, 100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.04); }
-        50% { box-shadow: 0 0 60px rgba(255, 255, 255, 0.08); }
+        50% { box-shadow: 0 0 60px rgba(255, 255, 255, 0.1); }
     }
 
     .price-card.featured::before {
@@ -580,10 +721,25 @@
         padding: 26px;
         text-align: center;
         transition: all 0.2s;
+        position: relative;
     }
     .step:hover {
         border-color: #4a4a4a;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+    }
+    /* NEW: соединяющая линия между шагами */
+    .step:not(:last-child)::after {
+        content: '→';
+        position: absolute;
+        right: -14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #3a3a3a;
+        font-size: 18px;
+        pointer-events: none;
+    }
+    @media (max-width: 900px) {
+        .step:not(:last-child)::after { display: none; }
     }
 
     .step .num {
@@ -599,6 +755,13 @@
         font-size: 15px;
         font-weight: 700;
         margin-bottom: 14px;
+        transition: all 0.2s;
+    }
+    .step:hover .num {
+        background: #50c878;
+        border-color: #50c878;
+        color: #121212;
+        box-shadow: 0 0 16px rgba(80, 200, 120, 0.5);
     }
 
     .step .step-title {
@@ -627,14 +790,20 @@
         background: #1a1a1a;
         border: 1px solid #2e2e2e;
         color: #dcdcdc;
-        padding: 12px 16px;
+        padding: 12px 16px 12px 40px;
         border-radius: 4px;
         font-size: 13px;
         font-family: inherit;
         outline: none;
-        transition: border-color 0.15s;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235a5a5a' stroke-width='2'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.35-4.35'/></svg>");
+        background-repeat: no-repeat;
+        background-position: 14px center;
     }
-    .faq-search:focus { border-color: #4a4a4a; }
+    .faq-search:focus {
+        border-color: #50c878;
+        box-shadow: 0 0 0 3px rgba(80, 200, 120, 0.1);
+    }
     .faq-search::placeholder { color: #5a5a5a; }
 
     .faq-toggle-all {
@@ -661,6 +830,12 @@
         border-radius: 6px;
         margin-bottom: 10px;
         overflow: hidden;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .faq-item:hover { border-color: #3a3a3a; }
+    .faq-item.open {
+        border-color: #4a4a4a;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
     .faq-item.hidden { display: none; }
 
@@ -674,6 +849,7 @@
         justify-content: space-between;
         align-items: center;
         transition: background 0.15s;
+        user-select: none;
     }
     .faq-question:hover { background: #202020; }
 
@@ -682,25 +858,30 @@
         font-size: 20px;
         color: #8a8a8a;
         font-weight: 300;
+        transition: transform 0.25s, color 0.2s;
+        line-height: 1;
     }
-    .faq-item.open .faq-question::after { content: '−'; }
+    .faq-item.open .faq-question::after {
+        content: '−';
+        color: #50c878;
+    }
 
     .faq-answer {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease, padding 0.3s ease;
+        transition: max-height 0.35s ease, padding 0.35s ease;
         padding: 0 22px;
         color: #9a9a9a;
         font-size: 13px;
         line-height: 1.7;
     }
     .faq-item.open .faq-answer {
-        max-height: 400px;
+        max-height: 500px;
         padding: 0 22px 20px 22px;
     }
     .faq-answer strong { color: #e6e6e6; }
 
-    /* ================== CHANGELOG (UPDATE LOG) ================== */
+    /* ================== CHANGELOG ================== */
     .changelog {
         position: relative;
         padding-left: 28px;
@@ -741,6 +922,7 @@
     }
     .version:hover::before {
         border-color: #e6e6e6;
+        transform: scale(1.15);
     }
     .version.latest:hover::before {
         border-color: #50c878;
@@ -870,12 +1052,18 @@
         border-radius: 4px;
         padding: 8px 14px;
         min-width: 60px;
+        transition: all 0.2s;
+    }
+    .promo-timer .t-box:hover {
+        border-color: #50c878;
+        transform: translateY(-2px);
     }
     .promo-timer .t-val {
         font-size: 20px;
         font-weight: 700;
         color: #ffffff;
         line-height: 1;
+        font-variant-numeric: tabular-nums;
     }
     .promo-timer .t-lbl {
         font-size: 10px;
@@ -926,7 +1114,7 @@
     ::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #5a5a5a; }
 
-    /* ================== TOAST ================== */
+    /* ================== TOAST (обновлён) ================== */
     .toast {
         position: fixed;
         bottom: 30px;
@@ -935,21 +1123,41 @@
         background: #1e1e1e;
         border: 1px solid #4a4a4a;
         color: #e6e6e6;
-        padding: 12px 22px;
-        border-radius: 4px;
+        padding: 14px 22px;
+        border-radius: 6px;
         font-size: 13px;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
         z-index: 10000;
         opacity: 0;
-        transition: all 0.4s ease;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         pointer-events: none;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
         max-width: 90vw;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
     .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
+    }
+    .toast.success { border-color: rgba(80, 200, 120, 0.5); }
+    .toast.success::before {
+        content: '✓';
+        color: #50c878;
+        font-weight: 700;
+        font-size: 16px;
+    }
+    .toast.error { border-color: rgba(255, 100, 100, 0.5); }
+    .toast.error::before {
+        content: '⚠';
+        color: #ff7b7b;
+        font-size: 16px;
+    }
+    .toast.info::before {
+        content: 'ℹ';
+        color: #7ab0ff;
+        font-size: 16px;
     }
 
     /* ================== Кнопка "Наверх" ================== */
@@ -983,6 +1191,7 @@
         background: #2a2a2a;
         border-color: #50c878;
         color: #50c878;
+        transform: translateY(-3px);
     }
 
     /* ================== Cookie-плашка ================== */
@@ -1026,6 +1235,119 @@
         font-weight: 700;
     }
 
+    /* ================== Live-часы ================== */
+    #live-clock {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        background: rgba(26, 26, 26, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid #2e2e2e;
+        border-radius: 6px;
+        padding: 8px 14px;
+        font-size: 11px;
+        color: #8a8a8a;
+        z-index: 900;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+        letter-spacing: 0.5px;
+    }
+    #live-clock:hover { border-color: #4a4a4a; color: #e6e6e6; }
+    #live-clock .clock-time {
+        color: #e6e6e6;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+    #live-clock .clock-season { color: #50c878; }
+
+    /* ================== Модалка горячих клавиш ================== */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.25s;
+        padding: 20px;
+    }
+    .modal-overlay.open {
+        opacity: 1;
+        visibility: visible;
+    }
+    .modal {
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        border-radius: 8px;
+        max-width: 480px;
+        width: 100%;
+        padding: 28px;
+        transform: scale(0.95) translateY(10px);
+        transition: transform 0.25s;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+    .modal-overlay.open .modal {
+        transform: scale(1) translateY(0);
+    }
+    .modal h3 {
+        font-size: 18px;
+        color: #ffffff;
+        margin-bottom: 6px;
+        letter-spacing: 1px;
+    }
+    .modal p {
+        font-size: 12px;
+        color: #7a7a7a;
+        margin-bottom: 20px;
+    }
+    .hotkey-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #232323;
+        font-size: 13px;
+        color: #b0b0b0;
+    }
+    .hotkey-row:last-child { border-bottom: none; }
+    .hotkey-row kbd {
+        background: #232323;
+        border: 1px solid #3a3a3a;
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        padding: 3px 9px;
+        font-family: monospace;
+        font-size: 11px;
+        color: #e6e6e6;
+        margin-left: 4px;
+    }
+    .modal-close {
+        margin-top: 20px;
+        width: 100%;
+        background: #e6e6e6;
+        color: #121212;
+        border: none;
+        padding: 12px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-family: inherit;
+        transition: background 0.15s;
+    }
+    .modal-close:hover { background: #ffffff; }
+
     /* ================== СЕКРЕТНОЕ СВЕЧЕНИЕ ================== */
     body.secret-glow {
         animation: secretPulse 1.5s ease;
@@ -1058,6 +1380,8 @@
         .btn { padding: 12px 22px; font-size: 12px; }
         #back-to-top { bottom: 80px; right: 16px; }
         .version-date { margin-left: 0; width: 100%; }
+        #live-clock { display: none; }
+        .aurora span { filter: blur(60px); }
     }
 </style>
 </head>
@@ -1068,21 +1392,25 @@
 <script>
     console.log("%c Ryzen Loader ", "background: #e6e6e6; color: #121212; font-size: 22px; font-weight: bold; padding: 6px 12px; border-radius: 3px;");
     console.log("%c Хочешь узнать секрет? Набери: ↑ ↑ ↓ ↓ ← → ← → B A", "color: #8a8a8a; font-size: 13px;");
-    console.log("%c Или кликни по логотипу 3 раза.", "color: #5a5a5a; font-size: 11px;");
+    console.log("%c Или кликни по логотипу 3 раза. Нажми '?' для списка горячих клавиш.", "color: #5a5a5a; font-size: 11px;");
 </script>
+
+<!-- NEW: Аврора-фон -->
+<div class="aurora">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
 <canvas id="weather-canvas"></canvas>
 <canvas id="matrix-canvas"></canvas>
 
 <div class="lightning-flash" id="lightning-flash"></div>
 
-<div class="bg-glow g1"></div>
-<div class="bg-glow g2"></div>
-
 <div class="container">
 
     <!-- ============ NAV ============ -->
-    <nav>
+    <nav id="main-nav">
         <div class="brand" id="logo-brand">
             <span class="dot"></span>
             RYZEN LOADER
@@ -1096,7 +1424,7 @@
                 <a href="#faq">FAQ</a>
             </div>
 
-            <button class="settings-btn" id="settings-btn" title="Настройки фона">⚙</button>
+            <button class="settings-btn" id="settings-btn" title="Настройки (T)">⚙</button>
 
             <div class="settings-panel" id="settings-panel">
                 <div class="settings-title">Фон</div>
@@ -1142,12 +1470,21 @@
                     <span class="icon">⬛</span>
                     <span>Чёрная</span>
                 </div>
+
+                <!-- NEW: мини-график онлайна -->
+                <div class="settings-title">Онлайн за 24ч</div>
+                <div class="online-chart" id="online-chart"></div>
+                <div class="chart-labels">
+                    <span>00:00</span>
+                    <span>12:00</span>
+                    <span>23:00</span>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- ============ HERO ============ -->
-    <section class="hero">
+    <section class="hero reveal">
         <div class="badge">Online — <span class="online-count" id="online-count">—</span> гостей</div>
         <h1 id="hero-title">RYZEN<span class="accent"> LOADER</span></h1>
         <p class="tagline">Private Cheat Software</p>
@@ -1178,7 +1515,7 @@
     </section>
 
     <!-- ============ GAMES ============ -->
-    <section class="section" id="games">
+    <section class="section reveal" id="games">
         <div class="section-head">
             <h2>Поддерживаемые игры</h2>
             <p>Один ключ — обе игры</p>
@@ -1206,7 +1543,7 @@
     </section>
 
     <!-- ============ PRICING ============ -->
-    <section class="section" id="pricing">
+    <section class="section reveal" id="pricing">
         <div class="section-head">
             <h2>Тарифы Full Access</h2>
             <p>Обе игры — один ключ</p>
@@ -1256,7 +1593,7 @@
     </section>
 
     <!-- ============ STEPS ============ -->
-    <section class="section">
+    <section class="section reveal">
         <div class="section-head">
             <h2>Как купить</h2>
             <p>Четыре простых шага</p>
@@ -1286,8 +1623,8 @@
         </div>
     </section>
 
-    <!-- ============ CHANGELOG / UPDATE LOG ============ -->
-    <section class="section" id="changelog">
+    <!-- ============ CHANGELOG ============ -->
+    <section class="section reveal" id="changelog">
         <div class="section-head">
             <h2>Update Log</h2>
             <p>История обновлений Ryzen Loader</p>
@@ -1305,7 +1642,7 @@
                 <ul class="version-list">
                     <li>Полностью переписан инжектор с нуля <span class="tag tag-improve">Improve</span></li>
                     <li>Улучшена стабильность сайта <span class="tag tag-fix">Fix</span></li>
-                    <li>Добавлен счётчик онлайна <span class="tag tag-new">New</span></li>
+                    <li>Добавлен счётчик онлайна с сохранением <span class="tag tag-new">New</span></li>
                     <li>Новая система HWID-привязки с защитой от подмены <span class="tag tag-security">Security</span></li>
                     <li>Улучшена стабильность на Windows 11 24H2 <span class="tag tag-fix">Fix</span></li>
                     <li>Уменьшено время инжекта с 8 до 2 секунд <span class="tag tag-improve">Improve</span></li>
@@ -1370,14 +1707,14 @@
     </section>
 
     <!-- ============ FAQ ============ -->
-    <section class="section" id="faq">
+    <section class="section reveal" id="faq">
         <div class="section-head">
             <h2>Частые вопросы</h2>
             <p>Что важно знать перед покупкой</p>
         </div>
 
         <div class="faq-controls">
-            <input type="text" class="faq-search" id="faq-search" placeholder="Поиск по вопросам...">
+            <input type="text" class="faq-search" id="faq-search" placeholder="Поиск по вопросам... (нажми / )">
             <button class="faq-toggle-all" id="faq-toggle-all">Развернуть все</button>
         </div>
 
@@ -1432,7 +1769,7 @@
     </section>
 
     <!-- ============ CTA BANNER ============ -->
-    <section class="section">
+    <section class="section reveal">
         <div class="cta-banner">
             <h2>Готов начать?</h2>
             <p>Получи Full Access к обеим играм прямо сейчас</p>
@@ -1465,6 +1802,48 @@
 
 <button id="back-to-top" title="Наверх">↑</button>
 
+<!-- NEW: Live-часы -->
+<div id="live-clock" title="Текущее время и сезон">
+    <span>🕐</span>
+    <span class="clock-time" id="clock-time">--:--</span>
+    <span class="clock-season" id="clock-season">—</span>
+</div>
+
+<!-- NEW: Модалка горячих клавиш -->
+<div class="modal-overlay" id="hotkeys-modal">
+    <div class="modal">
+        <h3>⌨️ Горячие клавиши</h3>
+        <p>Быстрое управление сайтом</p>
+
+        <div class="hotkey-row">
+            <span>Поиск по FAQ</span>
+            <span><kbd>/</kbd></span>
+        </div>
+        <div class="hotkey-row">
+            <span>Переключить тему</span>
+            <span><kbd>T</kbd></span>
+        </div>
+        <div class="hotkey-row">
+            <span>Наверх страницы</span>
+            <span><kbd>Home</kbd></span>
+        </div>
+        <div class="hotkey-row">
+            <span>Вниз страницы</span>
+            <span><kbd>End</kbd></span>
+        </div>
+        <div class="hotkey-row">
+            <span>Список клавиш</span>
+            <span><kbd>?</kbd></span>
+        </div>
+        <div class="hotkey-row">
+            <span>Закрыть модалку</span>
+            <span><kbd>Esc</kbd></span>
+        </div>
+
+        <button class="modal-close" id="modal-close-btn">Понятно</button>
+    </div>
+</div>
+
 <div id="cookie-bar">
     <span>🍪 Мы используем localStorage для сохранения настроек. Продолжая, вы соглашаетесь.</span>
     <button id="cookie-accept">ОК</button>
@@ -1472,7 +1851,7 @@
 
 <script>
     // =========================================================
-    // Утилита: троттлинг
+    // Утилиты
     // =========================================================
     function throttle(fn, delay) {
         let last = 0;
@@ -1486,24 +1865,39 @@
     }
 
     // =========================================================
-    // Звук клика
+    // Звук (с разными тонами)
     // =========================================================
     let audioCtx = null;
-    function playClick() {
+    function playSound(freq = 800, duration = 0.08, type = 'square', vol = 0.03) {
         try {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'square';
-            osc.frequency.value = 800;
-            gain.gain.value = 0.03;
+            osc.type = type;
+            osc.frequency.value = freq;
+            gain.gain.value = vol;
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-            osc.stop(audioCtx.currentTime + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.stop(audioCtx.currentTime + duration);
         } catch(e) {}
     }
+    function playClick() { playSound(800, 0.06); }
+    function playSuccess() { playSound(1200, 0.15, 'sine', 0.04); }
+    function playError() { playSound(300, 0.15, 'sawtooth', 0.03); }
+
+    // =========================================================
+    // Toast (улучшенный)
+    // =========================================================
+    const showToast = throttle(function(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = 'toast show ' + type;
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => toast.classList.remove('show'), 3200);
+    }, 400);
 
     // =========================================================
     // FAQ
@@ -1553,18 +1947,6 @@
     });
 
     // =========================================================
-    // Toast
-    // =========================================================
-    const showToast = throttle(function(message) {
-        const toast = document.getElementById('toast');
-        if (!toast) return;
-        toast.textContent = message;
-        toast.classList.add('show');
-        clearTimeout(toast._timeout);
-        toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
-    }, 500);
-
-    // =========================================================
     // ПАСХАЛКА: 3 клика по логотипу
     // =========================================================
     let logoClicks = 0;
@@ -1576,14 +1958,15 @@
             if (logoClicks === 3) {
                 document.body.classList.add('secret-glow');
                 setTimeout(() => document.body.classList.remove('secret-glow'), 1500);
-                showToast('✨ Секрет активирован!');
+                showToast('✨ Секрет активирован!', 'success');
+                playSuccess();
                 logoClicks = 0;
             }
         });
     }
 
     // =========================================================
-    // ПАСХАЛКА: Konami-код → матрица
+    // ПАСХАЛКА: Konami-код
     // =========================================================
     const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
                         'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
@@ -1591,6 +1974,9 @@
     let konamiProgress = 0;
 
     document.addEventListener('keydown', (e) => {
+        // Игнорируем если в input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
         const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
         if (key === konamiCode[konamiProgress]) {
             konamiProgress++;
@@ -1607,7 +1993,8 @@
         const canvas = document.getElementById('matrix-canvas');
         if (!canvas) return;
 
-        showToast('🟢 Wake up, Neo...');
+        showToast('🟢 Wake up, Neo...', 'success');
+        playSuccess();
         document.body.classList.add('matrix-active');
 
         canvas.width = window.innerWidth;
@@ -1659,7 +2046,8 @@
             setTimeout(() => {
                 heroTitle.style.transform = 'scale(1) rotate(0deg)';
             }, 300);
-            showToast('👋 Привет, любопытный!');
+            showToast('👋 Привет, любопытный!', 'info');
+            playClick();
         });
     }
 
@@ -1676,7 +2064,7 @@
     }
 
     // =========================================================
-    // НАСТРОЙКИ ФОНА + ТЕМЫ
+    // НАСТРОЙКИ
     // =========================================================
     const settingsBtn = document.getElementById('settings-btn');
     const settingsPanel = document.getElementById('settings-panel');
@@ -1722,19 +2110,25 @@
 
     document.querySelectorAll('.settings-option[data-theme]').forEach(opt => {
         opt.addEventListener('click', () => {
-            currentTheme = opt.dataset.theme;
-            localStorage.setItem('ryzen_theme', currentTheme);
-            document.body.classList.toggle('theme-black', currentTheme === 'black');
-            updateSettingsUI();
+            setTheme(opt.dataset.theme);
             playClick();
         });
     });
 
+    function setTheme(theme) {
+        currentTheme = theme;
+        localStorage.setItem('ryzen_theme', theme);
+        document.body.classList.toggle('theme-black', theme === 'black');
+        updateSettingsUI();
+    }
+
     if (currentTheme === 'black') document.body.classList.add('theme-black');
 
+    // =========================================================
+    // WEATHER
+    // =========================================================
     function setWeather(mode) {
         stopWeather();
-
         currentWeather = mode;
         localStorage.setItem('ryzen_weather', mode);
         updateSettingsUI();
@@ -1772,7 +2166,6 @@
         const ctx = weatherCanvas.getContext('2d');
         const flakes = [];
         const count = 150;
-
         for (let i = 0; i < count; i++) {
             flakes.push({
                 x: Math.random() * weatherCanvas.width,
@@ -1782,24 +2175,19 @@
                 drift: Math.random() * 0.5 - 0.25
             });
         }
-
         function draw() {
             ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-
             flakes.forEach(f => {
                 ctx.beginPath();
                 ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(255, 255, 255, ' + (0.4 + Math.random() * 0.4) + ')';
                 ctx.fill();
-
                 f.y += f.speed;
                 f.x += f.drift;
-
                 if (f.y > weatherCanvas.height) { f.y = -5; f.x = Math.random() * weatherCanvas.width; }
                 if (f.x < 0) f.x = weatherCanvas.width;
                 if (f.x > weatherCanvas.width) f.x = 0;
             });
-
             weatherAnimId = requestAnimationFrame(draw);
         }
         draw();
@@ -1809,7 +2197,6 @@
         const ctx = weatherCanvas.getContext('2d');
         const drops = [];
         const count = 200;
-
         for (let i = 0; i < count; i++) {
             drops.push({
                 x: Math.random() * weatherCanvas.width,
@@ -1818,25 +2205,20 @@
                 speed: Math.random() * 6 + 5
             });
         }
-
         function draw() {
             ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
             ctx.strokeStyle = 'rgba(180, 200, 255, 0.4)';
             ctx.lineWidth = 1;
-
             drops.forEach(d => {
                 ctx.beginPath();
                 ctx.moveTo(d.x, d.y);
                 ctx.lineTo(d.x - 1, d.y + d.len);
                 ctx.stroke();
-
                 d.y += d.speed;
                 d.x -= 0.5;
-
                 if (d.y > weatherCanvas.height) { d.y = -20; d.x = Math.random() * weatherCanvas.width; }
                 if (d.x < 0) d.x = weatherCanvas.width;
             });
-
             weatherAnimId = requestAnimationFrame(draw);
         }
         draw();
@@ -1844,7 +2226,6 @@
 
     function startStorm() {
         startRain();
-
         function scheduleLightning() {
             const delay = Math.random() * 5000 + 3000;
             lightningInterval = setTimeout(() => {
@@ -1863,13 +2244,11 @@
         const columns = weatherCanvas.width / fontSize;
         const drops = [];
         for (let i = 0; i < columns; i++) drops[i] = 1;
-
         function draw() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, weatherCanvas.width, weatherCanvas.height);
             ctx.fillStyle = 'rgba(80, 200, 120, 0.6)';
             ctx.font = fontSize + 'px monospace';
-
             for (let i = 0; i < drops.length; i++) {
                 const text = chars[Math.floor(Math.random() * chars.length)];
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
@@ -1877,7 +2256,6 @@
                     drops[i] = 0;
                 drops[i]++;
             }
-
             weatherAnimId = requestAnimationFrame(draw);
         }
         draw();
@@ -1887,7 +2265,6 @@
         const ctx = weatherCanvas.getContext('2d');
         const stars = [];
         const count = 200;
-
         for (let i = 0; i < count; i++) {
             stars.push({
                 x: Math.random() * weatherCanvas.width,
@@ -1897,28 +2274,22 @@
                 speed: Math.random() * 0.02 + 0.01
             });
         }
-
         function draw() {
             ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-
             stars.forEach(s => {
                 s.phase += s.speed;
                 const alpha = 0.3 + Math.abs(Math.sin(s.phase)) * 0.7;
-
                 ctx.beginPath();
                 ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
                 ctx.fill();
             });
-
             weatherAnimId = requestAnimationFrame(draw);
         }
         draw();
     }
 
-    if (currentWeather !== 'none') {
-        setWeather(currentWeather);
-    }
+    if (currentWeather !== 'none') setWeather(currentWeather);
 
     window.addEventListener('resize', () => {
         weatherCanvas.width = window.innerWidth;
@@ -1938,36 +2309,40 @@
     });
 
     // =========================================================
-    // Индикатор прогресса
+    // Индикатор прогресса + sticky nav
     // =========================================================
     const readingProgress = document.getElementById('reading-progress');
+    const mainNav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
         readingProgress.style.width = progress + '%';
+
+        if (mainNav) {
+            mainNav.classList.toggle('scrolled', scrollTop > 40);
+        }
     });
 
     // =========================================================
     // Копирование Discord-ссылки
     // =========================================================
-    const discordLinks = document.querySelectorAll('.discord-link');
-    discordLinks.forEach(link => {
+    document.querySelectorAll('.discord-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const url = link.getAttribute('href');
             navigator.clipboard.writeText(url).then(() => {
-                showToast('🔗 Ссылка на Discord скопирована!');
+                showToast('Ссылка на Discord скопирована!', 'success');
+                playSuccess();
             }).catch(() => {
-                showToast('🔗 Discord: ' + url);
+                showToast('Discord: ' + url, 'info');
             });
             window.open(url, '_blank');
-            playClick();
         });
     });
 
     // =========================================================
-    // Реалистичный счётчик онлайна
+    // РЕАЛИСТИЧНЫЙ СЧЁТЧИК ОНЛАЙНА (сохраняется)
     // =========================================================
     (function initOnlineCounter() {
         const el = document.getElementById('online-count');
@@ -1975,6 +2350,8 @@
 
         const PEAK = 340;
         const MIN = 18;
+        const STORAGE_KEY = 'ryzen_online_value';
+        const STORAGE_TIME_KEY = 'ryzen_online_ts';
 
         const HOUR_PROFILE = [
             0.05, 0.04, 0.03, 0.03, 0.04, 0.06,
@@ -1999,45 +2376,92 @@
             const hour = now.getHours();
             const day = now.getDay();
             const season = getSeason(now);
-
             let base = HOUR_PROFILE[hour];
-
             if (season.name === 'summer' && (hour >= 22 || hour <= 3)) base += season.nightBonus;
             if (season.name === 'winter' && (hour >= 22 || hour <= 2)) base += season.nightBonus;
-
             base = Math.min(1, Math.max(0, base));
             base *= DAY_FACTOR[day] || 1;
             base *= season.factor;
-
             let value = Math.round(MIN + (PEAK - MIN) * base);
             value += Math.round((Math.random() - 0.5) * value * 0.08);
-
             return Math.max(MIN, Math.min(PEAK, value));
         }
 
-        let currentValue = computeTarget(new Date());
+        const now = new Date();
+        const nowTs = now.getTime();
+        const target = computeTarget(now);
+        const savedValue = parseInt(localStorage.getItem(STORAGE_KEY) || '0');
+        const savedTs = parseInt(localStorage.getItem(STORAGE_TIME_KEY) || '0');
+
+        let currentValue;
+
+        if (savedValue >= MIN && savedValue <= PEAK && savedTs > 0) {
+            const elapsedSec = (nowTs - savedTs) / 1000;
+            if (elapsedSec < 30) {
+                currentValue = savedValue;
+            } else if (elapsedSec < 60 * 60 * 6) {
+                const progress = Math.min(1, elapsedSec / (60 * 60));
+                currentValue = Math.round(savedValue + (target - savedValue) * progress);
+            } else {
+                currentValue = target;
+            }
+        } else {
+            currentValue = target;
+        }
+
+        currentValue = Math.max(MIN, Math.min(PEAK, currentValue));
         el.textContent = currentValue;
 
+        function persist() {
+            localStorage.setItem(STORAGE_KEY, String(Math.round(currentValue)));
+            localStorage.setItem(STORAGE_TIME_KEY, String(Date.now()));
+        }
+        persist();
+
         setInterval(() => {
-            const target = computeTarget(new Date());
-            const diff = target - currentValue;
+            const t = computeTarget(new Date());
+            const diff = t - currentValue;
             const step = Math.sign(diff) * Math.max(1, Math.round(Math.abs(diff) * 0.15));
             currentValue += step;
             currentValue += (Math.random() > 0.5 ? 1 : -1);
-
             if (currentValue < MIN) currentValue = MIN;
             if (currentValue > PEAK) currentValue = PEAK;
-
             el.textContent = Math.round(currentValue);
+            persist();
         }, 4000);
 
         setInterval(() => {
-            const target = computeTarget(new Date());
-            currentValue = Math.round((currentValue + target) / 2);
+            const t = computeTarget(new Date());
+            currentValue = Math.round(currentValue + (t - currentValue) * 0.3);
+            currentValue = Math.max(MIN, Math.min(PEAK, currentValue));
             el.textContent = Math.round(currentValue);
+            persist();
         }, 60000);
 
-        const now = new Date();
+        window.addEventListener('beforeunload', persist);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') persist();
+        });
+
+        // NEW: мини-график 24ч
+        const chartEl = document.getElementById('online-chart');
+        if (chartEl) {
+            const nowHour = new Date().getHours();
+            const chartData = [];
+            for (let h = 0; h < 24; h++) {
+                const v = MIN + (PEAK - MIN) * HOUR_PROFILE[h];
+                chartData.push(Math.round(v));
+            }
+            const maxVal = Math.max(...chartData);
+            chartData.forEach((v, h) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar' + (h === nowHour ? ' current' : '');
+                bar.style.height = (v / maxVal * 100) + '%';
+                bar.title = String(h).padStart(2, '0') + ':00 — ~' + v + ' онлайн';
+                chartEl.appendChild(bar);
+            });
+        }
+
         const s = getSeason(now);
         console.log(
             '%c[Online Counter] Сезон: ' + s.name +
@@ -2113,16 +2537,17 @@
                 }).catch(() => {});
             } else {
                 navigator.clipboard.writeText(window.location.href).then(() => {
-                    showToast('🔗 Ссылка скопирована!');
+                    showToast('Ссылка скопирована!', 'success');
+                    playSuccess();
                 }).catch(() => {
-                    showToast('🔗 ' + window.location.href);
+                    showToast(window.location.href, 'info');
                 });
             }
         });
     }
 
     // =========================================================
-    // Подсветка активного раздела
+    // Подсветка активного раздела (scroll spy)
     // =========================================================
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('#nav-links a');
@@ -2149,7 +2574,7 @@
         cookieAccept.addEventListener('click', () => {
             localStorage.setItem('ryzen_cookie_ok', '1');
             cookieBar.classList.remove('visible');
-            playClick();
+            playSuccess();
         });
     }
 
@@ -2159,6 +2584,130 @@
     document.querySelectorAll('.btn').forEach(btn => {
         btn.addEventListener('click', playClick);
     });
+
+    // =========================================================
+    // NEW: Live-часы
+    // =========================================================
+    const clockTime = document.getElementById('clock-time');
+    const clockSeason = document.getElementById('clock-season');
+    function updateClock() {
+        if (!clockTime) return;
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        clockTime.textContent = hh + ':' + mm;
+
+        if (clockSeason) {
+            const m = now.getMonth();
+            let s;
+            if (m === 11 || m === 0 || m === 1) s = '❄ Зима';
+            else if (m >= 2 && m <= 4) s = '🌸 Весна';
+            else if (m >= 5 && m <= 7) s = '☀ Лето';
+            else s = '🍂 Осень';
+            clockSeason.textContent = s;
+        }
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    // =========================================================
+    // NEW: Анимация появления секций
+    // =========================================================
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+        revealObserver.observe(el);
+    });
+
+    // =========================================================
+    // NEW: Модалка горячих клавиш
+    // =========================================================
+    const hotkeysModal = document.getElementById('hotkeys-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    function openModal() {
+        if (hotkeysModal) {
+            hotkeysModal.classList.add('open');
+            playClick();
+        }
+    }
+    function closeModal() {
+        if (hotkeysModal) {
+            hotkeysModal.classList.remove('open');
+        }
+    }
+
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+    if (hotkeysModal) {
+        hotkeysModal.addEventListener('click', (e) => {
+            if (e.target === hotkeysModal) closeModal();
+        });
+    }
+
+    // =========================================================
+    // NEW: Горячие клавиши
+    // =========================================================
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            if (e.key === 'Escape') e.target.blur();
+            return;
+        }
+
+        // "/" → фокус на поиск FAQ
+        if (e.key === '/') {
+            e.preventDefault();
+            if (faqSearch) {
+                faqSearch.focus();
+                faqSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                playClick();
+            }
+        }
+
+        // "T" → переключить тему
+        if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            setTheme(currentTheme === 'dark' ? 'black' : 'dark');
+            showToast('Тема: ' + (currentTheme === 'black' ? 'Чёрная' : 'Тёмная'), 'info');
+            playClick();
+        }
+
+        // "?" → модалка клавиш
+        if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+            e.preventDefault();
+            openModal();
+        }
+
+        // Esc → закрыть всё
+        if (e.key === 'Escape') {
+            closeModal();
+            if (settingsPanel) settingsPanel.classList.remove('open');
+        }
+    });
+
+    // =========================================================
+    // NEW: Обновление графика онлайна раз в минуту (текущий час)
+    // =========================================================
+    setInterval(() => {
+        const chartEl = document.getElementById('online-chart');
+        if (!chartEl) return;
+        const bars = chartEl.querySelectorAll('.bar');
+        const nowHour = new Date().getHours();
+        bars.forEach((bar, i) => {
+            bar.classList.toggle('current', i === nowHour);
+        });
+    }, 60000);
+
+    // =========================================================
+    // Финал — приветствие в консоли
+    // =========================================================
+    console.log('%c✓ Все системы работают', 'color: #50c878; font-weight: bold;');
+    console.log('%cНажми "?" для списка горячих клавиш', 'color: #8a8a8a;');
 </script>
 
 </body>
