@@ -569,25 +569,6 @@
         font-weight: 700;
     }
 
-    /* NEW: кнопка "скопировать ключ" (демо) в тарифах */
-    .copy-key-btn {
-        background: transparent;
-        border: 1px dashed #3a3a3a;
-        color: #7a7a7a;
-        font-size: 11px;
-        padding: 6px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-        margin-bottom: 12px;
-        letter-spacing: 1px;
-        transition: all 0.15s;
-        font-family: inherit;
-    }
-    .copy-key-btn:hover {
-        border-color: #50c878;
-        color: #50c878;
-    }
-
     /* ================== STEPS ================== */
     .steps {
         display: grid;
@@ -637,7 +618,6 @@
     }
 
     /* ================== FAQ ================== */
-    /* NEW: панель управления FAQ (поиск + развернуть все) */
     .faq-controls {
         display: flex;
         gap: 10px;
@@ -685,7 +665,6 @@
         margin-bottom: 10px;
         overflow: hidden;
     }
-    /* NEW: скрытие при поиске */
     .faq-item.hidden { display: none; }
 
     .faq-question {
@@ -755,7 +734,6 @@
         margin-bottom: 28px;
     }
 
-    /* NEW: таймер акции */
     .promo-timer {
         display: inline-flex;
         gap: 10px;
@@ -801,7 +779,6 @@
     }
     footer a:hover { color: #e6e6e6; }
 
-    /* NEW: кнопка "поделиться" в футере */
     .share-btn {
         background: transparent;
         border: 1px solid #2e2e2e;
@@ -852,7 +829,7 @@
         transform: translateX(-50%) translateY(0);
     }
 
-    /* ================== NEW: Кнопка "Наверх" ================== */
+    /* ================== Кнопка "Наверх" ================== */
     #back-to-top {
         position: fixed;
         bottom: 90px;
@@ -885,7 +862,7 @@
         color: #50c878;
     }
 
-    /* ================== NEW: Cookie-плашка ================== */
+    /* ================== Cookie-плашка ================== */
     #cookie-bar {
         position: fixed;
         bottom: 0; left: 0; right: 0;
@@ -921,7 +898,7 @@
     }
     #cookie-bar button:hover { background: #ffffff; }
 
-    /* ================== NEW: онлайн-счётчик в badge ================== */
+    /* ================== Онлайн-счётчик в badge ================== */
     .online-count {
         color: #50c878;
         font-weight: 700;
@@ -963,7 +940,7 @@
 </head>
 <body>
 
-<!-- NEW: индикатор прогресса чтения -->
+<!-- индикатор прогресса чтения -->
 <div id="reading-progress"></div>
 
 <!-- Консольная пасхалка -->
@@ -1037,7 +1014,6 @@
                     <span>Звёзды</span>
                 </div>
 
-                <!-- NEW: переключатель темы -->
                 <div class="settings-title">Тема</div>
 
                 <div class="settings-option active" data-theme="dark">
@@ -1055,8 +1031,7 @@
 
     <!-- ============ HERO ============ -->
     <section class="hero">
-        <!-- NEW: онлайн-счётчик -->
-        <div class="badge">Online — <span class="online-count" id="online-count">247</span> игроков</div>
+        <div class="badge">Online — <span class="online-count" id="online-count">—</span> игроков</div>
         <h1 id="hero-title">RYZEN<span class="accent"> LOADER</span></h1>
         <p class="tagline">Private Cheat Software</p>
 
@@ -1068,7 +1043,6 @@
         <!-- STATS -->
         <div class="stats">
             <div class="stat">
-                <!-- NEW: data-target для анимации цифр -->
                 <div class="value" data-count="2">0</div>
                 <div class="label">Игры</div>
             </div>
@@ -1133,8 +1107,6 @@
                     <li>Привязка по HWID</li>
                     <li>Обновления</li>
                 </ul>
-                <!-- NEW: кнопка "скопировать пример ключа" -->
-                <button class="copy-key-btn" data-key="RYZEN-7D-XXXX-XXXX">Скопировать пример ключа</button>
                 <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost discord-link">Купить</a>
             </div>
 
@@ -1148,7 +1120,6 @@
                     <li>Обновления</li>
                     <li>Приоритетная поддержка</li>
                 </ul>
-                <button class="copy-key-btn" data-key="RYZEN-30D-XXXX-XXXX">Скопировать пример ключа</button>
                 <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary discord-link">Купить</a>
             </div>
 
@@ -1162,7 +1133,6 @@
                     <li>Все будущие обновления</li>
                     <li>Личная поддержка</li>
                 </ul>
-                <button class="copy-key-btn" data-key="RYZEN-LIFE-XXXX-XXXX">Скопировать пример ключа</button>
                 <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost discord-link">Купить</a>
             </div>
 
@@ -1207,7 +1177,6 @@
             <p>Что важно знать перед покупкой</p>
         </div>
 
-        <!-- NEW: поиск + развернуть все -->
         <div class="faq-controls">
             <input type="text" class="faq-search" id="faq-search" placeholder="Поиск по вопросам...">
             <button class="faq-toggle-all" id="faq-toggle-all">Развернуть все</button>
@@ -1269,7 +1238,6 @@
             <h2>Готов начать?</h2>
             <p>Получи Full Access к обеим играм прямо сейчас</p>
 
-            <!-- NEW: таймер акции -->
             <div class="promo-timer" id="promo-timer">
                 <div class="t-box"><div class="t-val" id="t-days">00</div><div class="t-lbl">Дней</div></div>
                 <div class="t-box"><div class="t-val" id="t-hours">00</div><div class="t-lbl">Часов</div></div>
@@ -1289,7 +1257,6 @@
             <a href="#pricing">Цены</a>
         </div>
         <div>© 2024 Ryzen Loader. Все права защищены.</div>
-        <!-- NEW: кнопка "поделиться" -->
         <button class="share-btn" id="share-btn">🔗 Поделиться сайтом</button>
     </footer>
 
@@ -1298,10 +1265,10 @@
 <!-- Toast уведомление -->
 <div class="toast" id="toast">🎉 Ты нашёл секрет!</div>
 
-<!-- NEW: кнопка "Наверх" -->
+<!-- Кнопка "Наверх" -->
 <button id="back-to-top" title="Наверх">↑</button>
 
-<!-- NEW: cookie-плашка -->
+<!-- Cookie-плашка -->
 <div id="cookie-bar">
     <span>🍪 Мы используем localStorage для сохранения настроек. Продолжая, вы соглашаетесь.</span>
     <button id="cookie-accept">ОК</button>
@@ -1309,7 +1276,7 @@
 
 <script>
     // =========================================================
-    // Утилита: троттлинг (NEW: защита от спама)
+    // Утилита: троттлинг
     // =========================================================
     function throttle(fn, delay) {
         let last = 0;
@@ -1323,7 +1290,7 @@
     }
 
     // =========================================================
-    // NEW: звук клика (Web Audio API, без файлов)
+    // Звук клика (Web Audio API)
     // =========================================================
     let audioCtx = null;
     function playClick() {
@@ -1352,7 +1319,6 @@
         });
     });
 
-    // NEW: развернуть / свернуть все
     const faqToggleAll = document.getElementById('faq-toggle-all');
     let allExpanded = false;
     if (faqToggleAll) {
@@ -1366,7 +1332,6 @@
         });
     }
 
-    // NEW: поиск по FAQ
     const faqSearch = document.getElementById('faq-search');
     if (faqSearch) {
         faqSearch.addEventListener('input', (e) => {
@@ -1392,7 +1357,7 @@
     });
 
     // =========================================================
-    // Toast (NEW: с защитой от спама)
+    // Toast
     // =========================================================
     const showToast = throttle(function(message) {
         const toast = document.getElementById('toast');
@@ -1563,7 +1528,6 @@
         });
     });
 
-    // NEW: переключение темы
     document.querySelectorAll('.settings-option[data-theme]').forEach(opt => {
         opt.addEventListener('click', () => {
             currentTheme = opt.dataset.theme;
@@ -1574,7 +1538,6 @@
         });
     });
 
-    // Применяем тему при загрузке
     if (currentTheme === 'black') document.body.classList.add('theme-black');
 
     // =========================================================
@@ -1616,9 +1579,6 @@
         ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
     }
 
-    // =========================================================
-    // СНЕГ
-    // =========================================================
     function startSnow() {
         const ctx = weatherCanvas.getContext('2d');
         const flakes = [];
@@ -1656,9 +1616,6 @@
         draw();
     }
 
-    // =========================================================
-    // ДОЖДЬ
-    // =========================================================
     function startRain() {
         const ctx = weatherCanvas.getContext('2d');
         const drops = [];
@@ -1696,9 +1653,6 @@
         draw();
     }
 
-    // =========================================================
-    // ГРОЗА
-    // =========================================================
     function startStorm() {
         startRain();
 
@@ -1713,9 +1667,6 @@
         scheduleLightning();
     }
 
-    // =========================================================
-    // ФОНОВАЯ МАТРИЦА
-    // =========================================================
     function startMatrixBg() {
         const ctx = weatherCanvas.getContext('2d');
         const chars = '01アイウエオRYZEN'.split('');
@@ -1743,9 +1694,6 @@
         draw();
     }
 
-    // =========================================================
-    // ЗВЁЗДЫ
-    // =========================================================
     function startStars() {
         const ctx = weatherCanvas.getContext('2d');
         const stars = [];
@@ -1789,7 +1737,7 @@
     });
 
     // =========================================================
-    // NEW: Кнопка "Наверх"
+    // Кнопка "Наверх"
     // =========================================================
     const backToTop = document.getElementById('back-to-top');
     window.addEventListener('scroll', () => {
@@ -1801,7 +1749,7 @@
     });
 
     // =========================================================
-    // NEW: Индикатор прогресса чтения
+    // Индикатор прогресса чтения
     // =========================================================
     const readingProgress = document.getElementById('reading-progress');
     window.addEventListener('scroll', () => {
@@ -1812,7 +1760,7 @@
     });
 
     // =========================================================
-    // NEW: Копирование Discord-ссылки
+    // Копирование Discord-ссылки
     // =========================================================
     const discordLinks = document.querySelectorAll('.discord-link');
     discordLinks.forEach(link => {
@@ -1830,19 +1778,134 @@
     });
 
     // =========================================================
-    // NEW: Живой счётчик онлайна
+    // NEW: Реалистичный счётчик онлайна
+    // Зависит от: времени суток, дня недели, сезона
     // =========================================================
-    const onlineCountEl = document.getElementById('online-count');
-    let onlineCount = 247;
-    setInterval(() => {
-        onlineCount += Math.floor(Math.random() * 7) - 3;
-        if (onlineCount < 200) onlineCount = 200;
-        if (onlineCount > 350) onlineCount = 350;
-        if (onlineCountEl) onlineCountEl.textContent = onlineCount;
-    }, 3000);
+    (function initOnlineCounter() {
+        const el = document.getElementById('online-count');
+        if (!el) return;
+
+        // Базовый максимум игроков (в пик)
+        const PEAK = 340;
+        // Минимум ночью
+        const MIN = 18;
+
+        // Профиль онлайна по часам (0-23) — коэффициент 0..1
+        // Ночь — почти никого, утро — мало, вечер — пик
+        const HOUR_PROFILE = [
+            0.05, 0.04, 0.03, 0.03, 0.04, 0.06, // 00-05 ночь
+            0.10, 0.14, 0.18, 0.22, 0.26, 0.32, // 06-11 утро (школа/работа)
+            0.38, 0.44, 0.50, 0.58, 0.68, 0.78, // 12-17 день (приходят домой)
+            0.92, 1.00, 0.98, 0.88, 0.70, 0.40  // 18-23 вечер (пик 18-21)
+        ];
+
+        // Коэффициент по дню недели (0=Вс, 1=Пн ... 6=Сб)
+        const DAY_FACTOR = {
+            0: 1.05, // воскресенье — чуть больше
+            1: 0.90, // понедельник — тяжёлый
+            2: 0.92,
+            3: 0.94,
+            4: 0.96,
+            5: 1.00,
+            6: 1.10  // суббота — максимум
+        };
+
+        // Сезонный коэффициент и сдвиг "пика"
+        function getSeason(date) {
+            const m = date.getMonth(); // 0-11
+            // Зима: дек, янв, фев — сидят дома вечером
+            if (m === 11 || m === 0 || m === 1) {
+                return { name: 'winter', factor: 1.05, nightBonus: 0.03 };
+            }
+            // Весна: мар-май
+            if (m >= 2 && m <= 4) {
+                return { name: 'spring', factor: 0.98, nightBonus: 0.01 };
+            }
+            // Лето: июн-авг — каникулы, пик смещается на день и ночь
+            if (m >= 5 && m <= 7) {
+                return { name: 'summer', factor: 1.10, nightBonus: 0.10 };
+            }
+            // Осень: сен-ноя — школа, вечером пик, утром мало
+            return { name: 'autumn', factor: 1.00, nightBonus: 0.00 };
+        }
+
+        // Считаем целевое значение онлайна
+        function computeTarget(now) {
+            const hour = now.getHours();
+            const day = now.getDay();
+            const season = getSeason(now);
+
+            // Базовый профиль часа
+            let base = HOUR_PROFILE[hour];
+
+            // Летом ночью добавляем (каникулы)
+            if (season.name === 'summer' && (hour >= 22 || hour <= 3)) {
+                base += season.nightBonus;
+            }
+            // Зимой ночью чуть больше (дома сидят)
+            if (season.name === 'winter' && (hour >= 22 || hour <= 2)) {
+                base += season.nightBonus;
+            }
+
+            // Ограничим 0..1
+            base = Math.min(1, Math.max(0, base));
+
+            // Фактор дня недели
+            base *= DAY_FACTOR[day] || 1;
+
+            // Сезонный фактор
+            base *= season.factor;
+
+            // Итог
+            let value = Math.round(MIN + (PEAK - MIN) * base);
+
+            // Небольшой шум ±4%
+            value += Math.round((Math.random() - 0.5) * value * 0.08);
+
+            return Math.max(MIN, Math.min(PEAK, value));
+        }
+
+        // Текущее отображаемое значение (для плавности)
+        let currentValue = computeTarget(new Date());
+        el.textContent = currentValue;
+
+        // Плавное "дыхание": каждые 4 сек немного двигаем к цели
+        setInterval(() => {
+            const target = computeTarget(new Date());
+            const diff = target - currentValue;
+            const step = Math.sign(diff) * Math.max(1, Math.round(Math.abs(diff) * 0.15));
+            currentValue += step;
+
+            // Микродрожание ±1
+            currentValue += (Math.random() > 0.5 ? 1 : -1);
+
+            if (currentValue < MIN) currentValue = MIN;
+            if (currentValue > PEAK) currentValue = PEAK;
+
+            el.textContent = Math.round(currentValue);
+        }, 4000);
+
+        // Раз в минуту резко пересчитываем (например, час сменился)
+        setInterval(() => {
+            const target = computeTarget(new Date());
+            currentValue = Math.round((currentValue + target) / 2);
+            el.textContent = Math.round(currentValue);
+        }, 60000);
+
+        // Логируем, что учтено
+        const now = new Date();
+        const s = getSeason(now);
+        console.log(
+            '%c[Online Counter] Сезон: ' + s.name +
+            ' | День: ' + now.getDay() +
+            ' | Час: ' + now.getHours() +
+            ' | Онлайн: ' + currentValue,
+            'color: #50c878;'
+        );
+    })();
 
     // =========================================================
-    // NEW: Таймер акции (24 часа)
+    // Таймер акции (24 часа)
     // =========================================================
     const promoEnd = Date.now() + 24 * 60 * 60 * 1000;
     function updatePromoTimer() {
@@ -1862,22 +1925,7 @@
     setInterval(updatePromoTimer, 1000);
 
     // =========================================================
-    // NEW: Кнопка "Скопировать пример ключа"
-    // =========================================================
-    document.querySelectorAll('.copy-key-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const key = btn.dataset.key;
-            navigator.clipboard.writeText(key).then(() => {
-                showToast('🔑 Ключ скопирован (демо): ' + key);
-            }).catch(() => {
-                showToast('🔑 ' + key);
-            });
-            playClick();
-        });
-    });
-
-    // =========================================================
-    // NEW: Анимация цифр в статистике
+    // Анимация цифр в статистике
     // =========================================================
     function animateCounters() {
         document.querySelectorAll('.value[data-count]').forEach(el => {
@@ -1907,7 +1955,7 @@
     if (statsEl) statsObserver.observe(statsEl);
 
     // =========================================================
-    // NEW: Кнопка "Поделиться"
+    // Кнопка "Поделиться"
     // =========================================================
     const shareBtn = document.getElementById('share-btn');
     if (shareBtn) {
@@ -1930,7 +1978,7 @@
     }
 
     // =========================================================
-    // NEW: Подсветка активного раздела в навигации
+    // Подсветка активного раздела в навигации
     // =========================================================
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('#nav-links a');
@@ -1946,7 +1994,7 @@
     });
 
     // =========================================================
-    // NEW: Cookie-плашка
+    // Cookie-плашка
     // =========================================================
     const cookieBar = document.getElementById('cookie-bar');
     const cookieAccept = document.getElementById('cookie-accept');
@@ -1962,7 +2010,7 @@
     }
 
     // =========================================================
-    // NEW: глобальный звук для всех .btn
+    // Глобальный звук для всех .btn
     // =========================================================
     document.querySelectorAll('.btn').forEach(btn => {
         btn.addEventListener('click', playClick);
