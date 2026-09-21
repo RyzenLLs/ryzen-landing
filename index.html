@@ -2342,135 +2342,134 @@
     });
 
     // =========================================================
-    // РЕАЛИСТИЧНЫЙ СЧЁТЧИК ОНЛАЙНА (сохраняется)
-    // =========================================================
-    (function initOnlineCounter() {
-        const el = document.getElementById('online-count');
-        if (!el) return;
+// ГЛОБАЛЬНЫЙ ДЕТЕРМИНИРОВАННЫЙ СЧЁТЧИК ОНЛАЙНА
+// Одинаковый у ВСЕХ пользователей, зависит только от времени UTC
+// =========================================================
+(function initOnlineCounter() {
+    const el = document.getElementById('online-count');
+    if (!el) return;
 
-        const PEAK = 340;
-        const MIN = 18;
-        const STORAGE_KEY = 'ryzen_online_value';
-        const STORAGE_TIME_KEY = 'ryzen_online_ts';
+    const PEAK = 340;
+    const MIN = 18;
 
-        const HOUR_PROFILE = [
-            0.05, 0.04, 0.03, 0.03, 0.04, 0.06,
-            0.10, 0.14, 0.18, 0.22, 0.26, 0.32,
-            0.38, 0.44, 0.50, 0.58, 0.68, 0.78,
-            0.92, 1.00, 0.98, 0.88, 0.70, 0.40
-        ];
+    // Профиль онлайна по часам UTC (0-23)
+    // Пик 18:00-21:00 UTC = 21:00-00:00 МСК
+    const HOUR_PROFILE = [
+        0.05, 0.04, 0.03, 0.03, 0.04, 0.06,
+        0.10, 0.14, 0.18, 0.22, 0.26, 0.32,
+        0.38, 0.44, 0.50, 0.58, 0.68, 0.78,
+        0.92, 1.00, 0.98, 0.88, 0.70, 0.40
+    ];
 
-        const DAY_FACTOR = {
-            0: 1.05, 1: 0.90, 2: 0.92, 3: 0.94, 4: 0.96, 5: 1.00, 6: 1.10
-        };
+    const DAY_FACTOR = {
+        0: 1.05, 1: 0.90, 2: 0.92, 3: 0.94, 4: 0.96, 5: 1.00, 6: 1.10
+    };
 
-        function getSeason(date) {
-            const m = date.getMonth();
-            if (m === 11 || m === 0 || m === 1) return { name: 'winter', factor: 1.05, nightBonus: 0.03 };
-            if (m >= 2 && m <= 4) return { name: 'spring', factor: 0.98, nightBonus: 0.01 };
-            if (m >= 5 && m <= 7) return { name: 'summer', factor: 1.10, nightBonus: 0.10 };
-            return { name: 'autumn', factor: 1.00, nightBonus: 0.00 };
-        }
+    function getSeason(month) {
+        // month: 0-11 UTC
+        if (month === 11 || month === 0 || month === 1)
+            return { name: 'winter', factor: 1.05, nightBonus: 0.03 };
+        if (month >= 2 && month <= 4)
+            return { name: 'spring', factor: 0.98, nightBonus: 0.01 };
+        if (month >= 5 && month <= 7)
+            return { name: 'summer', factor: 1.10, nightBonus: 0.10 };
+        return { name: 'autumn', factor: 1.00, nightBonus: 0.00 };
+    }
 
-        function computeTarget(now) {
-            const hour = now.getHours();
-            const day = now.getDay();
-            const season = getSeason(now);
-            let base = HOUR_PROFILE[hour];
-            if (season.name === 'summer' && (hour >= 22 || hour <= 3)) base += season.nightBonus;
-            if (season.name === 'winter' && (hour >= 22 || hour <= 2)) base += season.nightBonus;
-            base = Math.min(1, Math.max(0, base));
-            base *= DAY_FACTOR[day] || 1;
-            base *= season.factor;
-            let value = Math.round(MIN + (PEAK - MIN) * base);
-            value += Math.round((Math.random() - 0.5) * value * 0.08);
-            return Math.max(MIN, Math.min(PEAK, value));
-        }
+    // Детерминированный псевдослучайный шум на основе времени (не Math.random!)
+    // Одинаков у всех в одну и ту же минуту
+    function seededNoise(seed) {
+        // Простая хеш-функция → значение 0..1
+        let x = Math.sin(seed) * 10000;
+        x = x - Math.floor(x);
+        return x;
+    }
 
+    function computeGlobalOnline() {
+        // Берём UTC-время — оно одинаково для всех
         const now = new Date();
-        const nowTs = now.getTime();
-        const target = computeTarget(now);
-        const savedValue = parseInt(localStorage.getItem(STORAGE_KEY) || '0');
-        const savedTs = parseInt(localStorage.getItem(STORAGE_TIME_KEY) || '0');
+        const utcHour = now.getUTCHours();
+        const utcDay = now.getUTCDay();
+        const utcMonth = now.getUTCMonth();
+        const utcMinute = now.getUTCMinutes();
+        const utcDayOfMonth = now.getUTCDate();
 
-        let currentValue;
+        const season = getSeason(utcMonth);
+        let base = HOUR_PROFILE[utcHour];
 
-        if (savedValue >= MIN && savedValue <= PEAK && savedTs > 0) {
-            const elapsedSec = (nowTs - savedTs) / 1000;
-            if (elapsedSec < 30) {
-                currentValue = savedValue;
-            } else if (elapsedSec < 60 * 60 * 6) {
-                const progress = Math.min(1, elapsedSec / (60 * 60));
-                currentValue = Math.round(savedValue + (target - savedValue) * progress);
-            } else {
-                currentValue = target;
-            }
-        } else {
-            currentValue = target;
+        // Сезонные бонусы
+        if (season.name === 'summer' && (utcHour >= 22 || utcHour <= 3))
+            base += season.nightBonus;
+        if (season.name === 'winter' && (utcHour >= 22 || utcHour <= 2))
+            base += season.nightBonus;
+
+        base = Math.min(1, Math.max(0, base));
+        base *= DAY_FACTOR[utcDay] || 1;
+        base *= season.factor;
+
+        // Базовое значение
+        let value = MIN + (PEAK - MIN) * base;
+
+        // МИКРО-ШУМ: одинаковый для всех в одну минуту
+        // Сид = год + месяц + день + час + минута (только целые части)
+        const seed = now.getUTCFullYear() * 10000000
+                   + (utcMonth + 1) * 1000000
+                   + utcDayOfMonth * 10000
+                   + utcHour * 100
+                   + utcMinute;
+        const noise = (seededNoise(seed) - 0.5) * 0.06; // ±3%
+        value *= (1 + noise);
+
+        return Math.max(MIN, Math.min(PEAK, Math.round(value)));
+    }
+
+    // === Отрисовка ===
+    function render() {
+        const v = computeGlobalOnline();
+        el.textContent = v;
+        return v;
+    }
+
+    render();
+
+    // Обновляем раз в 10 секунд — но число меняется только при смене минуты,
+    // поэтому у всех пользователей в одну минуту будет одно и то же значение
+    setInterval(render, 10000);
+
+    // Дополнительно: при возврате на вкладку — мгновенно обновить
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') render();
+    });
+
+    // === Мини-график 24ч (тоже детерминированный, без шума) ===
+    const chartEl = document.getElementById('online-chart');
+    if (chartEl) {
+        const nowUtcHour = new Date().getUTCHours();
+        const chartData = [];
+        for (let h = 0; h < 24; h++) {
+            const v = MIN + (PEAK - MIN) * HOUR_PROFILE[h];
+            chartData.push(Math.round(v));
         }
-
-        currentValue = Math.max(MIN, Math.min(PEAK, currentValue));
-        el.textContent = currentValue;
-
-        function persist() {
-            localStorage.setItem(STORAGE_KEY, String(Math.round(currentValue)));
-            localStorage.setItem(STORAGE_TIME_KEY, String(Date.now()));
-        }
-        persist();
-
-        setInterval(() => {
-            const t = computeTarget(new Date());
-            const diff = t - currentValue;
-            const step = Math.sign(diff) * Math.max(1, Math.round(Math.abs(diff) * 0.15));
-            currentValue += step;
-            currentValue += (Math.random() > 0.5 ? 1 : -1);
-            if (currentValue < MIN) currentValue = MIN;
-            if (currentValue > PEAK) currentValue = PEAK;
-            el.textContent = Math.round(currentValue);
-            persist();
-        }, 4000);
-
-        setInterval(() => {
-            const t = computeTarget(new Date());
-            currentValue = Math.round(currentValue + (t - currentValue) * 0.3);
-            currentValue = Math.max(MIN, Math.min(PEAK, currentValue));
-            el.textContent = Math.round(currentValue);
-            persist();
-        }, 60000);
-
-        window.addEventListener('beforeunload', persist);
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') persist();
+        const maxVal = Math.max(...chartData);
+        chartData.forEach((v, h) => {
+            const bar = document.createElement('div');
+            bar.className = 'bar' + (h === nowUtcHour ? ' current' : '');
+            bar.style.height = (v / maxVal * 100) + '%';
+            bar.title = String(h).padStart(2, '0') + ':00 UTC — ~' + v + ' онлайн';
+            chartEl.appendChild(bar);
         });
+    }
 
-        // NEW: мини-график 24ч
-        const chartEl = document.getElementById('online-chart');
-        if (chartEl) {
-            const nowHour = new Date().getHours();
-            const chartData = [];
-            for (let h = 0; h < 24; h++) {
-                const v = MIN + (PEAK - MIN) * HOUR_PROFILE[h];
-                chartData.push(Math.round(v));
-            }
-            const maxVal = Math.max(...chartData);
-            chartData.forEach((v, h) => {
-                const bar = document.createElement('div');
-                bar.className = 'bar' + (h === nowHour ? ' current' : '');
-                bar.style.height = (v / maxVal * 100) + '%';
-                bar.title = String(h).padStart(2, '0') + ':00 — ~' + v + ' онлайн';
-                chartEl.appendChild(bar);
-            });
-        }
-
-        const s = getSeason(now);
-        console.log(
-            '%c[Online Counter] Сезон: ' + s.name +
-            ' | День: ' + now.getDay() +
-            ' | Час: ' + now.getHours() +
-            ' | Онлайн: ' + currentValue,
-            'color: #50c878;'
-        );
-    })();
+    // Лог
+    const nowUtc = new Date();
+    console.log(
+        '%c[Online Counter] ГЛОБАЛЬНЫЙ (одинаков у всех) | ' +
+        'UTC: ' + String(nowUtc.getUTCHours()).padStart(2, '0') + ':' +
+        String(nowUtc.getUTCMinutes()).padStart(2, '0') +
+        ' | Онлайн: ' + computeGlobalOnline(),
+        'color: #50c878; font-weight: bold;'
+    );
+})();
 
     // =========================================================
     // Таймер акции
