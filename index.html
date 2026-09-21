@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ryzen Loader — Private Cheat Software</title>
-<link rel="icon" type="image/png" href="images/CS.png">
 <style>
     * {
         margin: 0;
@@ -22,6 +21,7 @@
         position: relative;
         overflow-x: hidden;
         line-height: 1.6;
+        transition: background 0.5s;
     }
 
     /* Верхняя белая полоска как в лоадере */
@@ -41,9 +41,39 @@
         z-index: 0;
         opacity: 0.15;
         filter: blur(120px);
+        transition: opacity 0.5s;
     }
     .bg-glow.g1 { width: 500px; height: 500px; top: -100px; left: -100px; background: #4a4a4a; }
     .bg-glow.g2 { width: 400px; height: 400px; bottom: -100px; right: -100px; background: #2a2a2a; }
+
+    /* Canvas для погодных эффектов */
+    #weather-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+    #weather-canvas.active { opacity: 1; }
+
+    /* Вспышка молнии */
+    .lightning-flash {
+        position: fixed;
+        inset: 0;
+        background: #ffffff;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+    .lightning-flash.flash {
+        animation: flash 0.3s ease;
+    }
+    @keyframes flash {
+        0% { opacity: 0; }
+        30% { opacity: 0.6; }
+        100% { opacity: 0; }
+    }
 
     .container {
         max-width: 1150px;
@@ -89,6 +119,13 @@
         50% { opacity: 0.4; }
     }
 
+    nav .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        position: relative;
+    }
+
     nav .links a {
         color: #8a8a8a;
         text-decoration: none;
@@ -97,6 +134,86 @@
         transition: color 0.15s;
     }
     nav .links a:hover { color: #ffffff; }
+
+    /* Кнопка настроек */
+    .settings-btn {
+        background: #1e1e1e;
+        border: 1px solid #2e2e2e;
+        color: #dcdcdc;
+        width: 36px;
+        height: 36px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        margin-left: 20px;
+        transition: all 0.15s;
+    }
+    .settings-btn:hover {
+        background: #2a2a2a;
+        border-color: #4a4a4a;
+        transform: rotate(45deg);
+    }
+
+    /* Панель настроек */
+    .settings-panel {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        border-radius: 6px;
+        padding: 12px;
+        width: 240px;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: all 0.2s;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    }
+    .settings-panel.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .settings-panel .settings-title {
+        font-size: 11px;
+        color: #7a7a7a;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #2a2a2a;
+    }
+
+    .settings-panel .settings-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        color: #b0b0b0;
+        transition: all 0.15s;
+    }
+    .settings-panel .settings-option:hover {
+        background: #242424;
+        color: #ffffff;
+    }
+    .settings-panel .settings-option.active {
+        background: #242424;
+        color: #50c878;
+    }
+    .settings-panel .settings-option .icon {
+        font-size: 15px;
+        width: 20px;
+        text-align: center;
+    }
 
     /* ================== HERO ================== */
     .hero {
@@ -116,6 +233,14 @@
         border-radius: 20px;
         margin-bottom: 24px;
     }
+    .hero .badge::before {
+        content: '● ';
+        animation: blink 1.2s infinite;
+    }
+    @keyframes blink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0.3; }
+    }
 
     .hero h1 {
         font-size: 54px;
@@ -127,11 +252,7 @@
         user-select: none;
         transition: transform 0.3s;
     }
-
-    .hero h1:hover {
-        transform: scale(1.02);
-    }
-
+    .hero h1:hover { transform: scale(1.02); }
     .hero h1 .accent { color: #6a6a6a; }
 
     .hero .tagline {
@@ -289,10 +410,7 @@
         border: 1px solid #333;
         transition: transform 0.3s;
     }
-
-    .game-card:hover .game-icon {
-        transform: rotate(-8deg) scale(1.1);
-    }
+    .game-card:hover .game-icon { transform: rotate(-8deg) scale(1.1); }
 
     .game-card .status {
         font-size: 10px;
@@ -318,55 +436,6 @@
     .game-card .game-desc {
         font-size: 12px;
         color: #7a7a7a;
-    }
-
-    /* ================== SCREENSHOTS ================== */
-    .screens-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 16px;
-    }
-
-    .screenshot {
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        border-radius: 6px;
-        overflow: hidden;
-        position: relative;
-        aspect-ratio: 16 / 9;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .screenshot:hover {
-        border-color: #5a5a5a;
-        transform: scale(1.02);
-    }
-
-    .screenshot img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.3s;
-    }
-    .screenshot:hover img { transform: scale(1.05); }
-
-    .screenshot .placeholder {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: #4a4a4a;
-        font-size: 12px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-    }
-    .screenshot .placeholder .icon {
-        font-size: 32px;
-        margin-bottom: 8px;
-        opacity: 0.5;
     }
 
     /* ================== PRICING ================== */
@@ -398,6 +467,11 @@
         border-color: #808080;
         background: #202020;
         box-shadow: 0 0 40px rgba(255, 255, 255, 0.04);
+        animation: featuredGlow 3s ease-in-out infinite;
+    }
+    @keyframes featuredGlow {
+        0%, 100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.04); }
+        50% { box-shadow: 0 0 60px rgba(255, 255, 255, 0.08); }
     }
 
     .price-card.featured::before {
@@ -458,7 +532,6 @@
         border-bottom: 1px solid #232323;
     }
     .price-card .features li:last-child { border-bottom: none; }
-
     .price-card .features li::before {
         content: '✓';
         color: #50c878;
@@ -479,10 +552,8 @@
         border-radius: 6px;
         padding: 26px;
         text-align: center;
-        position: relative;
         transition: all 0.2s;
     }
-
     .step:hover {
         border-color: #4a4a4a;
         transform: translateY(-2px);
@@ -536,7 +607,6 @@
         align-items: center;
         transition: background 0.15s;
     }
-
     .faq-question:hover { background: #202020; }
 
     .faq-question::after {
@@ -545,7 +615,6 @@
         color: #8a8a8a;
         font-weight: 300;
     }
-
     .faq-item.open .faq-question::after { content: '−'; }
 
     .faq-answer {
@@ -557,11 +626,11 @@
         font-size: 13px;
         line-height: 1.7;
     }
-
     .faq-item.open .faq-answer {
         max-height: 400px;
         padding: 0 22px 20px 22px;
     }
+    .faq-answer strong { color: #e6e6e6; }
 
     /* ================== CTA BANNER ================== */
     .cta-banner {
@@ -573,7 +642,6 @@
         position: relative;
         overflow: hidden;
     }
-
     .cta-banner::before {
         content: '';
         position: absolute;
@@ -603,9 +671,7 @@
         color: #5a5a5a;
         font-size: 12px;
     }
-
     footer .socials { margin-bottom: 14px; }
-
     footer a {
         color: #8a8a8a;
         text-decoration: none;
@@ -620,29 +686,7 @@
     ::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #5a5a5a; }
 
-    /* ================== ПАСХАЛКИ / ЭФФЕКТЫ ================== */
-    /* 1. Секретное свечение при клике на логотип 3 раза */
-    body.secret-glow {
-        animation: secretPulse 1.5s ease;
-    }
-    @keyframes secretPulse {
-        0% { filter: hue-rotate(0deg) brightness(1); }
-        50% { filter: hue-rotate(180deg) brightness(1.3); }
-        100% { filter: hue-rotate(0deg) brightness(1); }
-    }
-
-    /* 2. Konami-код — матрица */
-    #matrix-canvas {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        pointer-events: none;
-        display: none;
-        opacity: 0.85;
-    }
-    body.matrix-active #matrix-canvas { display: block; }
-
-    /* 3. Всплывающая подсказка о пасхалке */
+    /* ================== TOAST ================== */
     .toast {
         position: fixed;
         bottom: 30px;
@@ -666,30 +710,33 @@
         transform: translateX(-50%) translateY(0);
     }
 
-    /* 4. Пульсирующая тень у карточек-тарифов */
-    .price-card.featured {
-        animation: featuredGlow 3s ease-in-out infinite;
+    /* ================== СЕКРЕТНОЕ СВЕЧЕНИЕ ================== */
+    body.secret-glow {
+        animation: secretPulse 1.5s ease;
     }
-    @keyframes featuredGlow {
-        0%, 100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.04); }
-        50% { box-shadow: 0 0 60px rgba(255, 255, 255, 0.08); }
+    @keyframes secretPulse {
+        0% { filter: hue-rotate(0deg) brightness(1); }
+        50% { filter: hue-rotate(180deg) brightness(1.3); }
+        100% { filter: hue-rotate(0deg) brightness(1); }
     }
 
-    /* 5. Эффект "печатающей машинки" на бейдже */
-    .hero .badge::before {
-        content: '● ';
-        animation: blink 1.2s infinite;
+    /* ================== MATRIX (для Konami) ================== */
+    #matrix-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        pointer-events: none;
+        display: none;
+        opacity: 0.85;
     }
-    @keyframes blink {
-        0%, 49% { opacity: 1; }
-        50%, 100% { opacity: 0.3; }
-    }
+    body.matrix-active #matrix-canvas { display: block; }
 
     /* ================== MOBILE ================== */
     @media (max-width: 640px) {
         .hero h1 { font-size: 36px; letter-spacing: 2px; }
         .hero .tagline { font-size: 11px; letter-spacing: 2px; }
         nav .links a { margin-left: 14px; font-size: 12px; }
+        nav .links { display: none; }
         .section { padding: 50px 0; }
         .section-head h2 { font-size: 22px; }
         .btn { padding: 12px 22px; font-size: 12px; }
@@ -705,8 +752,12 @@
     console.log("%c Или кликни по логотипу 3 раза.", "color: #5a5a5a; font-size: 11px;");
 </script>
 
-<!-- Canvas для матрицы (пасхалка) -->
+<!-- Canvas для погоды и матрицы -->
+<canvas id="weather-canvas"></canvas>
 <canvas id="matrix-canvas"></canvas>
+
+<!-- Вспышка молнии -->
+<div class="lightning-flash" id="lightning-flash"></div>
 
 <!-- Декоративные пятна фона -->
 <div class="bg-glow g1"></div>
@@ -720,11 +771,51 @@
             <span class="dot"></span>
             RYZEN LOADER
         </div>
-        <div class="links">
-            <a href="#games">Игры</a>
-            <a href="#screens">Скриншоты</a>
-            <a href="#pricing">Цены</a>
-            <a href="#faq">FAQ</a>
+
+        <div class="nav-right">
+            <div class="links">
+                <a href="#games">Игры</a>
+                <a href="#pricing">Цены</a>
+                <a href="#faq">FAQ</a>
+            </div>
+
+            <!-- Кнопка настроек -->
+            <button class="settings-btn" id="settings-btn" title="Настройки фона">⚙</button>
+
+            <!-- Панель настроек -->
+            <div class="settings-panel" id="settings-panel">
+                <div class="settings-title">Фон</div>
+
+                <div class="settings-option active" data-weather="none">
+                    <span class="icon">🚫</span>
+                    <span>Отключено</span>
+                </div>
+
+                <div class="settings-option" data-weather="snow">
+                    <span class="icon">❄</span>
+                    <span>Снег</span>
+                </div>
+
+                <div class="settings-option" data-weather="rain">
+                    <span class="icon">🌧</span>
+                    <span>Дождь</span>
+                </div>
+
+                <div class="settings-option" data-weather="storm">
+                    <span class="icon">⛈</span>
+                    <span>Гроза</span>
+                </div>
+
+                <div class="settings-option" data-weather="matrix">
+                    <span class="icon">🟢</span>
+                    <span>Матрица</span>
+                </div>
+
+                <div class="settings-option" data-weather="stars">
+                    <span class="icon">✨</span>
+                    <span>Звёзды</span>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -784,29 +875,6 @@
                 </div>
                 <div class="game-name">Fatality Internal</div>
                 <div class="game-desc">Garry's Mod</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ SCREENSHOTS ============ -->
-    <section class="section" id="screens">
-        <div class="section-head">
-            <h2>Скриншоты</h2>
-            <p>Как это выглядит в игре</p>
-        </div>
-
-        <div class="screens-grid">
-            <div class="screenshot">
-                <img src="images/preview1.png" alt="CS2 preview" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;placeholder&quot;><div class=&quot;icon&quot;>🖼</div>CS2 Preview</div>');">
-            </div>
-            <div class="screenshot">
-                <img src="images/preview2.png" alt="GMod preview" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;placeholder&quot;><div class=&quot;icon&quot;>🖼</div>GMod Preview</div>');">
-            </div>
-            <div class="screenshot">
-                <img src="images/preview3.png" alt="Loader UI" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;placeholder&quot;><div class=&quot;icon&quot;>🖼</div>Loader UI</div>');">
-            </div>
-            <div class="screenshot">
-                <img src="images/preview4.png" alt="Menu" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;placeholder&quot;><div class=&quot;icon&quot;>🖼</div>Menu</div>');">
             </div>
         </div>
     </section>
@@ -900,6 +968,13 @@
         </div>
 
         <div class="faq-item">
+            <div class="faq-question">Можно ли получить пробную подписку?</div>
+            <div class="faq-answer">
+                <strong>Нет.</strong> Мы не выдаём бесплатные пробные подписки. Если хочешь попробовать — покупай минимальный тариф на 7 дней за 150₽. Это недорого, но этого хватит, чтобы понять, подходит ли тебе лоадер. Так мы защищаем свой софт от слива и не тратим время на бесконечные бесплатные тесты.
+            </div>
+        </div>
+
+        <div class="faq-item">
             <div class="faq-question">Дадут ли VAC-бан?</div>
             <div class="faq-answer">
                 Лоадер не детектится на момент публикации. Однако VAC Live обновляется, и любой чит может быть задетекчен. Использование чита — это риск, и вы принимаете его добровольно.
@@ -909,28 +984,35 @@
         <div class="faq-item">
             <div class="faq-question">На каких серверах можно играть?</div>
             <div class="faq-answer">
-               На любых серверах: Есть риски на официальных серверах (Premier, Competitive) играть можно, но с риском — БАНА.
+                На любых, но помни о рисках. На официальных серверах (Premier, Competitive) VAC-бан возможен — мы не гарантируем защиту. Играй на community-серверах и локальных, там безопаснее.
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">Можно ли перенести ключ на другой ПК?</div>
             <div class="faq-answer">
-                Нет, ключ привязан к HWID вашего компьютера. Если вы сменили железо или переустановили Windows — свяжитесь с продавцом для сброса HWID.
+                Нет, ключ привязан к HWID вашего компьютера. Если вы сменили железо или переустановили Windows — свяжитесь с продавцом для сброса HWID (делается один раз бесплатно).
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">Работает ли на пиратке?</div>
             <div class="faq-answer">
-                Лоадер работает с любыми версиями игр — Steam, пиратка, локальные сборки. Главное — чтобы игра запускалась как процесс cs2.exe / gmod.exe.
+                Лоадер работает с любыми версиями игр — Steam, пиратка, локальные сборки. Главное — чтобы игра запускалась как процесс <strong>cs2.exe</strong> / <strong>gmod.exe</strong>.
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">Что делать, если ключ не работает?</div>
             <div class="faq-answer">
-                Напишите продавцу в Discord/Команде проекта, они вам помогут.
+                Проверь, что вводишь ключ без лишних пробелов, и что HWID совпадает с тем, на который выдан ключ. Если проблема остаётся — напиши продавцу в Discord, помогут.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Возврат средств возможен?</div>
+            <div class="faq-answer">
+                <strong>Нет.</strong> После активации ключа возврат не делается. Если ключ не активирован — можно попросить замену. Пожалуйста, будь уверен в покупке перед оплатой.
             </div>
         </div>
     </section>
@@ -956,7 +1038,7 @@
 
 </div>
 
-<!-- Toast уведомление (для пасхалки) -->
+<!-- Toast уведомление -->
 <div class="toast" id="toast">🎉 Ты нашёл секрет!</div>
 
 <script>
@@ -970,7 +1052,7 @@
     });
 
     // =========================================================
-    // Плавный скролл для якорей
+    // Плавный скролл
     // =========================================================
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', e => {
@@ -983,7 +1065,7 @@
     });
 
     // =========================================================
-    // ПАСХАЛКА 1: Клик по логотипу 3 раза → свечение
+    // ПАСХАЛКА: клик по логотипу 3 раза
     // =========================================================
     let logoClicks = 0;
     const logoBrand = document.getElementById('logo-brand');
@@ -993,14 +1075,14 @@
             if (logoClicks === 3) {
                 document.body.classList.add('secret-glow');
                 setTimeout(() => document.body.classList.remove('secret-glow'), 1500);
-                showToast('✨ Секрет активирован! Ты нашёл glow-эффект.');
+                showToast('✨ Секрет активирован!');
                 logoClicks = 0;
             }
         });
     }
 
     // =========================================================
-    // ПАСХАЛКА 2: Konami-код → матрица
+    // ПАСХАЛКА: Konami-код → матрица
     // =========================================================
     const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
                         'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
@@ -1021,7 +1103,7 @@
     });
 
     // =========================================================
-    // Матрица
+    // Матрица (для Konami)
     // =========================================================
     function activateMatrix() {
         const canvas = document.getElementById('matrix-canvas');
@@ -1034,29 +1116,26 @@
         canvas.height = window.innerHeight;
 
         const ctx = canvas.getContext('2d');
-        const chars = 'RYSENLOADER01アイウエオカキクケコサシスセソ'.split('');
+        const chars = 'RYSENLOADER01アイウエオカキクケコ'.split('');
         const fontSize = 14;
         const columns = canvas.width / fontSize;
         const drops = [];
         for (let i = 0; i < columns; i++) drops[i] = 1;
 
         let frameCount = 0;
-        const maxFrames = 300; // ~5 секунд при 60fps
+        const maxFrames = 300;
 
         function draw() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
             ctx.fillStyle = '#50c878';
             ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < drops.length; i++) {
                 const text = chars[Math.floor(Math.random() * chars.length)];
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
                 if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
                     drops[i] = 0;
-
                 drops[i]++;
             }
 
@@ -1068,12 +1147,11 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
         }
-
         draw();
     }
 
     // =========================================================
-    // ПАСХАЛКА 3: Клик по заголовку H1 меняет цвет
+    // ПАСХАЛКА: клик по H1
     // =========================================================
     const heroTitle = document.getElementById('hero-title');
     if (heroTitle) {
@@ -1088,7 +1166,7 @@
     }
 
     // =========================================================
-    // Toast уведомления
+    // Toast
     // =========================================================
     function showToast(message) {
         const toast = document.getElementById('toast');
@@ -1099,19 +1177,281 @@
     }
 
     // =========================================================
-    // ПАСХАЛКА 4: Счётчик посещений в консоли
+    // Счётчик посещений
     // =========================================================
     let visits = parseInt(localStorage.getItem('ryzen_visits') || '0');
     visits++;
     localStorage.setItem('ryzen_visits', visits);
     console.log('%c Ты заходил на этот сайт ' + visits + ' раз.', 'color: #5a5a5a; font-style: italic;');
 
-    if (visits === 5) {
-        console.log('%c Постоянный клиент? Уважение. 🫡', 'color: #50c878; font-weight: bold;');
-    }
     if (visits === 10) {
-        console.log('%c 10 раз! Напиши нам в Discord — скажи кодовое слово "RYZEN10" и получи 10% скидку.', 'color: #50c878; font-weight: bold;');
+        console.log('%c 10 раз! Скажи "RYZEN10" в Discord — получи 10% скидку.', 'color: #50c878; font-weight: bold;');
     }
+
+    // =========================================================
+    // НАСТРОЙКИ ФОНА
+    // =========================================================
+
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+    const weatherCanvas = document.getElementById('weather-canvas');
+    const lightningFlash = document.getElementById('lightning-flash');
+
+    // Открытие/закрытие панели
+    if (settingsBtn && settingsPanel) {
+        settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            settingsPanel.classList.toggle('open');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!settingsPanel.contains(e.target) && e.target !== settingsBtn) {
+                settingsPanel.classList.remove('open');
+            }
+        });
+    }
+
+    // Текущий режим
+    let currentWeather = localStorage.getItem('ryzen_weather') || 'none';
+    let weatherAnimId = null;
+    let lightningInterval = null;
+
+    // Обновляем UI при загрузке
+    function updateSettingsUI() {
+        document.querySelectorAll('.settings-option').forEach(opt => {
+            if (opt.dataset.weather === currentWeather) {
+                opt.classList.add('active');
+            } else {
+                opt.classList.remove('active');
+            }
+        });
+    }
+    updateSettingsUI();
+
+    // Клик по опции
+    document.querySelectorAll('.settings-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            const mode = opt.dataset.weather;
+            setWeather(mode);
+            settingsPanel.classList.remove('open');
+        });
+    });
+
+    // =========================================================
+    // Установка погоды
+    // =========================================================
+    function setWeather(mode) {
+        // Останавливаем всё старое
+        stopWeather();
+
+        currentWeather = mode;
+        localStorage.setItem('ryzen_weather', mode);
+        updateSettingsUI();
+
+        if (mode === 'none') {
+            weatherCanvas.classList.remove('active');
+            return;
+        }
+
+        weatherCanvas.classList.add('active');
+        weatherCanvas.width = window.innerWidth;
+        weatherCanvas.height = window.innerHeight;
+
+        if (mode === 'snow') startSnow();
+        else if (mode === 'rain') startRain();
+        else if (mode === 'storm') startStorm();
+        else if (mode === 'matrix') startMatrixBg();
+        else if (mode === 'stars') startStars();
+    }
+
+    function stopWeather() {
+        if (weatherAnimId) {
+            cancelAnimationFrame(weatherAnimId);
+            weatherAnimId = null;
+        }
+        if (lightningInterval) {
+            clearTimeout(lightningInterval);
+            lightningInterval = null;
+        }
+        const ctx = weatherCanvas.getContext('2d');
+        ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+    }
+
+    // =========================================================
+    // СНЕГ
+    // =========================================================
+    function startSnow() {
+        const ctx = weatherCanvas.getContext('2d');
+        const flakes = [];
+        const count = 150;
+
+        for (let i = 0; i < count; i++) {
+            flakes.push({
+                x: Math.random() * weatherCanvas.width,
+                y: Math.random() * weatherCanvas.height,
+                r: Math.random() * 2 + 1,
+                speed: Math.random() * 1 + 0.5,
+                drift: Math.random() * 0.5 - 0.25
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+
+            flakes.forEach(f => {
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, ' + (0.4 + Math.random() * 0.4) + ')';
+                ctx.fill();
+
+                f.y += f.speed;
+                f.x += f.drift;
+
+                if (f.y > weatherCanvas.height) { f.y = -5; f.x = Math.random() * weatherCanvas.width; }
+                if (f.x < 0) f.x = weatherCanvas.width;
+                if (f.x > weatherCanvas.width) f.x = 0;
+            });
+
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    // =========================================================
+    // ДОЖДЬ
+    // =========================================================
+    function startRain() {
+        const ctx = weatherCanvas.getContext('2d');
+        const drops = [];
+        const count = 200;
+
+        for (let i = 0; i < count; i++) {
+            drops.push({
+                x: Math.random() * weatherCanvas.width,
+                y: Math.random() * weatherCanvas.height,
+                len: Math.random() * 15 + 8,
+                speed: Math.random() * 6 + 5
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            ctx.strokeStyle = 'rgba(180, 200, 255, 0.4)';
+            ctx.lineWidth = 1;
+
+            drops.forEach(d => {
+                ctx.beginPath();
+                ctx.moveTo(d.x, d.y);
+                ctx.lineTo(d.x - 1, d.y + d.len);
+                ctx.stroke();
+
+                d.y += d.speed;
+                d.x -= 0.5;
+
+                if (d.y > weatherCanvas.height) { d.y = -20; d.x = Math.random() * weatherCanvas.width; }
+                if (d.x < 0) d.x = weatherCanvas.width;
+            });
+
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    // =========================================================
+    // ГРОЗА (дождь + молнии)
+    // =========================================================
+    function startStorm() {
+        startRain();
+
+        function scheduleLightning() {
+            const delay = Math.random() * 5000 + 3000; // 3-8 сек
+            lightningInterval = setTimeout(() => {
+                lightningFlash.classList.add('flash');
+                setTimeout(() => lightningFlash.classList.remove('flash'), 300);
+                scheduleLightning();
+            }, delay);
+        }
+        scheduleLightning();
+    }
+
+    // =========================================================
+    // ФОНОВАЯ МАТРИЦА
+    // =========================================================
+    function startMatrixBg() {
+        const ctx = weatherCanvas.getContext('2d');
+        const chars = '01アイウエオRYZEN'.split('');
+        const fontSize = 14;
+        const columns = weatherCanvas.width / fontSize;
+        const drops = [];
+        for (let i = 0; i < columns; i++) drops[i] = 1;
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            ctx.fillStyle = 'rgba(80, 200, 120, 0.6)';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > weatherCanvas.height && Math.random() > 0.975)
+                    drops[i] = 0;
+                drops[i]++;
+            }
+
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    // =========================================================
+    // ЗВЁЗДЫ (мерцающее небо)
+    // =========================================================
+    function startStars() {
+        const ctx = weatherCanvas.getContext('2d');
+        const stars = [];
+        const count = 200;
+
+        for (let i = 0; i < count; i++) {
+            stars.push({
+                x: Math.random() * weatherCanvas.width,
+                y: Math.random() * weatherCanvas.height,
+                r: Math.random() * 1.5 + 0.3,
+                phase: Math.random() * Math.PI * 2,
+                speed: Math.random() * 0.02 + 0.01
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+
+            stars.forEach(s => {
+                s.phase += s.speed;
+                const alpha = 0.3 + Math.abs(Math.sin(s.phase)) * 0.7;
+
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+                ctx.fill();
+            });
+
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    // =========================================================
+    // Применяем сохранённую погоду при загрузке
+    // =========================================================
+    if (currentWeather !== 'none') {
+        setWeather(currentWeather);
+    }
+
+    // Обновляем размер canvas при resize
+    window.addEventListener('resize', () => {
+        weatherCanvas.width = window.innerWidth;
+        weatherCanvas.height = window.innerHeight;
+    });
 </script>
 
 </body>
