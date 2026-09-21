@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryzen Loader — Private Cheat Software</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #121212;
+        color: #dcdcdc;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        line-height: 1.6;
+    }
+
+    /* Верхняя белая полоска как в лоадере */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #e6e6e6 0%, #4a4a4a 100%);
+        z-index: 1000;
+    }
+
+    /* Фоновые декоративные пятна */
+    .bg-glow {
+        position: fixed;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.15;
+        filter: blur(120px);
+    }
+    .bg-glow.g1 {
+        width: 500px;
+        height: 500px;
+        top: -100px;
+        left: -100px;
+        background: #4a4a4a;
+    }
+    .bg-glow.g2 {
+        width: 400px;
+        height: 400px;
+        bottom: -100px;
+        right: -100px;
+        background: #2a2a2a;
+    }
+
+    .container {
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ================== NAV ================== */
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 0;
+        border-bottom: 1px solid #232323;
+    }
+
+    nav .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #ffffff;
+    }
+
+    nav .brand .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #50c878;
+        box-shadow: 0 0 10px #50c878;
+    }
+
+    nav .links a {
+        color: #8a8a8a;
+        text-decoration: none;
+        font-size: 13px;
+        margin-left: 24px;
+        transition: color 0.15s;
+    }
+
+    nav .links a:hover {
+        color: #ffffff;
+    }
+
+    /* ================== HERO ================== */
+    .hero {
+        text-align: center;
+        padding: 80px 0 60px 0;
+    }
+
+    .hero .badge {
+        display: inline-block;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #50c878;
+        background: rgba(80, 200, 120, 0.08);
+        border: 1px solid rgba(80, 200, 120, 0.25);
+        padding: 6px 14px;
+        border-radius: 20px;
+        margin-bottom: 24px;
+    }
+
+    .hero h1 {
+        font-size: 54px;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: 4px;
+        margin-bottom: 14px;
+        line-height: 1.1;
+    }
+
+    .hero h1 .accent {
+        color: #6a6a6a;
+    }
+
+    .hero .tagline {
+        font-size: 14px;
+        color: #8a8a8a;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 40px;
+    }
+
+    .hero .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-block;
+        text-decoration: none;
+        padding: 14px 32px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border-radius: 3px;
+        transition: all 0.15s;
+        cursor: pointer;
+        border: 1px solid transparent;
+    }
+
+    .btn-primary {
+        background: #e6e6e6;
+        color: #121212;
+    }
+
+    .btn-primary:hover {
+        background: #ffffff;
+        box-shadow: 0 0 24px rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+        background: transparent;
+        color: #dcdcdc;
+        border-color: #3a3a3a;
+    }
+
+    .btn-ghost:hover {
+        border-color: #7a7a7a;
+        color: #ffffff;
+    }
+
+    /* ================== STATS ================== */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1px;
+        background: #232323;
+        border: 1px solid #232323;
+        border-radius: 4px;
+        margin-top: 60px;
+        overflow: hidden;
+    }
+
+    .stat {
+        background: #161616;
+        padding: 24px 20px;
+        text-align: center;
+    }
+
+    .stat .value {
+        font-size: 26px;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .stat .label {
+        font-size: 11px;
+        color: #7a7a7a;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-top: 4px;
+    }
+
+    /* ================== SECTION TITLE ================== */
+    .section {
+        padding: 80px 0;
+    }
+
+    .section-head {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .section-head h2 {
+        font-size: 30px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .section-head p {
+        color: #7a7a7a;
+        font-size: 13px;
+        letter-spacing: 1px;
+    }
+
+    /* ================== GAMES ================== */
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .game-card {
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        border-radius: 6px;
+        padding: 26px;
+        transition: all 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .game-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #4a4a4a, transparent);
+    }
+
+    .game-card:hover {
+        background: #202020;
+        border-color: #4a4a4a;
+        transform: translateY(-3px);
+    }
+
+    .game-card .game-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 14px;
+    }
+
+    .game-card .game-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        background: #252525;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: 1px solid #333;
+    }
+
+    .game-card .status {
+        font-size: 10px;
+        padding: 4px 9px;
+        border-radius: 3px;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    .status-green {
+        background: rgba(80, 200, 120, 0.1);
+        color: #50c878;
+        border: 1px solid rgba(80, 200, 120, 0.3);
+    }
+
+    .game-card .game-name {
+        font-size: 17px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 4px;
+    }
+
+    .game-card .game-desc {
+        font-size: 12px;
+        color: #7a7a7a;
+    }
+
+    /* ================== SCREENSHOTS ================== */
+    .screens-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+    }
+
+    .screenshot {
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        border-radius: 6px;
+        overflow: hidden;
+        position: relative;
+        aspect-ratio: 16 / 9;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .screenshot:hover {
+        border-color: #5a5a5a;
+        transform: scale(1.02);
+    }
+
+    .screenshot img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s;
+    }
+
+    .screenshot:hover img {
+        transform: scale(1.05);
+    }
+
+    .screenshot .placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #4a4a4a;
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .screenshot .placeholder .icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+        opacity: 0.5;
+    }
+
+    /* ================== PRICING ================== */
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    .price-card {
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        border-radius: 6px;
+        padding: 32px 26px;
+        text-align: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.2s;
+    }
+
+    .price-card:hover {
+        border-color: #5a5a5a;
+        transform: translateY(-2px);
+    }
+
+    .price-card.featured {
+        border-color: #808080;
+        background: #202020;
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.04);
+    }
+
+    .price-card.featured::before {
+        content: '★ ПОПУЛЯРНЫЙ';
+        position: absolute;
+        top: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #e6e6e6;
+        color: #121212;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 5px 14px;
+        letter-spacing: 1.5px;
+        border-radius: 0 0 4px 4px;
+    }
+
+    .price-card .duration {
+        font-size: 13px;
+        color: #9a9a9a;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+    }
+
+    .price-card .price {
+        font-size: 38px;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 4px;
+        line-height: 1;
+    }
+
+    .price-card .price .currency {
+        font-size: 18px;
+        color: #8a8a8a;
+        font-weight: 400;
+        margin-left: 2px;
+    }
+
+    .price-card .price-note {
+        font-size: 11px;
+        color: #6a6a6a;
+        margin-bottom: 22px;
+    }
+
+    .price-card .features {
+        list-style: none;
+        margin-bottom: 26px;
+        text-align: left;
+        flex-grow: 1;
+    }
+
+    .price-card .features li {
+        font-size: 13px;
+        color: #b0b0b0;
+        padding: 7px 0;
+        border-bottom: 1px solid #232323;
+    }
+
+    .price-card .features li:last-child {
+        border-bottom: none;
+    }
+
+    .price-card .features li::before {
+        content: '✓';
+        color: #50c878;
+        margin-right: 10px;
+        font-weight: 700;
+    }
+
+    /* ================== STEPS ================== */
+    .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+    }
+
+    .step {
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        border-radius: 6px;
+        padding: 26px;
+        text-align: center;
+        position: relative;
+    }
+
+    .step .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #232323;
+        border: 1px solid #3a3a3a;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+
+    .step .step-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 8px;
+    }
+
+    .step .step-desc {
+        font-size: 12px;
+        color: #8a8a8a;
+        line-height: 1.6;
+    }
+
+    /* ================== FAQ ================== */
+    .faq-item {
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+
+    .faq-question {
+        padding: 18px 22px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #e6e6e6;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.15s;
+    }
+
+    .faq-question:hover {
+        background: #202020;
+    }
+
+    .faq-question::after {
+        content: '+';
+        font-size: 20px;
+        color: #8a8a8a;
+        font-weight: 300;
+    }
+
+    .faq-item.open .faq-question::after {
+        content: '−';
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        padding: 0 22px;
+        color: #9a9a9a;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .faq-item.open .faq-answer {
+        max-height: 400px;
+        padding: 0 22px 20px 22px;
+    }
+
+    /* ================== CTA BANNER ================== */
+    .cta-banner {
+        background: linear-gradient(135deg, #1a1a1a 0%, #232323 100%);
+        border: 1px solid #2e2e2e;
+        border-radius: 8px;
+        padding: 50px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e6e6e6, transparent);
+    }
+
+    .cta-banner h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 12px;
+    }
+
+    .cta-banner p {
+        color: #8a8a8a;
+        font-size: 14px;
+        margin-bottom: 28px;
+    }
+
+    /* ================== FOOTER ================== */
+    footer {
+        padding: 40px 0 30px 0;
+        border-top: 1px solid #232323;
+        text-align: center;
+        color: #5a5a5a;
+        font-size: 12px;
+    }
+
+    footer .socials {
+        margin-bottom: 14px;
+    }
+
+    footer a {
+        color: #8a8a8a;
+        text-decoration: none;
+        margin: 0 12px;
+        transition: color 0.15s;
+    }
+
+    footer a:hover {
+        color: #e6e6e6;
+    }
+
+    /* ================== SCROLLBAR ================== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #121212; }
+    ::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #5a5a5a; }
+
+    /* ================== MOBILE ================== */
+    @media (max-width: 640px) {
+        .hero h1 { font-size: 36px; letter-spacing: 2px; }
+        .hero .tagline { font-size: 11px; letter-spacing: 2px; }
+        nav .links a { margin-left: 14px; font-size: 12px; }
+        .section { padding: 50px 0; }
+        .section-head h2 { font-size: 22px; }
+        .btn { padding: 12px 22px; font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Декоративные пятна фона -->
+<div class="bg-glow g1"></div>
+<div class="bg-glow g2"></div>
+
+<div class="container">
+
+    <!-- ============ NAV ============ -->
+    <nav>
+        <div class="brand">
+            <span class="dot"></span>
+            RYZEN LOADER
+        </div>
+        <div class="links">
+            <a href="#games">Игры</a>
+            <a href="#screens">Скриншоты</a>
+            <a href="#pricing">Цены</a>
+            <a href="#faq">FAQ</a>
+        </div>
+    </nav>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+        <div class="badge">● Online</div>
+        <h1>RYZEN<span class="accent"> LOADER</span></h1>
+        <p class="tagline">Private Cheat Software</p>
+
+        <div class="cta-buttons">
+            <a href="#pricing" class="btn btn-primary">Купить доступ</a>
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost">Telegram</a>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats">
+            <div class="stat">
+                <div class="value">3</div>
+                <div class="label">Игры</div>
+            </div>
+            <div class="stat">
+                <div class="value">24/7</div>
+                <div class="label">Поддержка</div>
+            </div>
+            <div class="stat">
+                <div class="value">100%</div>
+                <div class="label">Undetected</div>
+            </div>
+            <div class="stat">
+                <div class="value">v2.0</div>
+                <div class="label">Версия</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ GAMES ============ -->
+    <section class="section" id="games">
+        <div class="section-head">
+            <h2>Поддерживаемые игры</h2>
+            <p>Один ключ — все игры</p>
+        </div>
+
+        <div class="games-grid">
+            <div class="game-card">
+                <div class="game-head">
+                    <div class="game-icon">👻</div>
+                    <span class="status status-green">● UNDETECTED</span>
+                </div>
+                <div class="game-name">Ryzen</div>
+                <div class="game-desc">Counter-Strike 2</div>
+            </div>
+
+            <div class="game-card">
+                <div class="game-head">
+                    <div class="game-icon">😈</div>
+                    <span class="status status-green">● UNDETECTED</span>
+                </div>
+                <div class="game-name">Fatality Internal</div>
+                <div class="game-desc">Garry's Mod</div>
+            </div>
+
+            <div class="game-card">
+                <div class="game-head">
+                    <div class="game-icon">🎯</div>
+                    <span class="status status-green">● UNDETECTED</span>
+                </div>
+                <div class="game-name">Primordial</div>
+                <div class="game-desc">Counter-Strike: Global Offensive</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SCREENSHOTS ============ -->
+    <section class="section" id="screens">
+        <div class="section-head">
+            <h2>Скриншоты</h2>
+            <p>Как это выглядит в игре</p>
+        </div>
+
+        <div class="screens-grid">
+            <div class="screenshot">
+                <img src="images/preview1.png" alt="CS2 preview" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;placeholder&quot;><div class=&quot;icon&quot;>🖼</div>CS2 Preview</div>');">
+            </div>
+            <div class="screenshot">
+                <img src="images/preview2.png" alt="GMod preview" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;placeholder&quot;><div class=&quot;icon&quot;>🖼</div>GMod Preview</div>');">
+            </div>
+            <div class="screenshot">
+                <img src="images/preview3.png" alt="CSGO preview" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;placeholder&quot;><div class=&quot;icon&quot;>🖼</div>CS:GO Preview</div>');">
+            </div>
+            <div class="screenshot">
+                <img src="images/preview4.png" alt="Loader preview" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;placeholder&quot;><div class=&quot;icon&quot;>🖼</div>Loader UI</div>');">
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section class="section" id="pricing">
+        <div class="section-head">
+            <h2>Тарифы Full Access</h2>
+            <p>Все игры — один ключ</p>
+        </div>
+
+        <div class="pricing-grid">
+
+            <div class="price-card">
+                <div class="duration">7 дней</div>
+                <div class="price">300<span class="currency">₽</span></div>
+                <div class="price-note">Пробный период</div>
+                <ul class="features">
+                    <li>Все 3 игры</li>
+                    <li>Привязка по HWID</li>
+                    <li>Обновления</li>
+                </ul>
+                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost">Купить</a>
+            </div>
+
+            <div class="price-card featured">
+                <div class="duration">30 дней</div>
+                <div class="price">1000<span class="currency">₽</span></div>
+                <div class="price-note">Оптимальный выбор</div>
+                <ul class="features">
+                    <li>Все 3 игры</li>
+                    <li>Привязка по HWID</li>
+                    <li>Обновления</li>
+                    <li>Приоритетная поддержка</li>
+                </ul>
+                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary">Купить</a>
+            </div>
+
+            <div class="price-card">
+                <div class="duration">Lifetime</div>
+                <div class="price">5000<span class="currency">₽</span></div>
+                <div class="price-note">Навсегда</div>
+                <ul class="features">
+                    <li>Все 3 игры</li>
+                    <li>Привязка по HWID</li>
+                    <li>Все будущие обновления</li>
+                    <li>Личная поддержка</li>
+                </ul>
+                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost">Купить</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============ STEPS ============ -->
+    <section class="section">
+        <div class="section-head">
+            <h2>Как купить</h2>
+            <p>Четыре простых шага</p>
+        </div>
+
+        <div class="steps">
+            <div class="step">
+                <div class="num">1</div>
+                <div class="step-title">Напиши в Telegram</div>
+                <div class="step-desc">Свяжись с продавцом и выбери тариф</div>
+            </div>
+            <div class="step">
+                <div class="num">2</div>
+                <div class="step-title">Оплати</div>
+                <div class="step-desc">Перевод или криптовалюта</div>
+            </div>
+            <div class="step">
+                <div class="num">3</div>
+                <div class="step-title">Получи ключ</div>
+                <div class="step-desc">В течение 5–10 минут после оплаты</div>
+            </div>
+            <div class="step">
+                <div class="num">4</div>
+                <div class="step-title">Запусти лоадер</div>
+                <div class="step-desc">Введи ключ и играй</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section" id="faq">
+        <div class="section-head">
+            <h2>Частые вопросы</h2>
+            <p>Что важно знать перед покупкой</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Дадут ли VAC-бан?</div>
+            <div class="faq-answer">
+                Лоадер не детектится на момент публикации. Однако VAC Live обновляется, и любой чит может быть задетекчен. Использование чита — это риск, и вы принимаете его добровольно.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">На каких серверах можно играть?</div>
+            <div class="faq-answer">
+                Только на серверах без VAC: community-сервера, offline с ботами, локальные сервера. На официальных серверах (Premier, Competitive) играть нельзя — моментальный бан.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Можно ли перенести ключ на другой ПК?</div>
+            <div class="faq-answer">
+                Нет, ключ привязан к HWID вашего компьютера. Если вы сменили железо или переустановили Windows — свяжитесь с продавцом для сброса HWID.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Работает ли на пиратке?</div>
+            <div class="faq-answer">
+                Лоадер работает с любыми версиями игр — Steam, пиратка, локальные сборки. Главное — чтобы игра запускалась как процесс cs2.exe / gmod.exe / csgo.exe.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Что делать, если ключ не работает?</div>
+            <div class="faq-answer">
+                Проверьте, что игра запущена с флагом -insecure (для CS2 и CS:GO). Если проблема остаётся — напишите продавцу в Telegram, помогут.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CTA BANNER ============ -->
+    <section class="section">
+        <div class="cta-banner">
+            <h2>Готов начать?</h2>
+            <p>Получи Full Access ко всем играм прямо сейчас</p>
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary">Написать в Telegram</a>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+        <div class="socials">
+            <a href="https://discord.gg/BMsBuuk2WK">Telegram</a>
+            <a href="https://discord.gg/BMsBuuk2WK">Канал</a>
+            <a href="#pricing">Цены</a>
+        </div>
+        <div>© 2024 Ryzen Loader. Все права защищены.</div>
+    </footer>
+
+</div>
+
+<script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(q => {
+        q.addEventListener('click', () => {
+            const item = q.parentElement;
+            item.classList.toggle('open');
+        });
+    });
+
+    // Плавный скролл для якорей
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
