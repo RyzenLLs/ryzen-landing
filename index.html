@@ -24,7 +24,12 @@
         transition: background 0.5s;
     }
 
-    /* Верхняя белая полоска как в лоадере */
+    /* NEW: очень тёмная тема */
+    body.theme-black {
+        background: #050505;
+    }
+    body.theme-black .container { color: #cfcfcf; }
+
     body::before {
         content: '';
         position: fixed;
@@ -34,7 +39,17 @@
         z-index: 1000;
     }
 
-    /* Фоновые декоративные пятна */
+    /* NEW: индикатор прогресса чтения */
+    #reading-progress {
+        position: fixed;
+        top: 2px; left: 0;
+        height: 2px;
+        width: 0%;
+        background: linear-gradient(90deg, #50c878, #e6e6e6);
+        z-index: 1001;
+        transition: width 0.1s linear;
+    }
+
     .bg-glow {
         position: fixed;
         pointer-events: none;
@@ -46,7 +61,6 @@
     .bg-glow.g1 { width: 500px; height: 500px; top: -100px; left: -100px; background: #4a4a4a; }
     .bg-glow.g2 { width: 400px; height: 400px; bottom: -100px; right: -100px; background: #2a2a2a; }
 
-    /* Canvas для погодных эффектов */
     #weather-canvas {
         position: fixed;
         inset: 0;
@@ -57,7 +71,6 @@
     }
     #weather-canvas.active { opacity: 1; }
 
-    /* Вспышка молнии */
     .lightning-flash {
         position: fixed;
         inset: 0;
@@ -132,10 +145,23 @@
         font-size: 13px;
         margin-left: 24px;
         transition: color 0.15s;
+        position: relative;
     }
     nav .links a:hover { color: #ffffff; }
 
-    /* Кнопка настроек */
+    /* NEW: активная ссылка в навигации */
+    nav .links a.active {
+        color: #50c878;
+    }
+    nav .links a.active::after {
+        content: '';
+        position: absolute;
+        left: 0; right: 0;
+        bottom: -6px;
+        height: 1px;
+        background: #50c878;
+    }
+
     .settings-btn {
         background: #1e1e1e;
         border: 1px solid #2e2e2e;
@@ -157,7 +183,6 @@
         transform: rotate(45deg);
     }
 
-    /* Панель настроек */
     .settings-panel {
         position: absolute;
         top: calc(100% + 8px);
@@ -173,6 +198,8 @@
         transform: translateY(-8px);
         transition: all 0.2s;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        max-height: 80vh;
+        overflow-y: auto;
     }
     .settings-panel.open {
         opacity: 1;
@@ -188,6 +215,9 @@
         margin-bottom: 10px;
         padding-bottom: 8px;
         border-bottom: 1px solid #2a2a2a;
+    }
+    .settings-panel .settings-title:not(:first-child) {
+        margin-top: 14px;
     }
 
     .settings-panel .settings-option {
@@ -539,6 +569,25 @@
         font-weight: 700;
     }
 
+    /* NEW: кнопка "скопировать ключ" (демо) в тарифах */
+    .copy-key-btn {
+        background: transparent;
+        border: 1px dashed #3a3a3a;
+        color: #7a7a7a;
+        font-size: 11px;
+        padding: 6px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-bottom: 12px;
+        letter-spacing: 1px;
+        transition: all 0.15s;
+        font-family: inherit;
+    }
+    .copy-key-btn:hover {
+        border-color: #50c878;
+        color: #50c878;
+    }
+
     /* ================== STEPS ================== */
     .steps {
         display: grid;
@@ -588,6 +637,47 @@
     }
 
     /* ================== FAQ ================== */
+    /* NEW: панель управления FAQ (поиск + развернуть все) */
+    .faq-controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .faq-search {
+        flex: 1;
+        min-width: 200px;
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        color: #dcdcdc;
+        padding: 12px 16px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s;
+    }
+    .faq-search:focus { border-color: #4a4a4a; }
+    .faq-search::placeholder { color: #5a5a5a; }
+
+    .faq-toggle-all {
+        background: #1a1a1a;
+        border: 1px solid #2e2e2e;
+        color: #b0b0b0;
+        padding: 12px 18px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-family: inherit;
+        transition: all 0.15s;
+    }
+    .faq-toggle-all:hover {
+        border-color: #4a4a4a;
+        color: #ffffff;
+    }
+
     .faq-item {
         background: #1a1a1a;
         border: 1px solid #2e2e2e;
@@ -595,6 +685,8 @@
         margin-bottom: 10px;
         overflow: hidden;
     }
+    /* NEW: скрытие при поиске */
+    .faq-item.hidden { display: none; }
 
     .faq-question {
         padding: 18px 22px;
@@ -663,6 +755,35 @@
         margin-bottom: 28px;
     }
 
+    /* NEW: таймер акции */
+    .promo-timer {
+        display: inline-flex;
+        gap: 10px;
+        margin-bottom: 26px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .promo-timer .t-box {
+        background: #121212;
+        border: 1px solid #2e2e2e;
+        border-radius: 4px;
+        padding: 8px 14px;
+        min-width: 60px;
+    }
+    .promo-timer .t-val {
+        font-size: 20px;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1;
+    }
+    .promo-timer .t-lbl {
+        font-size: 10px;
+        color: #6a6a6a;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-top: 4px;
+    }
+
     /* ================== FOOTER ================== */
     footer {
         padding: 40px 0 30px 0;
@@ -679,6 +800,25 @@
         transition: color 0.15s;
     }
     footer a:hover { color: #e6e6e6; }
+
+    /* NEW: кнопка "поделиться" в футере */
+    .share-btn {
+        background: transparent;
+        border: 1px solid #2e2e2e;
+        color: #8a8a8a;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        margin-top: 14px;
+        letter-spacing: 1px;
+        font-family: inherit;
+        transition: all 0.15s;
+    }
+    .share-btn:hover {
+        border-color: #4a4a4a;
+        color: #e6e6e6;
+    }
 
     /* ================== SCROLLBAR ================== */
     ::-webkit-scrollbar { width: 8px; }
@@ -704,10 +844,87 @@
         transition: all 0.4s ease;
         pointer-events: none;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        max-width: 90vw;
+        text-align: center;
     }
     .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
+    }
+
+    /* ================== NEW: Кнопка "Наверх" ================== */
+    #back-to-top {
+        position: fixed;
+        bottom: 90px;
+        right: 30px;
+        width: 44px;
+        height: 44px;
+        background: #1e1e1e;
+        border: 1px solid #3a3a3a;
+        color: #dcdcdc;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: all 0.3s;
+    }
+    #back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    #back-to-top:hover {
+        background: #2a2a2a;
+        border-color: #50c878;
+        color: #50c878;
+    }
+
+    /* ================== NEW: Cookie-плашка ================== */
+    #cookie-bar {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: #1a1a1a;
+        border-top: 1px solid #2e2e2e;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        z-index: 9998;
+        font-size: 12px;
+        color: #9a9a9a;
+        flex-wrap: wrap;
+        transform: translateY(100%);
+        transition: transform 0.4s ease;
+    }
+    #cookie-bar.visible { transform: translateY(0); }
+    #cookie-bar button {
+        background: #e6e6e6;
+        color: #121212;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-family: inherit;
+        transition: background 0.15s;
+        white-space: nowrap;
+    }
+    #cookie-bar button:hover { background: #ffffff; }
+
+    /* ================== NEW: онлайн-счётчик в badge ================== */
+    .online-count {
+        color: #50c878;
+        font-weight: 700;
     }
 
     /* ================== СЕКРЕТНОЕ СВЕЧЕНИЕ ================== */
@@ -720,7 +937,7 @@
         100% { filter: hue-rotate(0deg) brightness(1); }
     }
 
-    /* ================== MATRIX (для Konami) ================== */
+    /* ================== MATRIX ================== */
     #matrix-canvas {
         position: fixed;
         inset: 0;
@@ -740,10 +957,14 @@
         .section { padding: 50px 0; }
         .section-head h2 { font-size: 22px; }
         .btn { padding: 12px 22px; font-size: 12px; }
+        #back-to-top { bottom: 80px; right: 16px; }
     }
 </style>
 </head>
 <body>
+
+<!-- NEW: индикатор прогресса чтения -->
+<div id="reading-progress"></div>
 
 <!-- Консольная пасхалка -->
 <script>
@@ -773,7 +994,7 @@
         </div>
 
         <div class="nav-right">
-            <div class="links">
+            <div class="links" id="nav-links">
                 <a href="#games">Игры</a>
                 <a href="#pricing">Цены</a>
                 <a href="#faq">FAQ</a>
@@ -815,25 +1036,40 @@
                     <span class="icon">✨</span>
                     <span>Звёзды</span>
                 </div>
+
+                <!-- NEW: переключатель темы -->
+                <div class="settings-title">Тема</div>
+
+                <div class="settings-option active" data-theme="dark">
+                    <span class="icon">🌙</span>
+                    <span>Тёмная</span>
+                </div>
+
+                <div class="settings-option" data-theme="black">
+                    <span class="icon">⬛</span>
+                    <span>Чёрная</span>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- ============ HERO ============ -->
     <section class="hero">
-        <div class="badge">Online</div>
+        <!-- NEW: онлайн-счётчик -->
+        <div class="badge">Online — <span class="online-count" id="online-count">247</span> игроков</div>
         <h1 id="hero-title">RYZEN<span class="accent"> LOADER</span></h1>
         <p class="tagline">Private Cheat Software</p>
 
         <div class="cta-buttons">
             <a href="#pricing" class="btn btn-primary">Купить доступ</a>
-            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost">Discord</a>
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost discord-link">Discord</a>
         </div>
 
         <!-- STATS -->
         <div class="stats">
             <div class="stat">
-                <div class="value">2</div>
+                <!-- NEW: data-target для анимации цифр -->
+                <div class="value" data-count="2">0</div>
                 <div class="label">Игры</div>
             </div>
             <div class="stat">
@@ -841,7 +1077,7 @@
                 <div class="label">Поддержка</div>
             </div>
             <div class="stat">
-                <div class="value">100%</div>
+                <div class="value" data-count="100" data-suffix="%">0</div>
                 <div class="label">Undetected</div>
             </div>
             <div class="stat">
@@ -897,7 +1133,9 @@
                     <li>Привязка по HWID</li>
                     <li>Обновления</li>
                 </ul>
-                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost">Купить</a>
+                <!-- NEW: кнопка "скопировать пример ключа" -->
+                <button class="copy-key-btn" data-key="RYZEN-7D-XXXX-XXXX">Скопировать пример ключа</button>
+                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost discord-link">Купить</a>
             </div>
 
             <div class="price-card featured">
@@ -910,7 +1148,8 @@
                     <li>Обновления</li>
                     <li>Приоритетная поддержка</li>
                 </ul>
-                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary">Купить</a>
+                <button class="copy-key-btn" data-key="RYZEN-30D-XXXX-XXXX">Скопировать пример ключа</button>
+                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary discord-link">Купить</a>
             </div>
 
             <div class="price-card">
@@ -923,7 +1162,8 @@
                     <li>Все будущие обновления</li>
                     <li>Личная поддержка</li>
                 </ul>
-                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost">Купить</a>
+                <button class="copy-key-btn" data-key="RYZEN-LIFE-XXXX-XXXX">Скопировать пример ключа</button>
+                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost discord-link">Купить</a>
             </div>
 
         </div>
@@ -965,6 +1205,12 @@
         <div class="section-head">
             <h2>Частые вопросы</h2>
             <p>Что важно знать перед покупкой</p>
+        </div>
+
+        <!-- NEW: поиск + развернуть все -->
+        <div class="faq-controls">
+            <input type="text" class="faq-search" id="faq-search" placeholder="Поиск по вопросам...">
+            <button class="faq-toggle-all" id="faq-toggle-all">Развернуть все</button>
         </div>
 
         <div class="faq-item">
@@ -1022,18 +1268,29 @@
         <div class="cta-banner">
             <h2>Готов начать?</h2>
             <p>Получи Full Access к обеим играм прямо сейчас</p>
-            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary">Написать в Discord</a>
+
+            <!-- NEW: таймер акции -->
+            <div class="promo-timer" id="promo-timer">
+                <div class="t-box"><div class="t-val" id="t-days">00</div><div class="t-lbl">Дней</div></div>
+                <div class="t-box"><div class="t-val" id="t-hours">00</div><div class="t-lbl">Часов</div></div>
+                <div class="t-box"><div class="t-val" id="t-mins">00</div><div class="t-lbl">Минут</div></div>
+                <div class="t-box"><div class="t-val" id="t-secs">00</div><div class="t-lbl">Секунд</div></div>
+            </div>
+
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary discord-link">Написать в Discord</a>
         </div>
     </section>
 
     <!-- ============ FOOTER ============ -->
     <footer>
         <div class="socials">
-            <a href="https://discord.gg/BMsBuuk2WK">Discord</a>
-            <a href="https://discord.gg/BMsBuuk2WK">Канал</a>
+            <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Discord</a>
+            <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Канал</a>
             <a href="#pricing">Цены</a>
         </div>
         <div>© 2024 Ryzen Loader. Все права защищены.</div>
+        <!-- NEW: кнопка "поделиться" -->
+        <button class="share-btn" id="share-btn">🔗 Поделиться сайтом</button>
     </footer>
 
 </div>
@@ -1041,15 +1298,85 @@
 <!-- Toast уведомление -->
 <div class="toast" id="toast">🎉 Ты нашёл секрет!</div>
 
+<!-- NEW: кнопка "Наверх" -->
+<button id="back-to-top" title="Наверх">↑</button>
+
+<!-- NEW: cookie-плашка -->
+<div id="cookie-bar">
+    <span>🍪 Мы используем localStorage для сохранения настроек. Продолжая, вы соглашаетесь.</span>
+    <button id="cookie-accept">ОК</button>
+</div>
+
 <script>
+    // =========================================================
+    // Утилита: троттлинг (NEW: защита от спама)
+    // =========================================================
+    function throttle(fn, delay) {
+        let last = 0;
+        return function(...args) {
+            const now = Date.now();
+            if (now - last >= delay) {
+                last = now;
+                fn.apply(this, args);
+            }
+        };
+    }
+
+    // =========================================================
+    // NEW: звук клика (Web Audio API, без файлов)
+    // =========================================================
+    let audioCtx = null;
+    function playClick() {
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.value = 800;
+            gain.gain.value = 0.03;
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            osc.stop(audioCtx.currentTime + 0.08);
+        } catch(e) {}
+    }
+
     // =========================================================
     // FAQ аккордеон
     // =========================================================
     document.querySelectorAll('.faq-question').forEach(q => {
         q.addEventListener('click', () => {
             q.parentElement.classList.toggle('open');
+            playClick();
         });
     });
+
+    // NEW: развернуть / свернуть все
+    const faqToggleAll = document.getElementById('faq-toggle-all');
+    let allExpanded = false;
+    if (faqToggleAll) {
+        faqToggleAll.addEventListener('click', () => {
+            allExpanded = !allExpanded;
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.toggle('open', allExpanded);
+            });
+            faqToggleAll.textContent = allExpanded ? 'Свернуть все' : 'Развернуть все';
+            playClick();
+        });
+    }
+
+    // NEW: поиск по FAQ
+    const faqSearch = document.getElementById('faq-search');
+    if (faqSearch) {
+        faqSearch.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.classList.toggle('hidden', query !== '' && !text.includes(query));
+            });
+        });
+    }
 
     // =========================================================
     // Плавный скролл
@@ -1065,6 +1392,18 @@
     });
 
     // =========================================================
+    // Toast (NEW: с защитой от спама)
+    // =========================================================
+    const showToast = throttle(function(message) {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+    }, 500);
+
+    // =========================================================
     // ПАСХАЛКА: клик по логотипу 3 раза
     // =========================================================
     let logoClicks = 0;
@@ -1072,6 +1411,7 @@
     if (logoBrand) {
         logoBrand.addEventListener('click', () => {
             logoClicks++;
+            playClick();
             if (logoClicks === 3) {
                 document.body.classList.add('secret-glow');
                 setTimeout(() => document.body.classList.remove('secret-glow'), 1500);
@@ -1166,17 +1506,6 @@
     }
 
     // =========================================================
-    // Toast
-    // =========================================================
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        if (!toast) return;
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    // =========================================================
     // Счётчик посещений
     // =========================================================
     let visits = parseInt(localStorage.getItem('ryzen_visits') || '0');
@@ -1189,7 +1518,7 @@
     }
 
     // =========================================================
-    // НАСТРОЙКИ ФОНА
+    // НАСТРОЙКИ ФОНА + ТЕМЫ
     // =========================================================
 
     const settingsBtn = document.getElementById('settings-btn');
@@ -1197,11 +1526,11 @@
     const weatherCanvas = document.getElementById('weather-canvas');
     const lightningFlash = document.getElementById('lightning-flash');
 
-    // Открытие/закрытие панели
     if (settingsBtn && settingsPanel) {
         settingsBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             settingsPanel.classList.toggle('open');
+            playClick();
         });
 
         document.addEventListener('click', (e) => {
@@ -1211,37 +1540,47 @@
         });
     }
 
-    // Текущий режим
     let currentWeather = localStorage.getItem('ryzen_weather') || 'none';
+    let currentTheme = localStorage.getItem('ryzen_theme') || 'dark';
     let weatherAnimId = null;
     let lightningInterval = null;
 
-    // Обновляем UI при загрузке
     function updateSettingsUI() {
-        document.querySelectorAll('.settings-option').forEach(opt => {
-            if (opt.dataset.weather === currentWeather) {
-                opt.classList.add('active');
-            } else {
-                opt.classList.remove('active');
-            }
+        document.querySelectorAll('.settings-option[data-weather]').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.weather === currentWeather);
+        });
+        document.querySelectorAll('.settings-option[data-theme]').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.theme === currentTheme);
         });
     }
     updateSettingsUI();
 
-    // Клик по опции
-    document.querySelectorAll('.settings-option').forEach(opt => {
+    document.querySelectorAll('.settings-option[data-weather]').forEach(opt => {
         opt.addEventListener('click', () => {
-            const mode = opt.dataset.weather;
-            setWeather(mode);
+            setWeather(opt.dataset.weather);
             settingsPanel.classList.remove('open');
+            playClick();
         });
     });
+
+    // NEW: переключение темы
+    document.querySelectorAll('.settings-option[data-theme]').forEach(opt => {
+        opt.addEventListener('click', () => {
+            currentTheme = opt.dataset.theme;
+            localStorage.setItem('ryzen_theme', currentTheme);
+            document.body.classList.toggle('theme-black', currentTheme === 'black');
+            updateSettingsUI();
+            playClick();
+        });
+    });
+
+    // Применяем тему при загрузке
+    if (currentTheme === 'black') document.body.classList.add('theme-black');
 
     // =========================================================
     // Установка погоды
     // =========================================================
     function setWeather(mode) {
-        // Останавливаем всё старое
         stopWeather();
 
         currentWeather = mode;
@@ -1358,13 +1697,13 @@
     }
 
     // =========================================================
-    // ГРОЗА (дождь + молнии)
+    // ГРОЗА
     // =========================================================
     function startStorm() {
         startRain();
 
         function scheduleLightning() {
-            const delay = Math.random() * 5000 + 3000; // 3-8 сек
+            const delay = Math.random() * 5000 + 3000;
             lightningInterval = setTimeout(() => {
                 lightningFlash.classList.add('flash');
                 setTimeout(() => lightningFlash.classList.remove('flash'), 300);
@@ -1405,7 +1744,7 @@
     }
 
     // =========================================================
-    // ЗВЁЗДЫ (мерцающее небо)
+    // ЗВЁЗДЫ
     // =========================================================
     function startStars() {
         const ctx = weatherCanvas.getContext('2d');
@@ -1440,17 +1779,193 @@
         draw();
     }
 
-    // =========================================================
-    // Применяем сохранённую погоду при загрузке
-    // =========================================================
     if (currentWeather !== 'none') {
         setWeather(currentWeather);
     }
 
-    // Обновляем размер canvas при resize
     window.addEventListener('resize', () => {
         weatherCanvas.width = window.innerWidth;
         weatherCanvas.height = window.innerHeight;
+    });
+
+    // =========================================================
+    // NEW: Кнопка "Наверх"
+    // =========================================================
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('visible', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        playClick();
+    });
+
+    // =========================================================
+    // NEW: Индикатор прогресса чтения
+    // =========================================================
+    const readingProgress = document.getElementById('reading-progress');
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        readingProgress.style.width = progress + '%';
+    });
+
+    // =========================================================
+    // NEW: Копирование Discord-ссылки
+    // =========================================================
+    const discordLinks = document.querySelectorAll('.discord-link');
+    discordLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = link.getAttribute('href');
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('🔗 Ссылка на Discord скопирована!');
+            }).catch(() => {
+                showToast('🔗 Discord: ' + url);
+            });
+            window.open(url, '_blank');
+            playClick();
+        });
+    });
+
+    // =========================================================
+    // NEW: Живой счётчик онлайна
+    // =========================================================
+    const onlineCountEl = document.getElementById('online-count');
+    let onlineCount = 247;
+    setInterval(() => {
+        onlineCount += Math.floor(Math.random() * 7) - 3;
+        if (onlineCount < 200) onlineCount = 200;
+        if (onlineCount > 350) onlineCount = 350;
+        if (onlineCountEl) onlineCountEl.textContent = onlineCount;
+    }, 3000);
+
+    // =========================================================
+    // NEW: Таймер акции (24 часа)
+    // =========================================================
+    const promoEnd = Date.now() + 24 * 60 * 60 * 1000;
+    function updatePromoTimer() {
+        const diff = promoEnd - Date.now();
+        if (diff <= 0) return;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+        const pad = (n) => String(n).padStart(2, '0');
+        document.getElementById('t-days').textContent = pad(days);
+        document.getElementById('t-hours').textContent = pad(hours);
+        document.getElementById('t-mins').textContent = pad(mins);
+        document.getElementById('t-secs').textContent = pad(secs);
+    }
+    updatePromoTimer();
+    setInterval(updatePromoTimer, 1000);
+
+    // =========================================================
+    // NEW: Кнопка "Скопировать пример ключа"
+    // =========================================================
+    document.querySelectorAll('.copy-key-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const key = btn.dataset.key;
+            navigator.clipboard.writeText(key).then(() => {
+                showToast('🔑 Ключ скопирован (демо): ' + key);
+            }).catch(() => {
+                showToast('🔑 ' + key);
+            });
+            playClick();
+        });
+    });
+
+    // =========================================================
+    // NEW: Анимация цифр в статистике
+    // =========================================================
+    function animateCounters() {
+        document.querySelectorAll('.value[data-count]').forEach(el => {
+            const target = parseInt(el.dataset.count);
+            const suffix = el.dataset.suffix || '';
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 30));
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = current + suffix;
+            }, 40);
+        });
+    }
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounters();
+                statsObserver.disconnect();
+            }
+        });
+    });
+    const statsEl = document.querySelector('.stats');
+    if (statsEl) statsObserver.observe(statsEl);
+
+    // =========================================================
+    // NEW: Кнопка "Поделиться"
+    // =========================================================
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            playClick();
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Ryzen Loader',
+                    text: 'Private Cheat Software',
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showToast('🔗 Ссылка скопирована!');
+                }).catch(() => {
+                    showToast('🔗 ' + window.location.href);
+                });
+            }
+        });
+    }
+
+    // =========================================================
+    // NEW: Подсветка активного раздела в навигации
+    // =========================================================
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('#nav-links a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const top = section.offsetTop - 120;
+            if (window.scrollY >= top) current = section.getAttribute('id');
+        });
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        });
+    });
+
+    // =========================================================
+    // NEW: Cookie-плашка
+    // =========================================================
+    const cookieBar = document.getElementById('cookie-bar');
+    const cookieAccept = document.getElementById('cookie-accept');
+    if (!localStorage.getItem('ryzen_cookie_ok')) {
+        setTimeout(() => cookieBar.classList.add('visible'), 1500);
+    }
+    if (cookieAccept) {
+        cookieAccept.addEventListener('click', () => {
+            localStorage.setItem('ryzen_cookie_ok', '1');
+            cookieBar.classList.remove('visible');
+            playClick();
+        });
+    }
+
+    // =========================================================
+    // NEW: глобальный звук для всех .btn
+    // =========================================================
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', playClick);
     });
 </script>
 
