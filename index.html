@@ -4,241 +4,391 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ryzen Loader — Private Cheat Software</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+    :root {
+        /* Цвета */
+        --bg-primary: #0a0a0c;
+        --bg-secondary: #121216;
+        --bg-tertiary: #1a1a20;
+        --bg-elevated: #22222a;
+        
+        --border-subtle: #1f1f28;
+        --border-default: #2a2a35;
+        --border-strong: #3a3a48;
+        
+        --text-primary: #f0f0f5;
+        --text-secondary: #a0a0b0;
+        --text-tertiary: #6a6a7a;
+        --text-muted: #4a4a55;
+        
+        --accent: #50c878;
+        --accent-bright: #6ee89a;
+        --accent-dim: #2a6a44;
+        --accent-glow: rgba(80, 200, 120, 0.4);
+        
+        --danger: #ff5555;
+        --warning: #ffb84d;
+        --info: #5aa8ff;
+        --purple: #a875ff;
+        
+        /* Типографика */
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        
+        /* Размеры */
+        --container: 1200px;
+        --radius-sm: 6px;
+        --radius: 10px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        
+        /* Тени */
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+        --shadow: 0 4px 20px rgba(0,0,0,0.5);
+        --shadow-lg: 0 10px 40px rgba(0,0,0,0.6);
+        --shadow-glow: 0 0 30px var(--accent-glow);
+        
+        /* Анимации */
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, sans-serif;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-        background: #121212;
-        color: #dcdcdc;
+        font-family: var(--font-sans);
+        background: var(--bg-primary);
+        color: var(--text-primary);
         min-height: 100vh;
-        position: relative;
         overflow-x: hidden;
         line-height: 1.6;
-        transition: background 0.5s, color 0.5s;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transition: background 0.3s;
     }
 
-    body.theme-black {
-        background: #050505;
-    }
-    body.theme-black .container { color: #cfcfcf; }
-
-    body::before {
-        content: '';
+    /* ================== ФОНОВЫЕ ЭФФЕКТЫ ================== */
+    .bg-grid {
         position: fixed;
-        top: 0; left: 0; right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, #e6e6e6 0%, #4a4a4a 100%);
-        z-index: 1000;
+        inset: 0;
+        background-image: 
+            linear-gradient(rgba(80,200,120,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(80,200,120,0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        pointer-events: none;
+        z-index: 0;
+        mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
     }
 
-    #reading-progress {
-        position: fixed;
-        top: 2px; left: 0;
-        height: 2px;
-        width: 0%;
-        background: linear-gradient(90deg, #50c878, #e6e6e6);
-        z-index: 1001;
-        transition: width 0.1s linear;
-    }
-
-    /* NEW: Аврора-фон */
     .aurora {
         position: fixed;
         inset: 0;
         z-index: 0;
         pointer-events: none;
         overflow: hidden;
-        opacity: 0.5;
     }
     .aurora span {
         position: absolute;
         border-radius: 50%;
-        filter: blur(90px);
-        animation: auroraMove 20s ease-in-out infinite;
+        filter: blur(120px);
+        opacity: 0.35;
+        animation: auroraMove 24s ease-in-out infinite;
     }
     .aurora span:nth-child(1) {
-        width: 400px; height: 400px;
+        width: 500px; height: 500px;
         background: #50c878;
-        top: -100px; left: -100px;
-        animation-delay: 0s;
+        top: -150px; left: -150px;
     }
     .aurora span:nth-child(2) {
-        width: 350px; height: 350px;
+        width: 450px; height: 450px;
         background: #4a7ac8;
-        bottom: -80px; right: -80px;
-        animation-delay: -7s;
+        bottom: -120px; right: -120px;
+        animation-delay: -8s;
     }
     .aurora span:nth-child(3) {
-        width: 300px; height: 300px;
+        width: 400px; height: 400px;
         background: #8a4ac8;
-        top: 40%; left: 60%;
-        animation-delay: -14s;
+        top: 45%; left: 55%;
+        animation-delay: -16s;
     }
     @keyframes auroraMove {
         0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(40px, -30px) scale(1.1); }
-        66% { transform: translate(-30px, 40px) scale(0.95); }
+        33% { transform: translate(60px, -40px) scale(1.15); }
+        66% { transform: translate(-40px, 60px) scale(0.9); }
     }
-    body.theme-black .aurora { opacity: 0.25; }
 
-    .bg-glow { display: none; }
-
-    #weather-canvas {
+    /* ================== ПРОГРЕСС ЧТЕНИЯ ================== */
+    #reading-progress {
         position: fixed;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.5s;
-    }
-    #weather-canvas.active { opacity: 1; }
-
-    .lightning-flash {
-        position: fixed;
-        inset: 0;
-        background: #ffffff;
-        opacity: 0;
-        pointer-events: none;
-        z-index: 2;
-    }
-    .lightning-flash.flash {
-        animation: flash 0.3s ease;
-    }
-    @keyframes flash {
-        0% { opacity: 0; }
-        30% { opacity: 0.6; }
-        100% { opacity: 0; }
+        top: 0; left: 0;
+        height: 2px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+        z-index: 1001;
+        box-shadow: 0 0 10px var(--accent-glow);
+        transition: width 0.1s linear;
     }
 
+    /* ================== КОНТЕЙНЕР ================== */
     .container {
-        max-width: 1150px;
+        max-width: var(--container);
         margin: 0 auto;
         padding: 0 24px;
         position: relative;
-        z-index: 3;
+        z-index: 2;
     }
 
-    /* ================== NAV (sticky + blur) ================== */
+    /* ================== НАВИГАЦИЯ ================== */
     nav {
         position: sticky;
         top: 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 22px 0;
-        border-bottom: 1px solid #232323;
+        padding: 20px 0;
         z-index: 500;
-        transition: padding 0.3s, background 0.3s, border-color 0.3s;
+        transition: all 0.3s var(--ease);
+        border-bottom: 1px solid transparent;
     }
     nav.scrolled {
-        padding: 14px 0;
-        background: rgba(18, 18, 18, 0.85);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        border-color: #2e2e2e;
-    }
-    body.theme-black nav.scrolled {
-        background: rgba(5, 5, 5, 0.85);
+        padding: 12px 0;
+        background: rgba(10, 10, 12, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-color: var(--border-subtle);
     }
 
-    nav .brand {
+    .brand {
         display: flex;
         align-items: center;
-        gap: 10px;
-        font-size: 15px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        color: #ffffff;
+        gap: 12px;
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        color: var(--text-primary);
         cursor: pointer;
         user-select: none;
+        transition: all 0.2s;
+    }
+    .brand:hover { transform: scale(1.02); }
+    
+    .brand-logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 900;
+        color: var(--bg-primary);
+        box-shadow: 0 0 20px var(--accent-glow);
+        position: relative;
+    }
+    .brand-logo::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--accent), transparent);
+        opacity: 0.4;
+        z-index: -1;
+        animation: pulseGlow 3s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.05); }
     }
 
-    nav .brand .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #50c878;
-        box-shadow: 0 0 10px #50c878;
-        animation: pulse 2s infinite;
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+    }
+    .brand-text .main {
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 3px;
+    }
+    .brand-text .sub {
+        font-size: 9px;
+        color: var(--text-tertiary);
+        letter-spacing: 2px;
+        margin-top: 2px;
+        font-weight: 500;
     }
 
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    nav .nav-right {
+    .links {
         display: flex;
         align-items: center;
         gap: 4px;
-        position: relative;
     }
-
-    nav .links a {
-        color: #8a8a8a;
+    .links a {
+        color: var(--text-secondary);
         text-decoration: none;
         font-size: 13px;
-        margin-left: 24px;
-        transition: color 0.15s;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        transition: all 0.2s;
         position: relative;
     }
-    nav .links a:hover { color: #ffffff; }
-
-    nav .links a.active {
-        color: #50c878;
+    .links a:hover {
+        color: var(--text-primary);
+        background: var(--bg-tertiary);
     }
-    nav .links a.active::after {
+    .links a.active {
+        color: var(--accent);
+        background: rgba(80, 200, 120, 0.08);
+    }
+    .links a.active::before {
         content: '';
         position: absolute;
-        left: 0; right: 0;
-        bottom: -6px;
-        height: 1px;
-        background: #50c878;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 2px;
+        box-shadow: 0 0 10px var(--accent-glow);
     }
 
-    .settings-btn {
-        background: #1e1e1e;
-        border: 1px solid #2e2e2e;
-        color: #dcdcdc;
-        width: 36px;
-        height: 36px;
-        border-radius: 4px;
+    /* Иконка-кнопка */
+    .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-default);
+        color: var(--text-secondary);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 16px;
-        margin-left: 20px;
-        transition: all 0.15s;
+        transition: all 0.2s;
+        position: relative;
     }
-    .settings-btn:hover {
-        background: #2a2a2a;
-        border-color: #4a4a4a;
-        transform: rotate(45deg);
+    .icon-btn:hover {
+        background: var(--bg-elevated);
+        border-color: var(--border-strong);
+        color: var(--text-primary);
+        transform: translateY(-1px);
+    }
+    .icon-btn .badge-dot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--accent);
     }
 
+    /* Мобильный бургер */
+    .burger {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-default);
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+    .burger span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: var(--text-secondary);
+        border-radius: 2px;
+        transition: all 0.2s;
+    }
+
+    /* Мобильное меню */
+    .mobile-menu {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 10, 12, 0.98);
+        backdrop-filter: blur(20px);
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        padding: 30px 24px;
+        gap: 8px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+    }
+    .mobile-menu.open {
+        opacity: 1;
+        visibility: visible;
+    }
+    .mobile-menu a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 600;
+        padding: 16px 20px;
+        border-radius: var(--radius);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-subtle);
+        transition: all 0.2s;
+    }
+    .mobile-menu a:active {
+        background: var(--bg-elevated);
+        transform: scale(0.98);
+    }
+    .mobile-close {
+        align-self: flex-end;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-default);
+        color: var(--text-primary);
+        font-size: 20px;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+    /* ================== ПАНЕЛЬ НАСТРОЕК ================== */
     .settings-panel {
         position: absolute;
-        top: calc(100% + 8px);
+        top: calc(100% + 12px);
         right: 0;
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        border-radius: 6px;
-        padding: 12px;
-        width: 260px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        width: 300px;
         z-index: 100;
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-8px);
-        transition: all 0.2s;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        transform: translateY(-10px);
+        transition: all 0.25s var(--ease);
+        box-shadow: var(--shadow-lg);
         max-height: 80vh;
         overflow-y: auto;
     }
@@ -248,69 +398,77 @@
         transform: translateY(0);
     }
 
-    .settings-panel .settings-title {
-        font-size: 11px;
-        color: #7a7a7a;
-        letter-spacing: 1.5px;
+    .settings-title {
+        font-size: 10px;
+        color: var(--text-tertiary);
+        letter-spacing: 2px;
         text-transform: uppercase;
         margin-bottom: 10px;
         padding-bottom: 8px;
-        border-bottom: 1px solid #2a2a2a;
+        border-bottom: 1px solid var(--border-subtle);
+        font-weight: 700;
     }
-    .settings-panel .settings-title:not(:first-child) {
-        margin-top: 14px;
+    .settings-title:not(:first-child) {
+        margin-top: 18px;
     }
 
-    .settings-panel .settings-option {
+    .settings-option {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 8px 10px;
-        border-radius: 4px;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
         cursor: pointer;
         font-size: 13px;
-        color: #b0b0b0;
+        color: var(--text-secondary);
         transition: all 0.15s;
+        position: relative;
     }
-    .settings-panel .settings-option:hover {
-        background: #242424;
-        color: #ffffff;
+    .settings-option:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
     }
-    .settings-panel .settings-option.active {
-        background: #242424;
-        color: #50c878;
+    .settings-option.active {
+        background: rgba(80, 200, 120, 0.1);
+        color: var(--accent);
     }
-    .settings-panel .settings-option .icon {
-        font-size: 15px;
-        width: 20px;
+    .settings-option.active::after {
+        content: '✓';
+        position: absolute;
+        right: 12px;
+        font-weight: 700;
+    }
+    .settings-option .icon {
+        font-size: 16px;
+        width: 22px;
         text-align: center;
     }
 
-    /* NEW: мини-график онлайна */
+    /* График онлайна */
     .online-chart {
         display: flex;
         align-items: flex-end;
         gap: 2px;
-        height: 40px;
-        padding: 6px 4px;
-        background: #141414;
-        border: 1px solid #2a2a2a;
-        border-radius: 4px;
-        margin-top: 4px;
+        height: 50px;
+        padding: 8px 6px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        margin-top: 6px;
     }
     .online-chart .bar {
         flex: 1;
-        background: linear-gradient(180deg, #50c878, #2a6a44);
-        border-radius: 1px 1px 0 0;
-        min-height: 2px;
-        transition: height 0.4s ease, opacity 0.2s;
-        opacity: 0.75;
+        background: linear-gradient(180deg, var(--accent), var(--accent-dim));
+        border-radius: 2px 2px 0 0;
+        min-height: 3px;
+        transition: all 0.3s;
+        opacity: 0.6;
         cursor: help;
     }
     .online-chart .bar.current {
-        background: linear-gradient(180deg, #e6e6e6, #50c878);
+        background: linear-gradient(180deg, var(--accent-bright), var(--accent));
         opacity: 1;
-        box-shadow: 0 0 8px rgba(80, 200, 120, 0.6);
+        box-shadow: 0 0 10px var(--accent-glow);
     }
     .online-chart .bar:hover { opacity: 1; }
 
@@ -318,614 +476,710 @@
         display: flex;
         justify-content: space-between;
         font-size: 9px;
-        color: #5a5a5a;
-        margin-top: 4px;
+        color: var(--text-muted);
+        margin-top: 6px;
         letter-spacing: 0.5px;
     }
 
     /* ================== HERO ================== */
     .hero {
         text-align: center;
-        padding: 80px 0 60px 0;
+        padding: 80px 0 60px;
+        position: relative;
     }
 
-    .hero .badge {
-        display: inline-block;
+    .breadcrumbs {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+        letter-spacing: 1px;
+    }
+    .breadcrumbs span { color: var(--text-tertiary); }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         font-size: 11px;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color: #50c878;
+        color: var(--accent);
         background: rgba(80, 200, 120, 0.08);
         border: 1px solid rgba(80, 200, 120, 0.25);
-        padding: 6px 14px;
-        border-radius: 20px;
-        margin-bottom: 24px;
+        padding: 8px 16px;
+        border-radius: 30px;
+        margin-bottom: 28px;
+        font-weight: 600;
         position: relative;
     }
-    .hero .badge::before {
-        content: '● ';
-        animation: blink 1.2s infinite;
+    .hero-badge .pulse-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--accent);
+        animation: pulse 1.5s infinite;
     }
-    @keyframes blink {
-        0%, 49% { opacity: 1; }
-        50%, 100% { opacity: 0.3; }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.8); }
     }
-
-    /* NEW: пульсирующее кольцо на badge */
-    .hero .badge::after {
+    .hero-badge::after {
         content: '';
         position: absolute;
-        inset: -2px;
-        border-radius: 20px;
-        border: 1px solid rgba(80, 200, 120, 0.4);
+        inset: -1px;
+        border-radius: 30px;
+        border: 1px solid var(--accent);
+        opacity: 0;
         animation: badgePulse 2.5s ease-out infinite;
         pointer-events: none;
     }
     @keyframes badgePulse {
-        0% { transform: scale(1); opacity: 0.6; }
+        0% { transform: scale(1); opacity: 0.5; }
         100% { transform: scale(1.15); opacity: 0; }
     }
 
     .hero h1 {
-        font-size: 54px;
-        font-weight: 800;
-        color: #ffffff;
-        letter-spacing: 4px;
-        margin-bottom: 14px;
-        line-height: 1.1;
+        font-size: clamp(36px, 7vw, 72px);
+        font-weight: 900;
+        letter-spacing: -2px;
+        margin-bottom: 16px;
+        line-height: 1;
         user-select: none;
-        transition: transform 0.3s;
-        background: linear-gradient(135deg, #ffffff 0%, #8a8a8a 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #a0a0b0 50%, #50c878 100%);
+        background-size: 200% 200%;
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
+        animation: gradientShift 6s ease infinite;
     }
-    .hero h1:hover { transform: scale(1.02); }
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
     .hero h1 .accent {
-        background: linear-gradient(135deg, #6a6a6a 0%, #3a3a3a 100%);
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .hero .tagline {
-        font-size: 14px;
-        color: #8a8a8a;
-        letter-spacing: 3px;
+        font-size: 13px;
+        color: var(--text-secondary);
+        letter-spacing: 5px;
         text-transform: uppercase;
         margin-bottom: 40px;
+        font-weight: 500;
     }
 
-    .hero .cta-buttons {
+    .cta-buttons {
         display: flex;
         justify-content: center;
-        gap: 14px;
+        gap: 12px;
         flex-wrap: wrap;
+        margin-bottom: 60px;
     }
 
+    /* ================== КНОПКИ ================== */
     .btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         text-decoration: none;
-        padding: 14px 32px;
+        padding: 14px 28px;
         font-size: 13px;
         font-weight: 600;
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
         text-transform: uppercase;
-        border-radius: 3px;
-        transition: all 0.2s;
+        border-radius: var(--radius);
+        transition: all 0.25s var(--ease);
         cursor: pointer;
         border: 1px solid transparent;
         position: relative;
         overflow: hidden;
+        font-family: inherit;
     }
 
-    /* NEW: блеск при hover */
-    .btn::after {
+    .btn::before {
         content: '';
         position: absolute;
         top: 0; left: -100%;
         width: 100%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-        transition: left 0.5s;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.6s;
         pointer-events: none;
     }
-    .btn:hover::after { left: 100%; }
+    .btn:hover::before { left: 100%; }
 
     .btn-primary {
-        background: #e6e6e6;
-        color: #121212;
+        background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+        color: var(--bg-primary);
+        box-shadow: 0 4px 20px var(--accent-glow);
     }
     .btn-primary:hover {
-        background: #ffffff;
-        box-shadow: 0 0 24px rgba(255, 255, 255, 0.25);
         transform: translateY(-2px);
+        box-shadow: 0 8px 30px var(--accent-glow);
     }
+    .btn-primary:active { transform: translateY(0); }
 
     .btn-ghost {
-        background: transparent;
-        color: #dcdcdc;
-        border-color: #3a3a3a;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-color: var(--border-default);
     }
     .btn-ghost:hover {
-        border-color: #7a7a7a;
-        color: #ffffff;
+        background: var(--bg-elevated);
+        border-color: var(--border-strong);
         transform: translateY(-2px);
     }
 
-    /* ================== STATS ================== */
+    .btn-lg {
+        padding: 18px 40px;
+        font-size: 14px;
+        border-radius: var(--radius-lg);
+    }
+
+    /* Ripple-эффект */
+    .btn .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.4);
+        transform: scale(0);
+        animation: rippleAnim 0.6s ease-out;
+        pointer-events: none;
+    }
+    @keyframes rippleAnim {
+        to { transform: scale(4); opacity: 0; }
+    }
+
+    /* ================== СТАТИСТИКА ================== */
     .stats {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 1px;
-        background: #232323;
-        border: 1px solid #232323;
-        border-radius: 4px;
-        margin-top: 60px;
+        background: var(--border-subtle);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
         overflow: hidden;
+        margin-top: 20px;
     }
 
     .stat {
-        background: #161616;
-        padding: 24px 20px;
+        background: var(--bg-secondary);
+        padding: 28px 20px;
         text-align: center;
-        transition: background 0.2s, transform 0.2s;
+        transition: all 0.25s;
         position: relative;
+        overflow: hidden;
     }
-    .stat:hover { background: #1d1d1d; transform: translateY(-2px); }
+    .stat::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .stat:hover { background: var(--bg-tertiary); }
+    .stat:hover::before { opacity: 1; }
+
+    .stat-icon {
+        font-size: 20px;
+        margin-bottom: 10px;
+        opacity: 0.7;
+    }
 
     .stat .value {
-        font-size: 26px;
-        font-weight: 700;
-        color: #ffffff;
-        transition: color 0.2s;
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--text-primary);
+        transition: all 0.2s;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -1px;
     }
-    .stat:hover .value { color: #50c878; }
+    .stat:hover .value {
+        color: var(--accent);
+        text-shadow: 0 0 20px var(--accent-glow);
+    }
 
     .stat .label {
-        font-size: 11px;
-        color: #7a7a7a;
-        letter-spacing: 1.5px;
+        font-size: 10px;
+        color: var(--text-tertiary);
+        letter-spacing: 2px;
         text-transform: uppercase;
-        margin-top: 4px;
+        margin-top: 6px;
+        font-weight: 600;
     }
 
-    /* ================== SECTION ================== */
-    .section { padding: 80px 0; }
+    /* ================== СЕКЦИИ ================== */
+    .section {
+        padding: 90px 0;
+        position: relative;
+    }
 
     .section-head {
         text-align: center;
-        margin-bottom: 50px;
+        margin-bottom: 60px;
+    }
+
+    .section-label {
+        display: inline-block;
+        font-size: 11px;
+        color: var(--accent);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        background: rgba(80, 200, 120, 0.08);
+        border: 1px solid rgba(80, 200, 120, 0.2);
     }
 
     .section-head h2 {
-        font-size: 30px;
-        font-weight: 700;
-        color: #ffffff;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-        background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-size: clamp(26px, 4vw, 40px);
+        font-weight: 800;
+        color: var(--text-primary);
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+        line-height: 1.2;
     }
 
     .section-head p {
-        color: #7a7a7a;
-        font-size: 13px;
-        letter-spacing: 1px;
+        color: var(--text-secondary);
+        font-size: 15px;
+        max-width: 600px;
+        margin: 0 auto;
     }
 
-    /* NEW: анимация появления секций */
+    /* Анимация появления */
     .reveal {
         opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.7s ease, transform 0.7s ease;
+        transform: translateY(40px);
+        transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
     }
     .reveal.visible {
         opacity: 1;
         transform: translateY(0);
     }
 
-    /* ================== GAMES ================== */
+    /* ================== КАРТОЧКИ ИГР ================== */
     .games-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 24px;
     }
 
     .game-card {
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        border-radius: 6px;
-        padding: 26px;
-        transition: all 0.2s;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        padding: 0;
+        transition: all 0.3s var(--ease);
         position: relative;
         overflow: hidden;
     }
-
     .game-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #4a4a4a, transparent);
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
     }
-
     .game-card:hover {
-        background: #202020;
-        border-color: #4a4a4a;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        background: var(--bg-tertiary);
+        border-color: var(--border-strong);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
     }
+    .game-card:hover::before { opacity: 1; }
 
-    .game-card .game-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 14px;
-    }
-
-    .game-card .game-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 6px;
-        background: #252525;
+    .game-preview {
+        height: 140px;
+        background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-elevated));
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 22px;
-        border: 1px solid #333;
-        transition: transform 0.3s;
+        font-size: 64px;
+        position: relative;
+        overflow: hidden;
     }
-    .game-card:hover .game-icon { transform: rotate(-8deg) scale(1.1); }
+    .game-preview::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 30%, var(--bg-secondary) 100%);
+    }
 
-    .game-card .status {
+    .game-body {
+        padding: 24px;
+    }
+
+    .game-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+
+    .game-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+        letter-spacing: -0.3px;
+    }
+
+    .game-desc {
+        font-size: 13px;
+        color: var(--text-tertiary);
+        font-family: var(--font-mono);
+    }
+
+    .status {
         font-size: 10px;
-        padding: 4px 9px;
-        border-radius: 3px;
+        padding: 5px 10px;
+        border-radius: 20px;
         letter-spacing: 1px;
-        font-weight: 600;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
     }
-
     .status-green {
         background: rgba(80, 200, 120, 0.1);
-        color: #50c878;
+        color: var(--accent);
         border: 1px solid rgba(80, 200, 120, 0.3);
     }
+    .status-green::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 6px var(--accent);
+        animation: pulse 1.5s infinite;
+    }
 
-    .game-card .game-name {
-        font-size: 17px;
+    .game-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-subtle);
+    }
+    .game-tag {
+        font-size: 10px;
+        padding: 4px 10px;
+        border-radius: 4px;
+        background: var(--bg-elevated);
+        color: var(--text-secondary);
+        letter-spacing: 0.5px;
+        font-weight: 500;
+        font-family: var(--font-mono);
+    }
+
+    /* ================== ТАРИФЫ ================== */
+    .billing-toggle {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        margin-bottom: 40px;
+        padding: 6px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: 30px;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .billing-toggle button {
+        padding: 10px 24px;
+        border-radius: 24px;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s;
+        font-family: inherit;
+        position: relative;
+    }
+    .billing-toggle button.active {
+        background: var(--accent);
+        color: var(--bg-primary);
+        box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .billing-toggle button:not(.active):hover {
+        color: var(--text-primary);
+    }
+    .billing-toggle .save-badge {
+        font-size: 9px;
+        background: var(--danger);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 10px;
+        margin-left: 6px;
         font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 4px;
     }
 
-    .game-card .game-desc {
-        font-size: 12px;
-        color: #7a7a7a;
-    }
-
-    /* ================== PRICING ================== */
     .pricing-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 20px;
         align-items: stretch;
     }
 
     .price-card {
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        border-radius: 6px;
-        padding: 32px 26px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        padding: 32px 28px;
         text-align: center;
         position: relative;
         display: flex;
         flex-direction: column;
-        transition: all 0.2s;
+        transition: all 0.3s var(--ease);
     }
-
     .price-card:hover {
-        border-color: #5a5a5a;
-        transform: translateY(-4px);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        border-color: var(--border-strong);
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-lg);
     }
 
     .price-card.featured {
-        border-color: #808080;
-        background: #202020;
-        box-shadow: 0 0 40px rgba(255, 255, 255, 0.04);
-        animation: featuredGlow 3s ease-in-out infinite;
+        border-color: var(--accent);
+        background: linear-gradient(180deg, rgba(80,200,120,0.05) 0%, var(--bg-secondary) 50%);
+        box-shadow: 0 0 40px rgba(80, 200, 120, 0.15);
     }
-    @keyframes featuredGlow {
-        0%, 100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.04); }
-        50% { box-shadow: 0 0 60px rgba(255, 255, 255, 0.1); }
-    }
-
     .price-card.featured::before {
         content: '★ ПОПУЛЯРНЫЙ';
         position: absolute;
-        top: -1px;
+        top: -12px;
         left: 50%;
         transform: translateX(-50%);
-        background: #e6e6e6;
-        color: #121212;
+        background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+        color: var(--bg-primary);
         font-size: 10px;
-        font-weight: 700;
-        padding: 5px 14px;
+        font-weight: 800;
+        padding: 6px 16px;
+        border-radius: 20px;
         letter-spacing: 1.5px;
-        border-radius: 0 0 4px 4px;
+        box-shadow: 0 4px 15px var(--accent-glow);
+        white-space: nowrap;
     }
 
     .price-card .duration {
-        font-size: 13px;
-        color: #9a9a9a;
+        font-size: 12px;
+        color: var(--text-tertiary);
         letter-spacing: 2px;
         text-transform: uppercase;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
+        font-weight: 600;
     }
 
     .price-card .price {
-        font-size: 38px;
-        font-weight: 800;
-        color: #ffffff;
+        font-size: 44px;
+        font-weight: 900;
+        color: var(--text-primary);
         margin-bottom: 4px;
         line-height: 1;
+        letter-spacing: -2px;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 4px;
     }
-
     .price-card .price .currency {
-        font-size: 18px;
-        color: #8a8a8a;
-        font-weight: 400;
-        margin-left: 2px;
+        font-size: 20px;
+        color: var(--text-tertiary);
+        font-weight: 500;
+        letter-spacing: 0;
     }
 
     .price-card .price-note {
-        font-size: 11px;
-        color: #6a6a6a;
-        margin-bottom: 22px;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
     }
 
     .price-card .features {
         list-style: none;
-        margin-bottom: 26px;
+        margin-bottom: 28px;
         text-align: left;
         flex-grow: 1;
     }
-
     .price-card .features li {
         font-size: 13px;
-        color: #b0b0b0;
-        padding: 7px 0;
-        border-bottom: 1px solid #232323;
+        color: var(--text-secondary);
+        padding: 8px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.5;
     }
-    .price-card .features li:last-child { border-bottom: none; }
     .price-card .features li::before {
         content: '✓';
-        color: #50c878;
-        margin-right: 10px;
+        color: var(--accent);
         font-weight: 700;
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        background: rgba(80, 200, 120, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        margin-top: 1px;
     }
 
-    /* ================== STEPS ================== */
+    /* ================== ШАГИ ================== */
     .steps {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 18px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        position: relative;
     }
 
     .step {
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        border-radius: 6px;
-        padding: 26px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        padding: 28px 24px;
         text-align: center;
-        transition: all 0.2s;
+        transition: all 0.3s;
         position: relative;
     }
     .step:hover {
-        border-color: #4a4a4a;
-        transform: translateY(-3px);
-    }
-    /* NEW: соединяющая линия между шагами */
-    .step:not(:last-child)::after {
-        content: '→';
-        position: absolute;
-        right: -14px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #3a3a3a;
-        font-size: 18px;
-        pointer-events: none;
-    }
-    @media (max-width: 900px) {
-        .step:not(:last-child)::after { display: none; }
+        border-color: var(--border-strong);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow);
     }
 
     .step .num {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
-        background: #232323;
-        border: 1px solid #3a3a3a;
-        color: #ffffff;
-        font-size: 15px;
-        font-weight: 700;
-        margin-bottom: 14px;
-        transition: all 0.2s;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-strong);
+        color: var(--text-primary);
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        transition: all 0.3s var(--ease-bounce);
+        font-family: var(--font-mono);
     }
     .step:hover .num {
-        background: #50c878;
-        border-color: #50c878;
-        color: #121212;
-        box-shadow: 0 0 16px rgba(80, 200, 120, 0.5);
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--bg-primary);
+        box-shadow: 0 0 24px var(--accent-glow);
+        transform: scale(1.1) rotate(-5deg);
     }
 
-    .step .step-title {
-        font-size: 14px;
-        font-weight: 600;
-        color: #ffffff;
+    .step-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-primary);
         margin-bottom: 8px;
     }
 
-    .step .step-desc {
-        font-size: 12px;
-        color: #8a8a8a;
+    .step-desc {
+        font-size: 13px;
+        color: var(--text-secondary);
         line-height: 1.6;
     }
 
-    /* ================== FAQ ================== */
-    .faq-controls {
+    /* ================== CHANGELOG ================== */
+    .changelog-filters {
         display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 32px;
         flex-wrap: wrap;
     }
-    .faq-search {
-        flex: 1;
-        min-width: 200px;
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        color: #dcdcdc;
-        padding: 12px 16px 12px 40px;
-        border-radius: 4px;
-        font-size: 13px;
-        font-family: inherit;
-        outline: none;
-        transition: border-color 0.15s, box-shadow 0.15s;
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235a5a5a' stroke-width='2'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.35-4.35'/></svg>");
-        background-repeat: no-repeat;
-        background-position: 14px center;
-    }
-    .faq-search:focus {
-        border-color: #50c878;
-        box-shadow: 0 0 0 3px rgba(80, 200, 120, 0.1);
-    }
-    .faq-search::placeholder { color: #5a5a5a; }
-
-    .faq-toggle-all {
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        color: #b0b0b0;
-        padding: 12px 18px;
-        border-radius: 4px;
+    .filter-btn {
+        padding: 8px 16px;
+        border-radius: 20px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        color: var(--text-secondary);
         font-size: 12px;
-        cursor: pointer;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        font-family: inherit;
-        transition: all 0.15s;
-    }
-    .faq-toggle-all:hover {
-        border-color: #4a4a4a;
-        color: #ffffff;
-    }
-
-    .faq-item {
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        border-radius: 6px;
-        margin-bottom: 10px;
-        overflow: hidden;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .faq-item:hover { border-color: #3a3a3a; }
-    .faq-item.open {
-        border-color: #4a4a4a;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    .faq-item.hidden { display: none; }
-
-    .faq-question {
-        padding: 18px 22px;
-        font-size: 14px;
         font-weight: 600;
-        color: #e6e6e6;
         cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: background 0.15s;
-        user-select: none;
+        transition: all 0.2s;
+        font-family: inherit;
+        letter-spacing: 0.5px;
     }
-    .faq-question:hover { background: #202020; }
-
-    .faq-question::after {
-        content: '+';
-        font-size: 20px;
-        color: #8a8a8a;
-        font-weight: 300;
-        transition: transform 0.25s, color 0.2s;
-        line-height: 1;
+    .filter-btn:hover {
+        border-color: var(--border-strong);
+        color: var(--text-primary);
     }
-    .faq-item.open .faq-question::after {
-        content: '−';
-        color: #50c878;
+    .filter-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--bg-primary);
     }
 
-    .faq-answer {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.35s ease, padding 0.35s ease;
-        padding: 0 22px;
-        color: #9a9a9a;
-        font-size: 13px;
-        line-height: 1.7;
-    }
-    .faq-item.open .faq-answer {
-        max-height: 500px;
-        padding: 0 22px 20px 22px;
-    }
-    .faq-answer strong { color: #e6e6e6; }
-
-    /* ================== CHANGELOG ================== */
     .changelog {
         position: relative;
-        padding-left: 28px;
+        padding-left: 32px;
     }
     .changelog::before {
         content: '';
         position: absolute;
-        left: 8px;
-        top: 6px;
-        bottom: 6px;
-        width: 1px;
-        background: linear-gradient(180deg, #50c878 0%, #2e2e2e 60%, transparent 100%);
+        left: 9px;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        background: linear-gradient(180deg, var(--accent) 0%, var(--border-default) 50%, transparent 100%);
+        border-radius: 2px;
     }
 
     .version {
         position: relative;
-        margin-bottom: 32px;
+        margin-bottom: 36px;
+        padding-left: 8px;
     }
     .version:last-child { margin-bottom: 0; }
 
     .version::before {
         content: '';
         position: absolute;
-        left: -28px;
-        top: 8px;
-        width: 17px;
-        height: 17px;
+        left: -32px;
+        top: 6px;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
-        background: #1a1a1a;
-        border: 2px solid #4a4a4a;
-        transition: all 0.2s;
+        background: var(--bg-primary);
+        border: 2px solid var(--border-strong);
+        transition: all 0.3s;
     }
     .version.latest::before {
-        border-color: #50c878;
-        background: #50c878;
-        box-shadow: 0 0 12px rgba(80, 200, 120, 0.6);
+        border-color: var(--accent);
+        background: var(--accent);
+        box-shadow: 0 0 16px var(--accent-glow);
         animation: pulse 2s infinite;
     }
     .version:hover::before {
-        border-color: #e6e6e6;
-        transform: scale(1.15);
-    }
-    .version.latest:hover::before {
-        border-color: #50c878;
+        border-color: var(--accent);
+        transform: scale(1.2);
     }
 
     .version-head {
@@ -933,41 +1187,43 @@
         align-items: center;
         gap: 12px;
         flex-wrap: wrap;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
     }
 
     .version-tag {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 800;
-        color: #ffffff;
-        letter-spacing: 1px;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+        font-family: var(--font-mono);
     }
 
     .version-badge {
         font-size: 9px;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 1.5px;
-        padding: 3px 9px;
-        border-radius: 3px;
+        padding: 4px 10px;
+        border-radius: 20px;
         text-transform: uppercase;
     }
     .version-badge.latest {
         background: rgba(80, 200, 120, 0.15);
-        color: #50c878;
+        color: var(--accent);
         border: 1px solid rgba(80, 200, 120, 0.4);
     }
 
     .version-date {
-        font-size: 11px;
-        color: #6a6a6a;
-        letter-spacing: 1px;
+        font-size: 12px;
+        color: var(--text-muted);
+        letter-spacing: 0.5px;
         margin-left: auto;
+        font-family: var(--font-mono);
     }
 
     .version-title {
-        font-size: 13px;
-        color: #b0b0b0;
-        margin-bottom: 12px;
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-bottom: 14px;
         font-weight: 500;
     }
 
@@ -976,44 +1232,163 @@
     }
     .version-list li {
         font-size: 13px;
-        color: #9a9a9a;
-        padding: 6px 0 6px 20px;
+        color: var(--text-secondary);
+        padding: 8px 0 8px 24px;
         position: relative;
         line-height: 1.6;
-        border-bottom: 1px solid #1e1e1e;
+        border-bottom: 1px solid var(--border-subtle);
     }
     .version-list li:last-child { border-bottom: none; }
     .version-list li::before {
         content: '›';
         position: absolute;
-        left: 4px;
-        color: #4a4a4a;
-        font-weight: 700;
+        left: 6px;
+        color: var(--accent);
+        font-weight: 800;
+        font-size: 16px;
     }
 
     .tag {
         display: inline-block;
         font-size: 9px;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 1px;
-        padding: 2px 7px;
-        border-radius: 2px;
-        margin-left: 6px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-left: 8px;
         vertical-align: middle;
         text-transform: uppercase;
     }
-    .tag-new      { background: rgba(80, 200, 120, 0.12); color: #50c878; border: 1px solid rgba(80, 200, 120, 0.3); }
-    .tag-fix      { background: rgba(255, 100, 100, 0.12); color: #ff7b7b; border: 1px solid rgba(255, 100, 100, 0.3); }
-    .tag-improve  { background: rgba(100, 160, 255, 0.12); color: #7ab0ff; border: 1px solid rgba(100, 160, 255, 0.3); }
-    .tag-security { background: rgba(255, 200, 80, 0.12);  color: #ffc850; border: 1px solid rgba(255, 200, 80, 0.3); }
-    .tag-remove   { background: rgba(180, 120, 255, 0.12); color: #b478ff; border: 1px solid rgba(180, 120, 255, 0.3); }
+    .tag-new      { background: rgba(80, 200, 120, 0.12); color: var(--accent); border: 1px solid rgba(80, 200, 120, 0.3); }
+    .tag-fix      { background: rgba(255, 85, 85, 0.12);  color: var(--danger); border: 1px solid rgba(255, 85, 85, 0.3); }
+    .tag-improve  { background: rgba(90, 168, 255, 0.12); color: var(--info); border: 1px solid rgba(90, 168, 255, 0.3); }
+    .tag-security { background: rgba(255, 184, 77, 0.12); color: var(--warning); border: 1px solid rgba(255, 184, 77, 0.3); }
+    .tag-remove   { background: rgba(168, 117, 255, 0.12); color: var(--purple); border: 1px solid rgba(168, 117, 255, 0.3); }
 
-    /* ================== CTA BANNER ================== */
+    /* ================== FAQ ================== */
+    .faq-controls {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+    .faq-search {
+        flex: 1;
+        min-width: 220px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        color: var(--text-primary);
+        padding: 14px 18px 14px 44px;
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-family: inherit;
+        outline: none;
+        transition: all 0.2s;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236a6a7a' stroke-width='2' stroke-linecap='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.35-4.35'/></svg>");
+        background-repeat: no-repeat;
+        background-position: 16px center;
+    }
+    .faq-search:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(80, 200, 120, 0.1);
+    }
+    .faq-search::placeholder { color: var(--text-muted); }
+
+    .faq-counter {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: var(--text-tertiary);
+        padding: 0 16px;
+        white-space: nowrap;
+        font-family: var(--font-mono);
+    }
+
+    .faq-toggle-all {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        color: var(--text-secondary);
+        padding: 14px 20px;
+        border-radius: var(--radius);
+        font-size: 12px;
+        cursor: pointer;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-family: inherit;
+        font-weight: 600;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+    .faq-toggle-all:hover {
+        border-color: var(--border-strong);
+        color: var(--text-primary);
+    }
+
+    .faq-item {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: all 0.25s;
+    }
+    .faq-item:hover { border-color: var(--border-strong); }
+    .faq-item.open {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent), var(--shadow);
+    }
+    .faq-item.hidden { display: none; }
+
+    .faq-question {
+        padding: 20px 24px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        transition: background 0.15s;
+        user-select: none;
+    }
+    .faq-question:hover { background: var(--bg-tertiary); }
+
+    .faq-question::after {
+        content: '+';
+        font-size: 22px;
+        color: var(--text-tertiary);
+        font-weight: 300;
+        transition: all 0.3s var(--ease);
+        line-height: 1;
+        flex-shrink: 0;
+    }
+    .faq-item.open .faq-question::after {
+        transform: rotate(45deg);
+        color: var(--accent);
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s var(--ease), padding 0.4s var(--ease);
+        padding: 0 24px;
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.7;
+    }
+    .faq-item.open .faq-answer {
+        max-height: 600px;
+        padding: 0 24px 24px;
+    }
+    .faq-answer strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ================== CTA БАННЕР ================== */
     .cta-banner {
-        background: linear-gradient(135deg, #1a1a1a 0%, #232323 100%);
-        border: 1px solid #2e2e2e;
-        border-radius: 8px;
-        padding: 50px 30px;
+        background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-xl);
+        padding: 60px 40px;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -1023,253 +1398,364 @@
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 2px;
-        background: linear-gradient(90deg, transparent, #e6e6e6, transparent);
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .cta-banner::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at center, rgba(80,200,120,0.08) 0%, transparent 40%);
+        pointer-events: none;
     }
 
     .cta-banner h2 {
-        font-size: 28px;
-        font-weight: 700;
-        color: #ffffff;
+        font-size: clamp(24px, 4vw, 36px);
+        font-weight: 800;
+        color: var(--text-primary);
         margin-bottom: 12px;
+        letter-spacing: -0.5px;
+        position: relative;
+        z-index: 1;
     }
 
     .cta-banner p {
-        color: #8a8a8a;
-        font-size: 14px;
-        margin-bottom: 28px;
+        color: var(--text-secondary);
+        font-size: 15px;
+        margin-bottom: 32px;
+        position: relative;
+        z-index: 1;
     }
 
     .promo-timer {
         display: inline-flex;
-        gap: 10px;
-        margin-bottom: 26px;
+        gap: 12px;
+        margin-bottom: 32px;
         flex-wrap: wrap;
         justify-content: center;
+        position: relative;
+        z-index: 1;
     }
     .promo-timer .t-box {
-        background: #121212;
-        border: 1px solid #2e2e2e;
-        border-radius: 4px;
-        padding: 8px 14px;
-        min-width: 60px;
-        transition: all 0.2s;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius);
+        padding: 12px 18px;
+        min-width: 72px;
+        transition: all 0.25s;
     }
     .promo-timer .t-box:hover {
-        border-color: #50c878;
-        transform: translateY(-2px);
+        border-color: var(--accent);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
     .promo-timer .t-val {
-        font-size: 20px;
-        font-weight: 700;
-        color: #ffffff;
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--text-primary);
         line-height: 1;
         font-variant-numeric: tabular-nums;
+        font-family: var(--font-mono);
+        letter-spacing: -1px;
     }
     .promo-timer .t-lbl {
         font-size: 10px;
-        color: #6a6a6a;
-        letter-spacing: 1px;
+        color: var(--text-tertiary);
+        letter-spacing: 1.5px;
         text-transform: uppercase;
-        margin-top: 4px;
+        margin-top: 6px;
+        font-weight: 600;
+    }
+
+    /* ================== СТАТУС-БАР ================== */
+    .status-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 40px;
+        padding: 20px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+    }
+    .status-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+    }
+    .status-item .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 10px var(--accent-glow);
+        animation: pulse 2s infinite;
+        flex-shrink: 0;
+    }
+    .status-item .status-label {
+        color: var(--text-tertiary);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .status-item .status-value {
+        color: var(--text-primary);
+        font-weight: 700;
+        font-family: var(--font-mono);
+        margin-left: auto;
     }
 
     /* ================== FOOTER ================== */
     footer {
-        padding: 40px 0 30px 0;
-        border-top: 1px solid #232323;
-        text-align: center;
-        color: #5a5a5a;
+        padding: 50px 0 30px;
+        border-top: 1px solid var(--border-subtle);
+        margin-top: 60px;
+    }
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+    .footer-col h4 {
         font-size: 12px;
+        color: var(--text-primary);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        font-weight: 700;
     }
-    footer .socials { margin-bottom: 14px; }
-    footer a {
-        color: #8a8a8a;
+    .footer-col a {
+        display: block;
+        color: var(--text-secondary);
         text-decoration: none;
-        margin: 0 12px;
-        transition: color 0.15s;
+        font-size: 13px;
+        padding: 6px 0;
+        transition: all 0.2s;
     }
-    footer a:hover { color: #e6e6e6; }
+    .footer-col a:hover {
+        color: var(--accent);
+        transform: translateX(4px);
+    }
+    .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-subtle);
+        flex-wrap: wrap;
+        gap: 16px;
+        font-size: 12px;
+        color: var(--text-muted);
+    }
 
     .share-btn {
-        background: transparent;
-        border: 1px solid #2e2e2e;
-        color: #8a8a8a;
-        padding: 8px 16px;
-        border-radius: 4px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        color: var(--text-secondary);
+        padding: 10px 18px;
+        border-radius: var(--radius-sm);
         font-size: 12px;
         cursor: pointer;
-        margin-top: 14px;
         letter-spacing: 1px;
         font-family: inherit;
-        transition: all 0.15s;
+        font-weight: 600;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
     .share-btn:hover {
-        border-color: #4a4a4a;
-        color: #e6e6e6;
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-2px);
     }
 
-    /* ================== SCROLLBAR ================== */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #121212; }
-    ::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #5a5a5a; }
-
-    /* ================== TOAST (обновлён) ================== */
+    /* ================== TOAST ================== */
     .toast {
         position: fixed;
         bottom: 30px;
         left: 50%;
-        transform: translateX(-50%) translateY(100px);
-        background: #1e1e1e;
-        border: 1px solid #4a4a4a;
-        color: #e6e6e6;
-        padding: 14px 22px;
-        border-radius: 6px;
+        transform: translateX(-50%) translateY(120px);
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-strong);
+        color: var(--text-primary);
+        padding: 16px 24px;
+        border-radius: var(--radius);
         font-size: 13px;
-        letter-spacing: 0.5px;
         z-index: 10000;
         opacity: 0;
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.4s var(--ease-bounce);
         pointer-events: none;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        box-shadow: var(--shadow-lg);
         max-width: 90vw;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
+        font-weight: 500;
+        overflow: hidden;
     }
     .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
     }
+    .toast::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0;
+        height: 2px;
+        width: 100%;
+        background: var(--accent);
+        animation: toastProgress 3.2s linear forwards;
+    }
+    @keyframes toastProgress {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
     .toast.success { border-color: rgba(80, 200, 120, 0.5); }
     .toast.success::before {
         content: '✓';
-        color: #50c878;
-        font-weight: 700;
-        font-size: 16px;
+        color: var(--accent);
+        font-weight: 800;
+        font-size: 18px;
     }
-    .toast.error { border-color: rgba(255, 100, 100, 0.5); }
+    .toast.error { border-color: rgba(255, 85, 85, 0.5); }
     .toast.error::before {
         content: '⚠';
-        color: #ff7b7b;
-        font-size: 16px;
+        color: var(--danger);
+        font-size: 18px;
     }
     .toast.info::before {
         content: 'ℹ';
-        color: #7ab0ff;
-        font-size: 16px;
+        color: var(--info);
+        font-size: 18px;
     }
 
-    /* ================== Кнопка "Наверх" ================== */
+    /* ================== КНОПКА НАВЕРХ ================== */
     #back-to-top {
         position: fixed;
-        bottom: 90px;
+        bottom: 30px;
         right: 30px;
-        width: 44px;
-        height: 44px;
-        background: #1e1e1e;
-        border: 1px solid #3a3a3a;
-        color: #dcdcdc;
-        border-radius: 4px;
+        width: 48px;
+        height: 48px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-strong);
+        color: var(--text-primary);
+        border-radius: 50%;
         cursor: pointer;
-        font-size: 18px;
+        font-size: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 999;
         opacity: 0;
         visibility: hidden;
-        transform: translateY(20px);
-        transition: all 0.3s;
+        transform: translateY(20px) scale(0.8);
+        transition: all 0.3s var(--ease-bounce);
+        box-shadow: var(--shadow);
     }
     #back-to-top.visible {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
     #back-to-top:hover {
-        background: #2a2a2a;
-        border-color: #50c878;
-        color: #50c878;
-        transform: translateY(-3px);
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--bg-primary);
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 0 30px var(--accent-glow);
     }
 
-    /* ================== Cookie-плашка ================== */
+    /* ================== COOKIE ================== */
     #cookie-bar {
         position: fixed;
-        bottom: 0; left: 0; right: 0;
-        background: #1a1a1a;
-        border-top: 1px solid #2e2e2e;
-        padding: 16px 24px;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-lg);
+        padding: 16px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 16px;
         z-index: 9998;
-        font-size: 12px;
-        color: #9a9a9a;
+        font-size: 13px;
+        color: var(--text-secondary);
         flex-wrap: wrap;
-        transform: translateY(100%);
-        transition: transform 0.4s ease;
+        transform: translateY(150%);
+        transition: transform 0.5s var(--ease-bounce);
+        box-shadow: var(--shadow-lg);
     }
     #cookie-bar.visible { transform: translateY(0); }
     #cookie-bar button {
-        background: #e6e6e6;
-        color: #121212;
+        background: var(--accent);
+        color: var(--bg-primary);
         border: none;
-        padding: 8px 18px;
-        border-radius: 3px;
+        padding: 10px 20px;
+        border-radius: var(--radius-sm);
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         letter-spacing: 1px;
         text-transform: uppercase;
         font-family: inherit;
-        transition: background 0.15s;
+        transition: all 0.2s;
         white-space: nowrap;
     }
-    #cookie-bar button:hover { background: #ffffff; }
-
-    .online-count {
-        color: #50c878;
-        font-weight: 700;
+    #cookie-bar button:hover {
+        background: var(--accent-bright);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px var(--accent-glow);
     }
 
-    /* ================== Live-часы ================== */
+    /* ================== LIVE-ЧАСЫ ================== */
     #live-clock {
         position: fixed;
         bottom: 30px;
         left: 30px;
-        background: rgba(26, 26, 26, 0.85);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid #2e2e2e;
-        border-radius: 6px;
-        padding: 8px 14px;
-        font-size: 11px;
-        color: #8a8a8a;
+        background: rgba(18, 18, 22, 0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius);
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--text-secondary);
         z-index: 900;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         transition: all 0.2s;
         letter-spacing: 0.5px;
+        font-family: var(--font-mono);
     }
-    #live-clock:hover { border-color: #4a4a4a; color: #e6e6e6; }
+    #live-clock:hover {
+        border-color: var(--border-strong);
+        color: var(--text-primary);
+        transform: translateY(-2px);
+    }
     #live-clock .clock-time {
-        color: #e6e6e6;
-        font-weight: 600;
+        color: var(--text-primary);
+        font-weight: 700;
         font-variant-numeric: tabular-nums;
     }
-    #live-clock .clock-season { color: #50c878; }
+    #live-clock .clock-season { color: var(--accent); }
 
-    /* ================== Модалка горячих клавиш ================== */
+    /* ================== МОДАЛКА ================== */
     .modal-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         z-index: 10001;
         display: flex;
         align-items: center;
@@ -1284,81 +1770,80 @@
         visibility: visible;
     }
     .modal {
-        background: #1a1a1a;
-        border: 1px solid #2e2e2e;
-        border-radius: 8px;
-        max-width: 480px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-xl);
+        max-width: 500px;
         width: 100%;
-        padding: 28px;
-        transform: scale(0.95) translateY(10px);
-        transition: transform 0.25s;
+        padding: 32px;
+        transform: scale(0.95) translateY(20px);
+        transition: transform 0.3s var(--ease-bounce);
         max-height: 85vh;
         overflow-y: auto;
+        box-shadow: var(--shadow-lg);
     }
     .modal-overlay.open .modal {
         transform: scale(1) translateY(0);
     }
     .modal h3 {
-        font-size: 18px;
-        color: #ffffff;
-        margin-bottom: 6px;
-        letter-spacing: 1px;
+        font-size: 22px;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        letter-spacing: -0.3px;
+        font-weight: 800;
     }
     .modal p {
-        font-size: 12px;
-        color: #7a7a7a;
-        margin-bottom: 20px;
+        font-size: 13px;
+        color: var(--text-tertiary);
+        margin-bottom: 24px;
     }
     .hotkey-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #232323;
-        font-size: 13px;
-        color: #b0b0b0;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-subtle);
+        font-size: 14px;
+        color: var(--text-secondary);
     }
     .hotkey-row:last-child { border-bottom: none; }
     .hotkey-row kbd {
-        background: #232323;
-        border: 1px solid #3a3a3a;
-        border-bottom-width: 2px;
-        border-radius: 4px;
-        padding: 3px 9px;
-        font-family: monospace;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-strong);
+        border-bottom-width: 3px;
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-family: var(--font-mono);
         font-size: 11px;
-        color: #e6e6e6;
-        margin-left: 4px;
+        color: var(--text-primary);
+        font-weight: 600;
+        min-width: 32px;
+        text-align: center;
+        display: inline-block;
     }
     .modal-close {
-        margin-top: 20px;
+        margin-top: 24px;
         width: 100%;
-        background: #e6e6e6;
-        color: #121212;
+        background: var(--accent);
+        color: var(--bg-primary);
         border: none;
-        padding: 12px;
-        border-radius: 4px;
+        padding: 14px;
+        border-radius: var(--radius);
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         letter-spacing: 1px;
         text-transform: uppercase;
         font-family: inherit;
-        transition: background 0.15s;
+        transition: all 0.2s;
     }
-    .modal-close:hover { background: #ffffff; }
-
-    /* ================== СЕКРЕТНОЕ СВЕЧЕНИЕ ================== */
-    body.secret-glow {
-        animation: secretPulse 1.5s ease;
-    }
-    @keyframes secretPulse {
-        0% { filter: hue-rotate(0deg) brightness(1); }
-        50% { filter: hue-rotate(180deg) brightness(1.3); }
-        100% { filter: hue-rotate(0deg) brightness(1); }
+    .modal-close:hover {
+        background: var(--accent-bright);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--accent-glow);
     }
 
-    /* ================== MATRIX ================== */
+    /* ================== МАТРИЦА ================== */
     #matrix-canvas {
         position: fixed;
         inset: 0;
@@ -1369,51 +1854,77 @@
     }
     body.matrix-active #matrix-canvas { display: block; }
 
-    /* ================== MOBILE ================== */
-    @media (max-width: 640px) {
-        .hero h1 { font-size: 36px; letter-spacing: 2px; }
-        .hero .tagline { font-size: 11px; letter-spacing: 2px; }
-        nav .links a { margin-left: 14px; font-size: 12px; }
-        nav .links { display: none; }
-        .section { padding: 50px 0; }
-        .section-head h2 { font-size: 22px; }
-        .btn { padding: 12px 22px; font-size: 12px; }
-        #back-to-top { bottom: 80px; right: 16px; }
-        .version-date { margin-left: 0; width: 100%; }
-        #live-clock { display: none; }
-        .aurora span { filter: blur(60px); }
+    /* ================== СКРОЛЛБАР ================== */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb {
+        background: var(--border-default);
+        border-radius: 5px;
+        border: 2px solid var(--bg-primary);
     }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+    /* ================== АДАПТИВ ================== */
+    @media (max-width: 768px) {
+        .container { padding: 0 16px; }
+        .links { display: none; }
+        .burger { display: flex; }
+        .hero { padding: 50px 0 40px; }
+        .section { padding: 60px 0; }
+        .section-head { margin-bottom: 40px; }
+        .games-grid { grid-template-columns: 1fr; }
+        .pricing-grid { grid-template-columns: 1fr; }
+        .steps { grid-template-columns: 1fr; }
+        .step:not(:last-child)::after { display: none; }
+        #back-to-top { bottom: 90px; right: 16px; width: 44px; height: 44px; }
+        #live-clock { display: none; }
+        .toast { bottom: 100px; }
+        #cookie-bar { bottom: 16px; left: 16px; right: 16px; }
+        .cta-banner { padding: 40px 20px; }
+        .modal { padding: 24px; }
+        .footer-grid { gap: 24px; }
+        .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+        .hero h1 { letter-spacing: -1px; }
+        .btn { padding: 12px 20px; font-size: 12px; }
+        .btn-lg { padding: 14px 28px; }
+        .price-card { padding: 24px 20px; }
+        .price-card .price { font-size: 36px; }
+        .status-bar { grid-template-columns: 1fr; }
+    }
+
+    /* ================== УТИЛИТЫ ================== */
+    .text-accent { color: var(--accent); }
+    .text-muted { color: var(--text-muted); }
+    .font-mono { font-family: var(--font-mono); }
 </style>
 </head>
 <body>
 
 <div id="reading-progress"></div>
-
-<script>
-    console.log("%c Ryzen Loader ", "background: #e6e6e6; color: #121212; font-size: 22px; font-weight: bold; padding: 6px 12px; border-radius: 3px;");
-    console.log("%c Хочешь узнать секрет? Набери: ↑ ↑ ↓ ↓ ← → ← → B A", "color: #8a8a8a; font-size: 13px;");
-    console.log("%c Или кликни по логотипу 3 раза. Нажми '?' для списка горячих клавиш.", "color: #5a5a5a; font-size: 11px;");
-</script>
-
-<!-- NEW: Аврора-фон -->
+<div class="bg-grid"></div>
 <div class="aurora">
     <span></span>
     <span></span>
     <span></span>
 </div>
 
-<canvas id="weather-canvas"></canvas>
+<canvas id="weather-canvas" style="position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity 0.5s;"></canvas>
 <canvas id="matrix-canvas"></canvas>
-
-<div class="lightning-flash" id="lightning-flash"></div>
+<div id="lightning-flash" style="position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:2;"></div>
 
 <div class="container">
 
     <!-- ============ NAV ============ -->
     <nav id="main-nav">
         <div class="brand" id="logo-brand">
-            <span class="dot"></span>
-            RYZEN LOADER
+            <div class="brand-logo">R</div>
+            <div class="brand-text">
+                <span class="main">RYZEN</span>
+                <span class="sub">LOADER</span>
+            </div>
         </div>
 
         <div class="nav-right">
@@ -1424,92 +1935,121 @@
                 <a href="#faq">FAQ</a>
             </div>
 
-            <button class="settings-btn" id="settings-btn" title="Настройки (T)">⚙</button>
+            <button class="icon-btn" id="settings-btn" title="Настройки (T)" aria-label="Настройки">
+                ⚙
+            </button>
+
+            <button class="burger" id="burger" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
 
             <div class="settings-panel" id="settings-panel">
                 <div class="settings-title">Фон</div>
-
                 <div class="settings-option active" data-weather="none">
-                    <span class="icon">🚫</span>
-                    <span>Отключено</span>
+                    <span class="icon">🚫</span><span>Отключено</span>
                 </div>
-
                 <div class="settings-option" data-weather="snow">
-                    <span class="icon">❄</span>
-                    <span>Снег</span>
+                    <span class="icon">❄</span><span>Снег</span>
                 </div>
-
                 <div class="settings-option" data-weather="rain">
-                    <span class="icon">🌧</span>
-                    <span>Дождь</span>
+                    <span class="icon">🌧</span><span>Дождь</span>
                 </div>
-
                 <div class="settings-option" data-weather="storm">
-                    <span class="icon">⛈</span>
-                    <span>Гроза</span>
+                    <span class="icon">⛈</span><span>Гроза</span>
                 </div>
-
                 <div class="settings-option" data-weather="matrix">
-                    <span class="icon">🟢</span>
-                    <span>Матрица</span>
+                    <span class="icon">🟢</span><span>Матрица</span>
                 </div>
-
                 <div class="settings-option" data-weather="stars">
-                    <span class="icon">✨</span>
-                    <span>Звёзды</span>
+                    <span class="icon">✨</span><span>Звёзды</span>
                 </div>
 
                 <div class="settings-title">Тема</div>
-
                 <div class="settings-option active" data-theme="dark">
-                    <span class="icon">🌙</span>
-                    <span>Тёмная</span>
+                    <span class="icon">🌙</span><span>Тёмная</span>
                 </div>
-
                 <div class="settings-option" data-theme="black">
-                    <span class="icon">⬛</span>
-                    <span>Чёрная</span>
+                    <span class="icon">⬛</span><span>Чёрная</span>
                 </div>
 
-                <!-- NEW: мини-график онлайна -->
                 <div class="settings-title">Онлайн за 24ч</div>
                 <div class="online-chart" id="online-chart"></div>
                 <div class="chart-labels">
-                    <span>00:00</span>
-                    <span>12:00</span>
-                    <span>23:00</span>
+                    <span>00:00</span><span>12:00</span><span>23:00</span>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobile-menu">
+        <button class="mobile-close" id="mobile-close">✕</button>
+        <a href="#games">🎮 Игры</a>
+        <a href="#pricing">💰 Цены</a>
+        <a href="#changelog">📝 Обновления</a>
+        <a href="#faq">❓ FAQ</a>
+    </div>
+
     <!-- ============ HERO ============ -->
     <section class="hero reveal">
-        <div class="badge">Online — <span class="online-count" id="online-count">—</span> гостей</div>
+        <div class="breadcrumbs">
+            <span>Главная</span> / <span>Ryzen Loader</span> / <span class="text-accent">v3.0</span>
+        </div>
+
+        <div class="hero-badge">
+            <span class="pulse-dot"></span>
+            Online — <span id="online-count" style="color:var(--accent);font-weight:800;">—</span> гостей
+        </div>
+
         <h1 id="hero-title">RYZEN<span class="accent"> LOADER</span></h1>
         <p class="tagline">Private Cheat Software</p>
 
         <div class="cta-buttons">
-            <a href="#pricing" class="btn btn-primary">Купить доступ</a>
-            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost discord-link">Discord</a>
+            <a href="#pricing" class="btn btn-primary btn-lg">Купить доступ →</a>
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost btn-lg discord-link">💬 Discord</a>
         </div>
 
         <div class="stats">
             <div class="stat">
+                <div class="stat-icon">🎮</div>
                 <div class="value" data-count="2">0</div>
                 <div class="label">Игры</div>
             </div>
             <div class="stat">
+                <div class="stat-icon">🛡</div>
                 <div class="value">24/7</div>
                 <div class="label">Поддержка</div>
             </div>
             <div class="stat">
+                <div class="stat-icon">✅</div>
                 <div class="value" data-count="100" data-suffix="%">0</div>
                 <div class="label">Undetected</div>
             </div>
             <div class="stat">
+                <div class="stat-icon">⚡</div>
                 <div class="value">v3.0</div>
                 <div class="label">Версия</div>
+            </div>
+        </div>
+
+        <!-- Статус-бар -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <span class="status-label">Статус</span>
+                <span class="status-value text-accent">ONLINE</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <span class="status-label">Аптайм</span>
+                <span class="status-value">99.9%</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <span class="status-label">Инжект</span>
+                <span class="status-value">~2s</span>
             </div>
         </div>
     </section>
@@ -1517,27 +2057,49 @@
     <!-- ============ GAMES ============ -->
     <section class="section reveal" id="games">
         <div class="section-head">
+            <div class="section-label">Игры</div>
             <h2>Поддерживаемые игры</h2>
-            <p>Один ключ — обе игры</p>
+            <p>Один ключ — обе игры. Полный доступ ко всем функциям.</p>
         </div>
 
         <div class="games-grid">
             <div class="game-card">
-                <div class="game-head">
-                    <div class="game-icon">👻</div>
-                    <span class="status status-green">● UNDETECTED</span>
+                <div class="game-preview">👻</div>
+                <div class="game-body">
+                    <div class="game-head">
+                        <div>
+                            <div class="game-name">Ryzen Internal</div>
+                            <div class="game-desc">cs2.exe</div>
+                        </div>
+                        <span class="status status-green">Undetected</span>
+                    </div>
+                    <div class="game-tags">
+                        <span class="game-tag">Aimbot</span>
+                        <span class="game-tag">ESP</span>
+                        <span class="game-tag">Triggerbot</span>
+                        <span class="game-tag">Rage</span>
+                        <span class="game-tag">Legit</span>
+                    </div>
                 </div>
-                <div class="game-name">Ryzen Internal</div>
-                <div class="game-desc">Counter-Strike 2</div>
             </div>
 
             <div class="game-card">
-                <div class="game-head">
-                    <div class="game-icon">😈</div>
-                    <span class="status status-green">● UNDETECTED</span>
+                <div class="game-preview">😈</div>
+                <div class="game-body">
+                    <div class="game-head">
+                        <div>
+                            <div class="game-name">Fatality Internal</div>
+                            <div class="game-desc">gmod.exe</div>
+                        </div>
+                        <span class="status status-green">Undetected</span>
+                    </div>
+                    <div class="game-tags">
+                        <span class="game-tag">Aimbot</span>
+                        <span class="game-tag">ESP</span>
+                        <span class="game-tag">Silent</span>
+                        <span class="game-tag">Anti-Aim</span>
+                    </div>
                 </div>
-                <div class="game-name">Fatality Internal</div>
-                <div class="game-desc">Garry's Mod</div>
             </div>
         </div>
     </section>
@@ -1545,78 +2107,48 @@
     <!-- ============ PRICING ============ -->
     <section class="section reveal" id="pricing">
         <div class="section-head">
+            <div class="section-label">Цены</div>
             <h2>Тарифы Full Access</h2>
-            <p>Обе игры — один ключ</p>
+            <p>Обе игры — один ключ. Без скрытых платежей.</p>
         </div>
 
-        <div class="pricing-grid">
+        <div class="billing-toggle" id="billing-toggle">
+            <button class="active" data-period="7">7 дней</button>
+            <button data-period="30">30 дней <span class="save-badge">-15%</span></button>
+            <button data-period="lifetime">Lifetime <span class="save-badge">-30%</span></button>
+        </div>
 
-            <div class="price-card">
-                <div class="duration">7 дней</div>
-                <div class="price">150<span class="currency">₽</span></div>
-                <div class="price-note">Пробный период</div>
-                <ul class="features">
-                    <li>Ryzen (CS2) + Fatality (GMod)</li>
-                    <li>Привязка по HWID</li>
-                    <li>Обновления</li>
-                </ul>
-                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost discord-link">Купить</a>
-            </div>
-
-            <div class="price-card featured">
-                <div class="duration">30 дней</div>
-                <div class="price">500<span class="currency">₽</span></div>
-                <div class="price-note">Оптимальный выбор</div>
-                <ul class="features">
-                    <li>Ryzen (CS2) + Fatality (GMod)</li>
-                    <li>Привязка по HWID</li>
-                    <li>Обновления</li>
-                    <li>Приоритетная поддержка</li>
-                </ul>
-                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary discord-link">Купить</a>
-            </div>
-
-            <div class="price-card">
-                <div class="duration">Lifetime</div>
-                <div class="price">2500<span class="currency">₽</span></div>
-                <div class="price-note">Навсегда</div>
-                <ul class="features">
-                    <li>Ryzen (CS2) + Fatality (GMod)</li>
-                    <li>Привязка по HWID</li>
-                    <li>Все будущие обновления</li>
-                    <li>Личная поддержка</li>
-                </ul>
-                <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost discord-link">Купить</a>
-            </div>
-
+        <div class="pricing-grid" id="pricing-grid">
+            <!-- Заполняется JS -->
         </div>
     </section>
 
     <!-- ============ STEPS ============ -->
     <section class="section reveal">
         <div class="section-head">
-            <h2>Как купить</h2>
-            <p>Четыре простых шага</p>
+            <div class="section-label">Как купить</div>
+            <h2>Четыре простых шага</h2>
+            <p>От выбора тарифа до первого инжекта — меньше 10 минут</p>
         </div>
 
         <div class="steps">
             <div class="step">
-                <div class="num">1</div>
+                <div class="num">01</div>
                 <div class="step-title">Напиши в Discord</div>
                 <div class="step-desc">Свяжись с продавцом и выбери тариф</div>
             </div>
             <div class="step">
-                <div class="num">2</div>
+                <div class="num">02</div>
                 <div class="step-title">Оплати</div>
                 <div class="step-desc">Перевод или криптовалюта</div>
             </div>
             <div class="step">
-                <div class="num">3</div>
+                <div class="num">03</div>
                 <div class="step-title">Получи ключ</div>
                 <div class="step-desc">В течение 5–10 минут после оплаты</div>
             </div>
             <div class="step">
-                <div class="num">4</div>
+                <div class="num">04</div>
                 <div class="step-title">Запусти лоадер</div>
                 <div class="step-desc">Введи ключ и играй</div>
             </div>
@@ -1626,145 +2158,40 @@
     <!-- ============ CHANGELOG ============ -->
     <section class="section reveal" id="changelog">
         <div class="section-head">
+            <div class="section-label">Обновления</div>
             <h2>Update Log</h2>
             <p>История обновлений Ryzen Loader</p>
         </div>
 
-        <div class="changelog">
+        <div class="changelog-filters" id="changelog-filters">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="new">New</button>
+            <button class="filter-btn" data-filter="fix">Fix</button>
+            <button class="filter-btn" data-filter="improve">Improve</button>
+            <button class="filter-btn" data-filter="security">Security</button>
+        </div>
 
-            <div class="version latest">
-                <div class="version-head">
-                    <span class="version-tag">Beta v2</span>
-                    <span class="version-badge latest">Latest</span>
-                    <span class="version-date">21 сентября 2026</span>
-                </div>
-                <div class="version-title">Крупное обновление — новая версия лоадера</div>
-                <ul class="version-list">
-                    <li>Полностью переписан инжектор с нуля <span class="tag tag-improve">Improve</span></li>
-                    <li>Улучшена стабильность сайта <span class="tag tag-fix">Fix</span></li>
-                    <li>Добавлен счётчик онлайна с сохранением <span class="tag tag-new">New</span></li>
-                    <li>Новая система HWID-привязки с защитой от подмены <span class="tag tag-security">Security</span></li>
-                    <li>Улучшена стабильность на Windows 11 24H2 <span class="tag tag-fix">Fix</span></li>
-                    <li>Уменьшено время инжекта с 8 до 2 секунд <span class="tag tag-improve">Improve</span></li>
-                </ul>
-            </div>
-
-            <div class="version">
-                <div class="version-head">
-                    <span class="version-tag">Beta v1.3</span>
-                    <span class="version-date">15 августа 2026</span>
-                </div>
-                <div class="version-title">Оптимизация и новые фичи</div>
-                <ul class="version-list">
-                    <li>Добавлен Fatality Internal для Garry's Mod <span class="tag tag-new">New</span></li>
-                    <li>Исправлен краш при инжекте в CS2 после обновления <span class="tag tag-fix">Fix</span></li>
-                    <li>Обновлён API обхода VAC Live <span class="tag tag-security">Security</span></li>
-                    <li>Снижено потребление ОЗУ на 30% <span class="tag tag-improve">Improve</span></li>
-                </ul>
-            </div>
-
-            <div class="version">
-                <div class="version-head">
-                    <span class="version-tag">Beta v1.2</span>
-                    <span class="version-date">10 июля 2026</span>
-                </div>
-                <div class="version-title">Глобальный рефакторинг</div>
-                <ul class="version-list">
-                    <li>Новый лоадер с поддержкой HWID-сброса <span class="tag tag-new">New</span></li>
-                    <li>Удалена устаревшая поддержка CS:GO <span class="tag tag-remove">Remove</span></li>
-                    <li>Улучшена система автообновления <span class="tag tag-improve">Improve</span></li>
-                    <li>Исправлены ложные срабатывания антивируса <span class="tag tag-fix">Fix</span></li>
-                </ul>
-            </div>
-
-            <div class="version">
-                <div class="version-head">
-                    <span class="version-tag">Beta v1.1.5</span>
-                    <span class="version-date">22 мая 2026</span>
-                </div>
-                <div class="version-title">Промежуточное обновление</div>
-                <ul class="version-list">
-                    <li>Добавлена поддержка CS2 <span class="tag tag-new">New</span></li>
-                    <li>Оптимизация рендера меню <span class="tag tag-improve">Improve</span></li>
-                    <li>Мелкие исправления багов <span class="tag tag-fix">Fix</span></li>
-                </ul>
-            </div>
-
-            <div class="version">
-                <div class="version-head">
-                    <span class="version-tag">Beta v1.0</span>
-                    <span class="version-date">1 марта 2026</span>
-                </div>
-                <div class="version-title">Первый публичный релиз</div>
-                <ul class="version-list">
-                    <li>Запуск Ryzen Loader для Garry's Mod <span class="tag tag-new">New</span></li>
-                    <li>Базовый функционал чита <span class="tag tag-new">New</span></li>
-                    <li>Система ключей и HWID-привязки <span class="tag tag-new">New</span></li>
-                </ul>
-            </div>
-
+        <div class="changelog" id="changelog-list">
+            <!-- Заполняется JS -->
         </div>
     </section>
 
     <!-- ============ FAQ ============ -->
     <section class="section reveal" id="faq">
         <div class="section-head">
+            <div class="section-label">FAQ</div>
             <h2>Частые вопросы</h2>
             <p>Что важно знать перед покупкой</p>
         </div>
 
         <div class="faq-controls">
-            <input type="text" class="faq-search" id="faq-search" placeholder="Поиск по вопросам... (нажми / )">
+            <input type="text" class="faq-search" id="faq-search" placeholder="Поиск по вопросам... (нажми / )" aria-label="Поиск по FAQ">
+            <span class="faq-counter" id="faq-counter">7 вопросов</span>
             <button class="faq-toggle-all" id="faq-toggle-all">Развернуть все</button>
         </div>
 
-        <div class="faq-item">
-            <div class="faq-question">Можно ли получить пробную подписку?</div>
-            <div class="faq-answer">
-                <strong>Нет.</strong> Мы не выдаём бесплатные пробные подписки. Если хочешь попробовать — покупай минимальный тариф на 7 дней за 150₽. Это недорого, но этого хватит, чтобы понять, подходит ли тебе лоадер. Так мы защищаем свой софт от слива и не тратим время на бесконечные бесплатные тесты.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">Дадут ли VAC-бан?</div>
-            <div class="faq-answer">
-                Лоадер не детектится на момент публикации. Однако VAC Live обновляется, и любой чит может быть задетекчен. Использование чита — это риск, и вы принимаете его добровольно.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">На каких серверах можно играть?</div>
-            <div class="faq-answer">
-                На любых, но помни о рисках. На официальных серверах (Premier, Competitive) VAC-бан возможен — мы не гарантируем защиту. Играй на community-серверах и локальных, там безопаснее.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">Можно ли перенести ключ на другой ПК?</div>
-            <div class="faq-answer">
-                Нет, ключ привязан к HWID вашего компьютера. Если вы сменили железо или переустановили Windows — свяжитесь с продавцом для сброса HWID (делается один раз бесплатно).
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">Работает ли на пиратке?</div>
-            <div class="faq-answer">
-                Лоадер работает с любыми версиями игр — Steam, пиратка, локальные сборки. Главное — чтобы игра запускалась как процесс <strong>cs2.exe</strong> / <strong>gmod.exe</strong>.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">Что делать, если ключ не работает?</div>
-            <div class="faq-answer">
-                Проверь, что вводишь ключ без лишних пробелов, и что HWID совпадает с тем, на который выдан ключ. Если проблема остаётся — напиши продавцу в Discord, помогут.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">Возврат средств возможен?</div>
-            <div class="faq-answer">
-                <strong>Нет.</strong> После активации ключа возврат не делается. Если ключ не активирован — можно попросить замену. Пожалуйста, будь уверен в покупке перед оплатой.
-            </div>
+        <div id="faq-list">
+            <!-- Заполняется JS -->
         </div>
     </section>
 
@@ -1781,134 +2208,353 @@
                 <div class="t-box"><div class="t-val" id="t-secs">00</div><div class="t-lbl">Секунд</div></div>
             </div>
 
-            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary discord-link">Написать в Discord</a>
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary btn-lg discord-link">💬 Написать в Discord</a>
         </div>
     </section>
 
     <!-- ============ FOOTER ============ -->
     <footer>
-        <div class="socials">
-            <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Discord</a>
-            <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Канал</a>
-            <a href="#pricing">Цены</a>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Продукт</h4>
+                <a href="#games">Игры</a>
+                <a href="#pricing">Цены</a>
+                <a href="#changelog">Обновления</a>
+            </div>
+            <div class="footer-col">
+                <h4>Поддержка</h4>
+                <a href="#faq">FAQ</a>
+                <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Discord</a>
+                <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Канал</a>
+            </div>
+            <div class="footer-col">
+                <h4>Правовое</h4>
+                <a href="#">Условия</a>
+                <a href="#">Политика</a>
+                <a href="#">Возврат</a>
+            </div>
         </div>
-        <div>© 2024 Ryzen Loader. Все права защищены.</div>
-        <button class="share-btn" id="share-btn">🔗 Поделиться сайтом</button>
+        <div class="footer-bottom">
+            <span>© 2024 Ryzen Loader. Все права защищены.</span>
+            <button class="share-btn" id="share-btn">🔗 Поделиться сайтом</button>
+        </div>
     </footer>
 
 </div>
 
-<div class="toast" id="toast">🎉 Ты нашёл секрет!</div>
+<div class="toast" id="toast"></div>
+<button id="back-to-top" title="Наверх" aria-label="Наверх">↑</button>
 
-<button id="back-to-top" title="Наверх">↑</button>
-
-<!-- NEW: Live-часы -->
 <div id="live-clock" title="Текущее время и сезон">
     <span>🕐</span>
     <span class="clock-time" id="clock-time">--:--</span>
     <span class="clock-season" id="clock-season">—</span>
 </div>
 
-<!-- NEW: Модалка горячих клавиш -->
 <div class="modal-overlay" id="hotkeys-modal">
     <div class="modal">
         <h3>⌨️ Горячие клавиши</h3>
         <p>Быстрое управление сайтом</p>
-
-        <div class="hotkey-row">
-            <span>Поиск по FAQ</span>
-            <span><kbd>/</kbd></span>
-        </div>
-        <div class="hotkey-row">
-            <span>Переключить тему</span>
-            <span><kbd>T</kbd></span>
-        </div>
-        <div class="hotkey-row">
-            <span>Наверх страницы</span>
-            <span><kbd>Home</kbd></span>
-        </div>
-        <div class="hotkey-row">
-            <span>Вниз страницы</span>
-            <span><kbd>End</kbd></span>
-        </div>
-        <div class="hotkey-row">
-            <span>Список клавиш</span>
-            <span><kbd>?</kbd></span>
-        </div>
-        <div class="hotkey-row">
-            <span>Закрыть модалку</span>
-            <span><kbd>Esc</kbd></span>
-        </div>
-
+        <div class="hotkey-row"><span>Поиск по FAQ</span><kbd>/</kbd></div>
+        <div class="hotkey-row"><span>Переключить тему</span><kbd>T</kbd></div>
+        <div class="hotkey-row"><span>Наверх страницы</span><kbd>Home</kbd></div>
+        <div class="hotkey-row"><span>Вниз страницы</span><kbd>End</kbd></div>
+        <div class="hotkey-row"><span>Список клавиш</span><kbd>?</kbd></div>
+        <div class="hotkey-row"><span>Закрыть модалку</span><kbd>Esc</kbd></div>
         <button class="modal-close" id="modal-close-btn">Понятно</button>
     </div>
 </div>
 
 <div id="cookie-bar">
-    <span>🍪 Мы используем localStorage для сохранения настроек. Продолжая, вы соглашаетесь.</span>
+    <span>🍪 Мы используем localStorage для сохранения настроек.</span>
     <button id="cookie-accept">ОК</button>
 </div>
 
 <script>
-    // =========================================================
-    // Утилиты
-    // =========================================================
-    function throttle(fn, delay) {
-        let last = 0;
-        return function(...args) {
-            const now = Date.now();
-            if (now - last >= delay) {
-                last = now;
-                fn.apply(this, args);
-            }
-        };
+/* =========================================================
+   ДАННЫЕ
+   ========================================================= */
+const PRICING_DATA = {
+    7: {
+        name: '7 дней', price: 150, note: 'Пробный период',
+        features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления']
+    },
+    30: {
+        name: '30 дней', price: 500, note: 'Оптимальный выбор', featured: true,
+        features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка']
+    },
+    lifetime: {
+        name: 'Lifetime', price: 2500, note: 'Навсегда',
+        features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Все будущие обновления', 'Личная поддержка']
     }
+};
 
-    // =========================================================
-    // Звук (с разными тонами)
-    // =========================================================
-    let audioCtx = null;
-    function playSound(freq = 800, duration = 0.08, type = 'square', vol = 0.03) {
-        try {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.value = freq;
-            gain.gain.value = vol;
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-            osc.stop(audioCtx.currentTime + duration);
-        } catch(e) {}
+const CHANGELOG_DATA = [
+    {
+        tag: 'Beta v2', latest: true, date: '21 сентября 2026',
+        title: 'Крупное обновление — новая версия лоадера',
+        items: [
+            { text: 'Полностью переписан инжектор с нуля', type: 'improve' },
+            { text: 'Улучшена стабильность сайта', type: 'fix' },
+            { text: 'Добавлен счётчик онлайна с сохранением', type: 'new' },
+            { text: 'Новая система HWID-привязки с защитой от подмены', type: 'security' },
+            { text: 'Улучшена стабильность на Windows 11 24H2', type: 'fix' },
+            { text: 'Уменьшено время инжекта с 8 до 2 секунд', type: 'improve' }
+        ]
+    },
+    {
+        tag: 'Beta v1.3', date: '15 августа 2026',
+        title: 'Оптимизация и новые фичи',
+        items: [
+            { text: 'Добавлен Fatality Internal для Garry\'s Mod', type: 'new' },
+            { text: 'Исправлен краш при инжекте в CS2 после обновления', type: 'fix' },
+            { text: 'Обновлён API обхода VAC Live', type: 'security' },
+            { text: 'Снижено потребление ОЗУ на 30%', type: 'improve' }
+        ]
+    },
+    {
+        tag: 'Beta v1.2', date: '10 июля 2026',
+        title: 'Глобальный рефакторинг',
+        items: [
+            { text: 'Новый лоадер с поддержкой HWID-сброса', type: 'new' },
+            { text: 'Удалена устаревшая поддержка CS:GO', type: 'remove' },
+            { text: 'Улучшена система автообновления', type: 'improve' },
+            { text: 'Исправлены ложные срабатывания антивируса', type: 'fix' }
+        ]
+    },
+    {
+        tag: 'Beta v1.1.5', date: '22 мая 2026',
+        title: 'Промежуточное обновление',
+        items: [
+            { text: 'Добавлена поддержка CS2', type: 'new' },
+            { text: 'Оптимизация рендера меню', type: 'improve' },
+            { text: 'Мелкие исправления багов', type: 'fix' }
+        ]
+    },
+    {
+        tag: 'Beta v1.0', date: '1 марта 2026',
+        title: 'Первый публичный релиз',
+        items: [
+            { text: 'Запуск Ryzen Loader для Garry\'s Mod', type: 'new' },
+            { text: 'Базовый функционал чита', type: 'new' },
+            { text: 'Система ключей и HWID-привязки', type: 'new' }
+        ]
     }
-    function playClick() { playSound(800, 0.06); }
-    function playSuccess() { playSound(1200, 0.15, 'sine', 0.04); }
-    function playError() { playSound(300, 0.15, 'sawtooth', 0.03); }
+];
 
-    // =========================================================
-    // Toast (улучшенный)
-    // =========================================================
-    const showToast = throttle(function(message, type = 'info') {
-        const toast = document.getElementById('toast');
-        if (!toast) return;
-        toast.textContent = message;
-        toast.className = 'toast show ' + type;
-        clearTimeout(toast._timeout);
-        toast._timeout = setTimeout(() => toast.classList.remove('show'), 3200);
-    }, 400);
+const FAQ_DATA = [
+    { q: 'Можно ли получить пробную подписку?', a: '<strong>Нет.</strong> Мы не выдаём бесплатные пробные подписки. Если хочешь попробовать — покупай минимальный тариф на 7 дней за 150₽. Это недорого, но этого хватит, чтобы понять, подходит ли тебе лоадер. Так мы защищаем свой софт от слива.' },
+    { q: 'Дадут ли VAC-бан?', a: 'Лоадер не детектится на момент публикации. Однако VAC Live обновляется, и любой чит может быть задетекчен. Использование чита — это риск, и вы принимаете его добровольно.' },
+    { q: 'На каких серверах можно играть?', a: 'На любых, но помни о рисках. На официальных серверах (Premier, Competitive) VAC-бан возможен — мы не гарантируем защиту. Играй на community-серверах и локальных, там безопаснее.' },
+    { q: 'Можно ли перенести ключ на другой ПК?', a: 'Нет, ключ привязан к HWID вашего компьютера. Если вы сменили железо или переустановили Windows — свяжитесь с продавцом для сброса HWID (делается один раз бесплатно).' },
+    { q: 'Работает ли на пиратке?', a: 'Лоадер работает с любыми версиями игр — Steam, пиратка, локальные сборки. Главное — чтобы игра запускалась как процесс <strong>cs2.exe</strong> / <strong>gmod.exe</strong>.' },
+    { q: 'Что делать, если ключ не работает?', a: 'Проверь, что вводишь ключ без лишних пробелов, и что HWID совпадает с тем, на который выдан ключ. Если проблема остаётся — напиши продавцу в Discord, помогут.' },
+    { q: 'Возврат средств возможен?', a: '<strong>Нет.</strong> После активации ключа возврат не делается. Если ключ не активирован — можно попросить замену. Пожалуйста, будь уверен в покупке перед оплатой.' }
+];
 
-    // =========================================================
-    // FAQ
-    // =========================================================
-    document.querySelectorAll('.faq-question').forEach(q => {
+/* =========================================================
+   УТИЛИТЫ
+   ========================================================= */
+function throttle(fn, delay) {
+    let last = 0;
+    return function(...args) {
+        const now = Date.now();
+        if (now - last >= delay) { last = now; fn.apply(this, args); }
+    };
+}
+
+let audioCtx = null;
+function playSound(freq = 800, duration = 0.08, type = 'square', vol = 0.03) {
+    try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type; osc.frequency.value = freq; gain.gain.value = vol;
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+}
+const playClick = () => playSound(800, 0.06);
+const playSuccess = () => playSound(1200, 0.15, 'sine', 0.04);
+const playError = () => playSound(300, 0.15, 'sawtooth', 0.03);
+
+const showToast = throttle(function(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = 'toast show ' + type;
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.remove('show'), 3200);
+}, 400);
+
+/* =========================================================
+   РЕНДЕР ДИНАМИЧЕСКОГО КОНТЕНТА
+   ========================================================= */
+function renderPricing(period = '30') {
+    const grid = document.getElementById('pricing-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    
+    // Показываем все 3 тарифа, но выделяем выбранный
+    Object.entries(PRICING_DATA).forEach(([key, plan]) => {
+        const isActive = key === period;
+        const card = document.createElement('div');
+        card.className = 'price-card' + (plan.featured ? ' featured' : '');
+        if (isActive) card.style.borderColor = 'var(--accent)';
+        
+        card.innerHTML = `
+            <div class="duration">${plan.name}</div>
+            <div class="price">${plan.price}<span class="currency">₽</span></div>
+            <div class="price-note">${plan.note}</div>
+            <ul class="features">
+                ${plan.features.map(f => `<li>${f}</li>`).join('')}
+            </ul>
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn ${plan.featured ? 'btn-primary' : 'btn-ghost'} discord-link">Купить</a>
+        `;
+        grid.appendChild(card);
+    });
+    
+    // Перепривязываем события к новым discord-ссылкам
+    bindDiscordLinks();
+    bindButtonRipples();
+}
+
+function renderChangelog(filter = 'all') {
+    const list = document.getElementById('changelog-list');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    CHANGELOG_DATA.forEach(version => {
+        const filteredItems = filter === 'all' 
+            ? version.items 
+            : version.items.filter(item => item.type === filter);
+        
+        if (filteredItems.length === 0 && filter !== 'all') return;
+        
+        const div = document.createElement('div');
+        div.className = 'version' + (version.latest ? ' latest' : '');
+        
+        div.innerHTML = `
+            <div class="version-head">
+                <span class="version-tag">${version.tag}</span>
+                ${version.latest ? '<span class="version-badge latest">Latest</span>' : ''}
+                <span class="version-date">${version.date}</span>
+            </div>
+            <div class="version-title">${version.title}</div>
+            <ul class="version-list">
+                ${filteredItems.map(item => `
+                    <li>${item.text} <span class="tag tag-${item.type}">${item.type}</span></li>
+                `).join('')}
+            </ul>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function renderFAQ() {
+    const list = document.getElementById('faq-list');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    FAQ_DATA.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'faq-item';
+        div.dataset.index = i;
+        div.innerHTML = `
+            <div class="faq-question">${item.q}</div>
+            <div class="faq-answer">${item.a}</div>
+        `;
+        list.appendChild(div);
+    });
+    
+    // Обработчики
+    list.querySelectorAll('.faq-question').forEach(q => {
         q.addEventListener('click', () => {
             q.parentElement.classList.toggle('open');
             playClick();
         });
     });
+    
+    updateFaqCounter();
+}
 
+function updateFaqCounter() {
+    const counter = document.getElementById('faq-counter');
+    if (!counter) return;
+    const visible = document.querySelectorAll('.faq-item:not(.hidden)').length;
+    const total = FAQ_DATA.length;
+    counter.textContent = visible === total ? `${total} вопросов` : `${visible} из ${total}`;
+}
+
+function bindDiscordLinks() {
+    document.querySelectorAll('.discord-link').forEach(link => {
+        if (link._bound) return;
+        link._bound = true;
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = link.getAttribute('href');
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Ссылка на Discord скопирована!', 'success');
+                playSuccess();
+            }).catch(() => {
+                showToast('Discord: ' + url, 'info');
+            });
+            window.open(url, '_blank');
+        });
+    });
+}
+
+function bindButtonRipples() {
+    document.querySelectorAll('.btn').forEach(btn => {
+        if (btn._rippleBound) return;
+        btn._rippleBound = true;
+        btn.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+}
+
+/* =========================================================
+   ИНИЦИАЛИЗАЦИЯ
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+    renderPricing('30');
+    renderChangelog('all');
+    renderFAQ();
+    bindDiscordLinks();
+    bindButtonRipples();
+
+    // ===== Billing toggle =====
+    document.querySelectorAll('#billing-toggle button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#billing-toggle button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPricing(btn.dataset.period);
+            playClick();
+        });
+    });
+
+    // ===== Changelog filters =====
+    document.querySelectorAll('#changelog-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#changelog-filters .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderChangelog(btn.dataset.filter);
+            playClick();
+        });
+    });
+
+    // ===== FAQ toggle all =====
     const faqToggleAll = document.getElementById('faq-toggle-all');
     let allExpanded = false;
     if (faqToggleAll) {
@@ -1922,6 +2568,7 @@
         });
     }
 
+    // ===== FAQ search =====
     const faqSearch = document.getElementById('faq-search');
     if (faqSearch) {
         faqSearch.addEventListener('input', (e) => {
@@ -1930,25 +2577,57 @@
                 const text = item.textContent.toLowerCase();
                 item.classList.toggle('hidden', query !== '' && !text.includes(query));
             });
+            updateFaqCounter();
         });
     }
 
-    // =========================================================
-    // Плавный скролл
-    // =========================================================
+    // ===== Smooth scroll =====
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', e => {
             const target = document.querySelector(a.getAttribute('href'));
             if (target) {
                 e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Закрываем мобильное меню
+                document.getElementById('mobile-menu')?.classList.remove('open');
             }
         });
     });
 
-    // =========================================================
-    // ПАСХАЛКА: 3 клика по логотипу
-    // =========================================================
+    // ===== Mobile burger =====
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileClose = document.getElementById('mobile-close');
+    if (burger && mobileMenu) {
+        burger.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            playClick();
+        });
+    }
+    if (mobileClose && mobileMenu) {
+        mobileClose.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            playClick();
+        });
+    }
+
+    // ===== Settings panel =====
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+    if (settingsBtn && settingsPanel) {
+        settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            settingsPanel.classList.toggle('open');
+            playClick();
+        });
+        document.addEventListener('click', (e) => {
+            if (!settingsPanel.contains(e.target) && e.target !== settingsBtn) {
+                settingsPanel.classList.remove('open');
+            }
+        });
+    }
+
+    // ===== Logo easter egg =====
     let logoClicks = 0;
     const logoBrand = document.getElementById('logo-brand');
     if (logoBrand) {
@@ -1965,79 +2644,7 @@
         });
     }
 
-    // =========================================================
-    // ПАСХАЛКА: Konami-код
-    // =========================================================
-    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-                        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-                        'b', 'a'];
-    let konamiProgress = 0;
-
-    document.addEventListener('keydown', (e) => {
-        // Игнорируем если в input
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-        if (key === konamiCode[konamiProgress]) {
-            konamiProgress++;
-            if (konamiProgress === konamiCode.length) {
-                activateMatrix();
-                konamiProgress = 0;
-            }
-        } else {
-            konamiProgress = 0;
-        }
-    });
-
-    function activateMatrix() {
-        const canvas = document.getElementById('matrix-canvas');
-        if (!canvas) return;
-
-        showToast('🟢 Wake up, Neo...', 'success');
-        playSuccess();
-        document.body.classList.add('matrix-active');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const ctx = canvas.getContext('2d');
-        const chars = 'RYSENLOADER01アイウエオカキクケコ'.split('');
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        for (let i = 0; i < columns; i++) drops[i] = 1;
-
-        let frameCount = 0;
-        const maxFrames = 300;
-
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#50c878';
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
-                    drops[i] = 0;
-                drops[i]++;
-            }
-
-            frameCount++;
-            if (frameCount < maxFrames) {
-                requestAnimationFrame(draw);
-            } else {
-                document.body.classList.remove('matrix-active');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
-        }
-        draw();
-    }
-
-    // =========================================================
-    // ПАСХАЛКА: клик по H1
-    // =========================================================
+    // ===== H1 easter egg =====
     const heroTitle = document.getElementById('hero-title');
     if (heroTitle) {
         heroTitle.addEventListener('click', () => {
@@ -2051,429 +2658,198 @@
         });
     }
 
-    // =========================================================
-    // Счётчик посещений
-    // =========================================================
-    let visits = parseInt(localStorage.getItem('ryzen_visits') || '0');
-    visits++;
-    localStorage.setItem('ryzen_visits', visits);
-    console.log('%c Ты заходил на этот сайт ' + visits + ' раз.', 'color: #5a5a5a; font-style: italic;');
-
-    if (visits === 10) {
-        console.log('%c 10 раз! Скажи "RYZEN10" в Discord — получи 10% скидку.', 'color: #50c878; font-weight: bold;');
-    }
-
-    // =========================================================
-    // НАСТРОЙКИ
-    // =========================================================
-    const settingsBtn = document.getElementById('settings-btn');
-    const settingsPanel = document.getElementById('settings-panel');
-    const weatherCanvas = document.getElementById('weather-canvas');
-    const lightningFlash = document.getElementById('lightning-flash');
-
-    if (settingsBtn && settingsPanel) {
-        settingsBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            settingsPanel.classList.toggle('open');
-            playClick();
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!settingsPanel.contains(e.target) && e.target !== settingsBtn) {
-                settingsPanel.classList.remove('open');
+    // ===== Konami =====
+    const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let konamiProgress = 0;
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        if (key === konamiCode[konamiProgress]) {
+            konamiProgress++;
+            if (konamiProgress === konamiCode.length) {
+                activateMatrix();
+                konamiProgress = 0;
             }
-        });
-    }
-
-    let currentWeather = localStorage.getItem('ryzen_weather') || 'none';
-    let currentTheme = localStorage.getItem('ryzen_theme') || 'dark';
-    let weatherAnimId = null;
-    let lightningInterval = null;
-
-    function updateSettingsUI() {
-        document.querySelectorAll('.settings-option[data-weather]').forEach(opt => {
-            opt.classList.toggle('active', opt.dataset.weather === currentWeather);
-        });
-        document.querySelectorAll('.settings-option[data-theme]').forEach(opt => {
-            opt.classList.toggle('active', opt.dataset.theme === currentTheme);
-        });
-    }
-    updateSettingsUI();
-
-    document.querySelectorAll('.settings-option[data-weather]').forEach(opt => {
-        opt.addEventListener('click', () => {
-            setWeather(opt.dataset.weather);
-            settingsPanel.classList.remove('open');
-            playClick();
-        });
+        } else {
+            konamiProgress = 0;
+        }
     });
 
-    document.querySelectorAll('.settings-option[data-theme]').forEach(opt => {
-        opt.addEventListener('click', () => {
-            setTheme(opt.dataset.theme);
-            playClick();
-        });
-    });
-
-    function setTheme(theme) {
-        currentTheme = theme;
-        localStorage.setItem('ryzen_theme', theme);
-        document.body.classList.toggle('theme-black', theme === 'black');
-        updateSettingsUI();
-    }
-
-    if (currentTheme === 'black') document.body.classList.add('theme-black');
-
-    // =========================================================
-    // WEATHER
-    // =========================================================
-    function setWeather(mode) {
-        stopWeather();
-        currentWeather = mode;
-        localStorage.setItem('ryzen_weather', mode);
-        updateSettingsUI();
-
-        if (mode === 'none') {
-            weatherCanvas.classList.remove('active');
+    // ===== Hotkeys =====
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            if (e.key === 'Escape') e.target.blur();
             return;
         }
-
-        weatherCanvas.classList.add('active');
-        weatherCanvas.width = window.innerWidth;
-        weatherCanvas.height = window.innerHeight;
-
-        if (mode === 'snow') startSnow();
-        else if (mode === 'rain') startRain();
-        else if (mode === 'storm') startStorm();
-        else if (mode === 'matrix') startMatrixBg();
-        else if (mode === 'stars') startStars();
-    }
-
-    function stopWeather() {
-        if (weatherAnimId) {
-            cancelAnimationFrame(weatherAnimId);
-            weatherAnimId = null;
-        }
-        if (lightningInterval) {
-            clearTimeout(lightningInterval);
-            lightningInterval = null;
-        }
-        const ctx = weatherCanvas.getContext('2d');
-        ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-    }
-
-    function startSnow() {
-        const ctx = weatherCanvas.getContext('2d');
-        const flakes = [];
-        const count = 150;
-        for (let i = 0; i < count; i++) {
-            flakes.push({
-                x: Math.random() * weatherCanvas.width,
-                y: Math.random() * weatherCanvas.height,
-                r: Math.random() * 2 + 1,
-                speed: Math.random() * 1 + 0.5,
-                drift: Math.random() * 0.5 - 0.25
-            });
-        }
-        function draw() {
-            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-            flakes.forEach(f => {
-                ctx.beginPath();
-                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, ' + (0.4 + Math.random() * 0.4) + ')';
-                ctx.fill();
-                f.y += f.speed;
-                f.x += f.drift;
-                if (f.y > weatherCanvas.height) { f.y = -5; f.x = Math.random() * weatherCanvas.width; }
-                if (f.x < 0) f.x = weatherCanvas.width;
-                if (f.x > weatherCanvas.width) f.x = 0;
-            });
-            weatherAnimId = requestAnimationFrame(draw);
-        }
-        draw();
-    }
-
-    function startRain() {
-        const ctx = weatherCanvas.getContext('2d');
-        const drops = [];
-        const count = 200;
-        for (let i = 0; i < count; i++) {
-            drops.push({
-                x: Math.random() * weatherCanvas.width,
-                y: Math.random() * weatherCanvas.height,
-                len: Math.random() * 15 + 8,
-                speed: Math.random() * 6 + 5
-            });
-        }
-        function draw() {
-            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-            ctx.strokeStyle = 'rgba(180, 200, 255, 0.4)';
-            ctx.lineWidth = 1;
-            drops.forEach(d => {
-                ctx.beginPath();
-                ctx.moveTo(d.x, d.y);
-                ctx.lineTo(d.x - 1, d.y + d.len);
-                ctx.stroke();
-                d.y += d.speed;
-                d.x -= 0.5;
-                if (d.y > weatherCanvas.height) { d.y = -20; d.x = Math.random() * weatherCanvas.width; }
-                if (d.x < 0) d.x = weatherCanvas.width;
-            });
-            weatherAnimId = requestAnimationFrame(draw);
-        }
-        draw();
-    }
-
-    function startStorm() {
-        startRain();
-        function scheduleLightning() {
-            const delay = Math.random() * 5000 + 3000;
-            lightningInterval = setTimeout(() => {
-                lightningFlash.classList.add('flash');
-                setTimeout(() => lightningFlash.classList.remove('flash'), 300);
-                scheduleLightning();
-            }, delay);
-        }
-        scheduleLightning();
-    }
-
-    function startMatrixBg() {
-        const ctx = weatherCanvas.getContext('2d');
-        const chars = '01アイウエオRYZEN'.split('');
-        const fontSize = 14;
-        const columns = weatherCanvas.width / fontSize;
-        const drops = [];
-        for (let i = 0; i < columns; i++) drops[i] = 1;
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-            ctx.fillStyle = 'rgba(80, 200, 120, 0.6)';
-            ctx.font = fontSize + 'px monospace';
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > weatherCanvas.height && Math.random() > 0.975)
-                    drops[i] = 0;
-                drops[i]++;
+        if (e.key === '/') {
+            e.preventDefault();
+            if (faqSearch) {
+                faqSearch.focus();
+                faqSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                playClick();
             }
-            weatherAnimId = requestAnimationFrame(draw);
         }
-        draw();
+        if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            const newTheme = currentTheme === 'dark' ? 'black' : 'dark';
+            setTheme(newTheme);
+            showToast('Тема: ' + (newTheme === 'black' ? 'Чёрная' : 'Тёмная'), 'info');
+            playClick();
+        }
+        if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+            e.preventDefault();
+            openModal();
+        }
+        if (e.key === 'Escape') {
+            closeModal();
+            if (settingsPanel) settingsPanel.classList.remove('open');
+            document.getElementById('mobile-menu')?.classList.remove('open');
+        }
+    });
+
+    // ===== Modal =====
+    const hotkeysModal = document.getElementById('hotkeys-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    window.openModal = () => {
+        if (hotkeysModal) {
+            hotkeysModal.classList.add('open');
+            playClick();
+        }
+    };
+    window.closeModal = () => {
+        if (hotkeysModal) hotkeysModal.classList.remove('open');
+    };
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+    if (hotkeysModal) {
+        hotkeysModal.addEventListener('click', (e) => {
+            if (e.target === hotkeysModal) closeModal();
+        });
     }
 
-    function startStars() {
-        const ctx = weatherCanvas.getContext('2d');
-        const stars = [];
-        const count = 200;
-        for (let i = 0; i < count; i++) {
-            stars.push({
-                x: Math.random() * weatherCanvas.width,
-                y: Math.random() * weatherCanvas.height,
-                r: Math.random() * 1.5 + 0.3,
-                phase: Math.random() * Math.PI * 2,
-                speed: Math.random() * 0.02 + 0.01
-            });
-        }
-        function draw() {
-            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-            stars.forEach(s => {
-                s.phase += s.speed;
-                const alpha = 0.3 + Math.abs(Math.sin(s.phase)) * 0.7;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
-                ctx.fill();
-            });
-            weatherAnimId = requestAnimationFrame(draw);
-        }
-        draw();
-    }
-
-    if (currentWeather !== 'none') setWeather(currentWeather);
-
-    window.addEventListener('resize', () => {
-        weatherCanvas.width = window.innerWidth;
-        weatherCanvas.height = window.innerHeight;
-    });
-
-    // =========================================================
-    // Кнопка "Наверх"
-    // =========================================================
-    const backToTop = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => {
-        backToTop.classList.toggle('visible', window.scrollY > 400);
-    });
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        playClick();
-    });
-
-    // =========================================================
-    // Индикатор прогресса + sticky nav
-    // =========================================================
+    // ===== Scroll handlers =====
     const readingProgress = document.getElementById('reading-progress');
     const mainNav = document.getElementById('main-nav');
+    const backToTop = document.getElementById('back-to-top');
     window.addEventListener('scroll', () => {
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        readingProgress.style.width = progress + '%';
-
-        if (mainNav) {
-            mainNav.classList.toggle('scrolled', scrollTop > 40);
-        }
+        if (readingProgress) readingProgress.style.width = progress + '%';
+        if (mainNav) mainNav.classList.toggle('scrolled', scrollTop > 40);
+        if (backToTop) backToTop.classList.toggle('visible', scrollTop > 400);
     });
 
-    // =========================================================
-    // Копирование Discord-ссылки
-    // =========================================================
-    document.querySelectorAll('.discord-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const url = link.getAttribute('href');
-            navigator.clipboard.writeText(url).then(() => {
-                showToast('Ссылка на Discord скопирована!', 'success');
-                playSuccess();
-            }).catch(() => {
-                showToast('Discord: ' + url, 'info');
-            });
-            window.open(url, '_blank');
+    if (backToTop) {
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            playClick();
+        });
+    }
+
+    // ===== Scroll spy =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('#nav-links a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const top = section.offsetTop - 120;
+            if (window.scrollY >= top) current = section.getAttribute('id');
+        });
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + current);
         });
     });
 
-    // =========================================================
-// ГЛОБАЛЬНЫЙ ДЕТЕРМИНИРОВАННЫЙ СЧЁТЧИК ОНЛАЙНА
-// Одинаковый у ВСЕХ пользователей, зависит только от времени UTC
-// =========================================================
-(function initOnlineCounter() {
-    const el = document.getElementById('online-count');
-    if (!el) return;
+    // ===== Reveal =====
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    const PEAK = 340;
-    const MIN = 18;
+    // ===== Stats counter =====
+    function animateCounters() {
+        document.querySelectorAll('.value[data-count]').forEach(el => {
+            const target = parseInt(el.dataset.count);
+            const suffix = el.dataset.suffix || '';
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 30));
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) { current = target; clearInterval(timer); }
+                el.textContent = current + suffix;
+            }, 40);
+        });
+    }
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounters();
+                statsObserver.disconnect();
+            }
+        });
+    });
+    const statsEl = document.querySelector('.stats');
+    if (statsEl) statsObserver.observe(statsEl);
 
-    // Профиль онлайна по часам UTC (0-23)
-    // Пик 18:00-21:00 UTC = 21:00-00:00 МСК
-    const HOUR_PROFILE = [
-        0.05, 0.04, 0.03, 0.03, 0.04, 0.06,
-        0.10, 0.14, 0.18, 0.22, 0.26, 0.32,
-        0.38, 0.44, 0.50, 0.58, 0.68, 0.78,
-        0.92, 1.00, 0.98, 0.88, 0.70, 0.40
-    ];
-
-    const DAY_FACTOR = {
-        0: 1.05, 1: 0.90, 2: 0.92, 3: 0.94, 4: 0.96, 5: 1.00, 6: 1.10
-    };
-
-    function getSeason(month) {
-        // month: 0-11 UTC
-        if (month === 11 || month === 0 || month === 1)
-            return { name: 'winter', factor: 1.05, nightBonus: 0.03 };
-        if (month >= 2 && month <= 4)
-            return { name: 'spring', factor: 0.98, nightBonus: 0.01 };
-        if (month >= 5 && month <= 7)
-            return { name: 'summer', factor: 1.10, nightBonus: 0.10 };
-        return { name: 'autumn', factor: 1.00, nightBonus: 0.00 };
+    // ===== Share =====
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            playClick();
+            if (navigator.share) {
+                navigator.share({ title: 'Ryzen Loader', text: 'Private Cheat Software', url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showToast('Ссылка скопирована!', 'success');
+                    playSuccess();
+                }).catch(() => {
+                    showToast(window.location.href, 'info');
+                });
+            }
+        });
     }
 
-    // Детерминированный псевдослучайный шум на основе времени (не Math.random!)
-    // Одинаков у всех в одну и ту же минуту
-    function seededNoise(seed) {
-        // Простая хеш-функция → значение 0..1
-        let x = Math.sin(seed) * 10000;
-        x = x - Math.floor(x);
-        return x;
+    // ===== Cookie =====
+    const cookieBar = document.getElementById('cookie-bar');
+    const cookieAccept = document.getElementById('cookie-accept');
+    if (!localStorage.getItem('ryzen_cookie_ok') && cookieBar) {
+        setTimeout(() => cookieBar.classList.add('visible'), 1500);
+    }
+    if (cookieAccept) {
+        cookieAccept.addEventListener('click', () => {
+            localStorage.setItem('ryzen_cookie_ok', '1');
+            cookieBar.classList.remove('visible');
+            playSuccess();
+        });
     }
 
-    function computeGlobalOnline() {
-        // Берём UTC-время — оно одинаково для всех
+    // ===== Clock =====
+    const clockTime = document.getElementById('clock-time');
+    const clockSeason = document.getElementById('clock-season');
+    function updateClock() {
+        if (!clockTime) return;
         const now = new Date();
-        const utcHour = now.getUTCHours();
-        const utcDay = now.getUTCDay();
-        const utcMonth = now.getUTCMonth();
-        const utcMinute = now.getUTCMinutes();
-        const utcDayOfMonth = now.getUTCDate();
-
-        const season = getSeason(utcMonth);
-        let base = HOUR_PROFILE[utcHour];
-
-        // Сезонные бонусы
-        if (season.name === 'summer' && (utcHour >= 22 || utcHour <= 3))
-            base += season.nightBonus;
-        if (season.name === 'winter' && (utcHour >= 22 || utcHour <= 2))
-            base += season.nightBonus;
-
-        base = Math.min(1, Math.max(0, base));
-        base *= DAY_FACTOR[utcDay] || 1;
-        base *= season.factor;
-
-        // Базовое значение
-        let value = MIN + (PEAK - MIN) * base;
-
-        // МИКРО-ШУМ: одинаковый для всех в одну минуту
-        // Сид = год + месяц + день + час + минута (только целые части)
-        const seed = now.getUTCFullYear() * 10000000
-                   + (utcMonth + 1) * 1000000
-                   + utcDayOfMonth * 10000
-                   + utcHour * 100
-                   + utcMinute;
-        const noise = (seededNoise(seed) - 0.5) * 0.06; // ±3%
-        value *= (1 + noise);
-
-        return Math.max(MIN, Math.min(PEAK, Math.round(value)));
-    }
-
-    // === Отрисовка ===
-    function render() {
-        const v = computeGlobalOnline();
-        el.textContent = v;
-        return v;
-    }
-
-    render();
-
-    // Обновляем раз в 10 секунд — но число меняется только при смене минуты,
-    // поэтому у всех пользователей в одну минуту будет одно и то же значение
-    setInterval(render, 10000);
-
-    // Дополнительно: при возврате на вкладку — мгновенно обновить
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') render();
-    });
-
-    // === Мини-график 24ч (тоже детерминированный, без шума) ===
-    const chartEl = document.getElementById('online-chart');
-    if (chartEl) {
-        const nowUtcHour = new Date().getUTCHours();
-        const chartData = [];
-        for (let h = 0; h < 24; h++) {
-            const v = MIN + (PEAK - MIN) * HOUR_PROFILE[h];
-            chartData.push(Math.round(v));
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        clockTime.textContent = hh + ':' + mm;
+        if (clockSeason) {
+            const m = now.getMonth();
+            let s;
+            if (m === 11 || m === 0 || m === 1) s = '❄ Зима';
+            else if (m >= 2 && m <= 4) s = '🌸 Весна';
+            else if (m >= 5 && m <= 7) s = '☀ Лето';
+            else s = '🍂 Осень';
+            clockSeason.textContent = s;
         }
-        const maxVal = Math.max(...chartData);
-        chartData.forEach((v, h) => {
-            const bar = document.createElement('div');
-            bar.className = 'bar' + (h === nowUtcHour ? ' current' : '');
-            bar.style.height = (v / maxVal * 100) + '%';
-            bar.title = String(h).padStart(2, '0') + ':00 UTC — ~' + v + ' онлайн';
-            chartEl.appendChild(bar);
-        });
     }
+    updateClock();
+    setInterval(updateClock, 30000);
 
-    // Лог
-    const nowUtc = new Date();
-    console.log(
-        '%c[Online Counter] ГЛОБАЛЬНЫЙ (одинаков у всех) | ' +
-        'UTC: ' + String(nowUtc.getUTCHours()).padStart(2, '0') + ':' +
-        String(nowUtc.getUTCMinutes()).padStart(2, '0') +
-        ' | Онлайн: ' + computeGlobalOnline(),
-        'color: #50c878; font-weight: bold;'
-    );
-})();
-
-    // =========================================================
-    // Таймер акции
-    // =========================================================
+    // ===== Promo timer =====
     const promoEnd = Date.now() + 24 * 60 * 60 * 1000;
     function updatePromoTimer() {
         const diff = promoEnd - Date.now();
@@ -2491,222 +2867,283 @@
     updatePromoTimer();
     setInterval(updatePromoTimer, 1000);
 
-    // =========================================================
-    // Анимация цифр в статистике
-    // =========================================================
-    function animateCounters() {
-        document.querySelectorAll('.value[data-count]').forEach(el => {
-            const target = parseInt(el.dataset.count);
-            const suffix = el.dataset.suffix || '';
-            let current = 0;
-            const step = Math.max(1, Math.floor(target / 30));
-            const timer = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                el.textContent = current + suffix;
-            }, 40);
-        });
-    }
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounters();
-                statsObserver.disconnect();
-            }
-        });
-    });
-    const statsEl = document.querySelector('.stats');
-    if (statsEl) statsObserver.observe(statsEl);
-
-    // =========================================================
-    // Кнопка "Поделиться"
-    // =========================================================
-    const shareBtn = document.getElementById('share-btn');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', () => {
-            playClick();
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Ryzen Loader',
-                    text: 'Private Cheat Software',
-                    url: window.location.href
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    showToast('Ссылка скопирована!', 'success');
-                    playSuccess();
-                }).catch(() => {
-                    showToast(window.location.href, 'info');
-                });
-            }
-        });
-    }
-
-    // =========================================================
-    // Подсветка активного раздела (scroll spy)
-    // =========================================================
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('#nav-links a');
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const top = section.offsetTop - 120;
-            if (window.scrollY >= top) current = section.getAttribute('id');
-        });
-        navLinks.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === '#' + current);
-        });
-    });
-
-    // =========================================================
-    // Cookie-плашка
-    // =========================================================
-    const cookieBar = document.getElementById('cookie-bar');
-    const cookieAccept = document.getElementById('cookie-accept');
-    if (!localStorage.getItem('ryzen_cookie_ok')) {
-        setTimeout(() => cookieBar.classList.add('visible'), 1500);
-    }
-    if (cookieAccept) {
-        cookieAccept.addEventListener('click', () => {
-            localStorage.setItem('ryzen_cookie_ok', '1');
-            cookieBar.classList.remove('visible');
-            playSuccess();
-        });
-    }
-
-    // =========================================================
-    // Глобальный звук для всех .btn
-    // =========================================================
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', playClick);
-    });
-
-    // =========================================================
-    // NEW: Live-часы
-    // =========================================================
-    const clockTime = document.getElementById('clock-time');
-    const clockSeason = document.getElementById('clock-season');
-    function updateClock() {
-        if (!clockTime) return;
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        clockTime.textContent = hh + ':' + mm;
-
-        if (clockSeason) {
-            const m = now.getMonth();
-            let s;
-            if (m === 11 || m === 0 || m === 1) s = '❄ Зима';
-            else if (m >= 2 && m <= 4) s = '🌸 Весна';
-            else if (m >= 5 && m <= 7) s = '☀ Лето';
-            else s = '🍂 Осень';
-            clockSeason.textContent = s;
+    // ===== Online counter (детерминированный) =====
+    (function initOnlineCounter() {
+        const el = document.getElementById('online-count');
+        if (!el) return;
+        const PEAK = 340, MIN = 18;
+        const HOUR_PROFILE = [0.05,0.04,0.03,0.03,0.04,0.06,0.10,0.14,0.18,0.22,0.26,0.32,0.38,0.44,0.50,0.58,0.68,0.78,0.92,1.00,0.98,0.88,0.70,0.40];
+        const DAY_FACTOR = {0:1.05,1:0.90,2:0.92,3:0.94,4:0.96,5:1.00,6:1.10};
+        function getSeason(month) {
+            if (month === 11 || month === 0 || month === 1) return { name:'winter', factor:1.05, nightBonus:0.03 };
+            if (month >= 2 && month <= 4) return { name:'spring', factor:0.98, nightBonus:0.01 };
+            if (month >= 5 && month <= 7) return { name:'summer', factor:1.10, nightBonus:0.10 };
+            return { name:'autumn', factor:1.00, nightBonus:0.00 };
         }
-    }
-    updateClock();
-    setInterval(updateClock, 30000);
-
-    // =========================================================
-    // NEW: Анимация появления секций
-    // =========================================================
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                revealObserver.unobserve(entry.target);
-            }
+        function seededNoise(seed) {
+            let x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+        function computeGlobalOnline() {
+            const now = new Date();
+            const utcHour = now.getUTCHours();
+            const utcDay = now.getUTCDay();
+            const utcMonth = now.getUTCMonth();
+            const utcMinute = now.getUTCMinutes();
+            const utcDayOfMonth = now.getUTCDate();
+            const season = getSeason(utcMonth);
+            let base = HOUR_PROFILE[utcHour];
+            if (season.name === 'summer' && (utcHour >= 22 || utcHour <= 3)) base += season.nightBonus;
+            if (season.name === 'winter' && (utcHour >= 22 || utcHour <= 2)) base += season.nightBonus;
+            base = Math.min(1, Math.max(0, base));
+            base *= DAY_FACTOR[utcDay] || 1;
+            base *= season.factor;
+            let value = MIN + (PEAK - MIN) * base;
+            const seed = now.getUTCFullYear() * 10000000 + (utcMonth + 1) * 1000000 + utcDayOfMonth * 10000 + utcHour * 100 + utcMinute;
+            const noise = (seededNoise(seed) - 0.5) * 0.06;
+            value *= (1 + noise);
+            return Math.max(MIN, Math.min(PEAK, Math.round(value)));
+        }
+        function render() { el.textContent = computeGlobalOnline(); }
+        render();
+        setInterval(render, 10000);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') render();
         });
-    }, { threshold: 0.08 });
-
-    document.querySelectorAll('.reveal').forEach(el => {
-        revealObserver.observe(el);
-    });
-
-    // =========================================================
-    // NEW: Модалка горячих клавиш
-    // =========================================================
-    const hotkeysModal = document.getElementById('hotkeys-modal');
-    const modalCloseBtn = document.getElementById('modal-close-btn');
-
-    function openModal() {
-        if (hotkeysModal) {
-            hotkeysModal.classList.add('open');
-            playClick();
-        }
-    }
-    function closeModal() {
-        if (hotkeysModal) {
-            hotkeysModal.classList.remove('open');
-        }
-    }
-
-    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
-    if (hotkeysModal) {
-        hotkeysModal.addEventListener('click', (e) => {
-            if (e.target === hotkeysModal) closeModal();
-        });
-    }
-
-    // =========================================================
-    // NEW: Горячие клавиши
-    // =========================================================
-    document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-            if (e.key === 'Escape') e.target.blur();
-            return;
-        }
-
-        // "/" → фокус на поиск FAQ
-        if (e.key === '/') {
-            e.preventDefault();
-            if (faqSearch) {
-                faqSearch.focus();
-                faqSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                playClick();
-            }
-        }
-
-        // "T" → переключить тему
-        if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-            setTheme(currentTheme === 'dark' ? 'black' : 'dark');
-            showToast('Тема: ' + (currentTheme === 'black' ? 'Чёрная' : 'Тёмная'), 'info');
-            playClick();
-        }
-
-        // "?" → модалка клавиш
-        if (e.key === '?' || (e.shiftKey && e.key === '/')) {
-            e.preventDefault();
-            openModal();
-        }
-
-        // Esc → закрыть всё
-        if (e.key === 'Escape') {
-            closeModal();
-            if (settingsPanel) settingsPanel.classList.remove('open');
-        }
-    });
-
-    // =========================================================
-    // NEW: Обновление графика онлайна раз в минуту (текущий час)
-    // =========================================================
-    setInterval(() => {
+        // График
         const chartEl = document.getElementById('online-chart');
-        if (!chartEl) return;
-        const bars = chartEl.querySelectorAll('.bar');
-        const nowHour = new Date().getHours();
-        bars.forEach((bar, i) => {
-            bar.classList.toggle('current', i === nowHour);
-        });
-    }, 60000);
+        if (chartEl) {
+            const nowUtcHour = new Date().getUTCHours();
+            const chartData = [];
+            for (let h = 0; h < 24; h++) chartData.push(Math.round(MIN + (PEAK - MIN) * HOUR_PROFILE[h]));
+            const maxVal = Math.max(...chartData);
+            chartData.forEach((v, h) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar' + (h === nowUtcHour ? ' current' : '');
+                bar.style.height = (v / maxVal * 100) + '%';
+                bar.title = String(h).padStart(2, '0') + ':00 UTC — ~' + v + ' онлайн';
+                chartEl.appendChild(bar);
+            });
+        }
+    })();
 
-    // =========================================================
-    // Финал — приветствие в консоли
-    // =========================================================
+    // ===== Weather =====
+    const weatherCanvas = document.getElementById('weather-canvas');
+    const lightningFlash = document.getElementById('lightning-flash');
+    let currentWeather = localStorage.getItem('ryzen_weather') || 'none';
+    let currentTheme = localStorage.getItem('ryzen_theme') || 'dark';
+    let weatherAnimId = null;
+    let lightningInterval = null;
+
+    function updateSettingsUI() {
+        document.querySelectorAll('.settings-option[data-weather]').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.weather === currentWeather);
+        });
+        document.querySelectorAll('.settings-option[data-theme]').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.theme === currentTheme);
+        });
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        localStorage.setItem('ryzen_theme', theme);
+        document.body.classList.toggle('theme-black', theme === 'black');
+        updateSettingsUI();
+    }
+    window.setTheme = setTheme;
+
+    function stopWeather() {
+        if (weatherAnimId) { cancelAnimationFrame(weatherAnimId); weatherAnimId = null; }
+        if (lightningInterval) { clearTimeout(lightningInterval); lightningInterval = null; }
+        const ctx = weatherCanvas.getContext('2d');
+        ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+    }
+
+    function setWeather(mode) {
+        stopWeather();
+        currentWeather = mode;
+        localStorage.setItem('ryzen_weather', mode);
+        updateSettingsUI();
+        if (mode === 'none') { weatherCanvas.style.opacity = 0; return; }
+        weatherCanvas.style.opacity = 1;
+        weatherCanvas.width = window.innerWidth;
+        weatherCanvas.height = window.innerHeight;
+        if (mode === 'snow') startSnow();
+        else if (mode === 'rain') startRain();
+        else if (mode === 'storm') startStorm();
+        else if (mode === 'matrix') startMatrixBg();
+        else if (mode === 'stars') startStars();
+    }
+    window.setWeather = setWeather;
+
+    function startSnow() {
+        const ctx = weatherCanvas.getContext('2d');
+        const flakes = [];
+        for (let i = 0; i < 150; i++) flakes.push({
+            x: Math.random() * weatherCanvas.width, y: Math.random() * weatherCanvas.height,
+            r: Math.random() * 2 + 1, speed: Math.random() * 1 + 0.5, drift: Math.random() * 0.5 - 0.25
+        });
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            flakes.forEach(f => {
+                ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,' + (0.4 + Math.random()*0.4) + ')';
+                ctx.fill();
+                f.y += f.speed; f.x += f.drift;
+                if (f.y > weatherCanvas.height) { f.y = -5; f.x = Math.random() * weatherCanvas.width; }
+                if (f.x < 0) f.x = weatherCanvas.width;
+                if (f.x > weatherCanvas.width) f.x = 0;
+            });
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    function startRain() {
+        const ctx = weatherCanvas.getContext('2d');
+        const drops = [];
+        for (let i = 0; i < 200; i++) drops.push({
+            x: Math.random() * weatherCanvas.width, y: Math.random() * weatherCanvas.height,
+            len: Math.random() * 15 + 8, speed: Math.random() * 6 + 5
+        });
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            ctx.strokeStyle = 'rgba(180,200,255,0.4)';
+            ctx.lineWidth = 1;
+            drops.forEach(d => {
+                ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 1, d.y + d.len); ctx.stroke();
+                d.y += d.speed; d.x -= 0.5;
+                if (d.y > weatherCanvas.height) { d.y = -20; d.x = Math.random() * weatherCanvas.width; }
+                if (d.x < 0) d.x = weatherCanvas.width;
+            });
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    function startStorm() {
+        startRain();
+        function scheduleLightning() {
+            lightningInterval = setTimeout(() => {
+                lightningFlash.style.animation = 'flash 0.3s ease';
+                setTimeout(() => lightningFlash.style.animation = '', 300);
+                scheduleLightning();
+            }, Math.random() * 5000 + 3000);
+        }
+        scheduleLightning();
+    }
+
+    function startMatrixBg() {
+        const ctx = weatherCanvas.getContext('2d');
+        const chars = '01アイウエオRYZEN'.split('');
+        const fontSize = 14;
+        const columns = weatherCanvas.width / fontSize;
+        const drops = [];
+        for (let i = 0; i < columns; i++) drops[i] = 1;
+        function draw() {
+            ctx.fillStyle = 'rgba(10,10,12,0.05)';
+            ctx.fillRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            ctx.fillStyle = 'rgba(80,200,120,0.6)';
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > weatherCanvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    function startStars() {
+        const ctx = weatherCanvas.getContext('2d');
+        const stars = [];
+        for (let i = 0; i < 200; i++) stars.push({
+            x: Math.random() * weatherCanvas.width, y: Math.random() * weatherCanvas.height,
+            r: Math.random() * 1.5 + 0.3, phase: Math.random() * Math.PI * 2, speed: Math.random() * 0.02 + 0.01
+        });
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            stars.forEach(s => {
+                s.phase += s.speed;
+                const alpha = 0.3 + Math.abs(Math.sin(s.phase)) * 0.7;
+                ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+                ctx.fill();
+            });
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    document.querySelectorAll('.settings-option[data-weather]').forEach(opt => {
+        opt.addEventListener('click', () => {
+            setWeather(opt.dataset.weather);
+            settingsPanel.classList.remove('open');
+            playClick();
+        });
+    });
+    document.querySelectorAll('.settings-option[data-theme]').forEach(opt => {
+        opt.addEventListener('click', () => {
+            setTheme(opt.dataset.theme);
+            playClick();
+        });
+    });
+
+    updateSettingsUI();
+    if (currentTheme === 'black') document.body.classList.add('theme-black');
+    if (currentWeather !== 'none') setWeather(currentWeather);
+
+    window.addEventListener('resize', () => {
+        weatherCanvas.width = window.innerWidth;
+        weatherCanvas.height = window.innerHeight;
+    });
+
+    // ===== Matrix easter egg =====
+    function activateMatrix() {
+        const canvas = document.getElementById('matrix-canvas');
+        if (!canvas) return;
+        showToast('🟢 Wake up, Neo...', 'success');
+        playSuccess();
+        document.body.classList.add('matrix-active');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        const chars = 'RYSENLOADER01アイウエオカキクケコ'.split('');
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        for (let i = 0; i < columns; i++) drops[i] = 1;
+        let frameCount = 0;
+        function draw() {
+            ctx.fillStyle = 'rgba(0,0,0,0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#50c878';
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+            frameCount++;
+            if (frameCount < 300) requestAnimationFrame(draw);
+            else { document.body.classList.remove('matrix-active'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        }
+        draw();
+    }
+
+    // ===== Visits =====
+    let visits = parseInt(localStorage.getItem('ryzen_visits') || '0');
+    visits++;
+    localStorage.setItem('ryzen_visits', visits);
+    console.log('%c Ты заходил на этот сайт ' + visits + ' раз.', 'color: #6a6a7a; font-style: italic;');
+    if (visits === 10) {
+        console.log('%c 10 раз! Скажи "RYZEN10" в Discord — получи 10% скидку.', 'color: #50c878; font-weight: bold;');
+    }
+
     console.log('%c✓ Все системы работают', 'color: #50c878; font-weight: bold;');
-    console.log('%cНажми "?" для списка горячих клавиш', 'color: #8a8a8a;');
+    console.log('%cНажми "?" для списка горячих клавиш', 'color: #a0a0b0;');
+});
 </script>
 
 </body>
