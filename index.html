@@ -2100,7 +2100,8 @@ function shuffle(arr) {
    ONLINE SIMULATION
    ========================================================= */
 const OnlineSim = (() => {
-    const PEAK = 10500;
+    // МАКСИМАЛЬНОЕ ЗНАЧЕНИЕ ТЕПЕРЬ 5800, ЧТОБЫ НЕ ПРЕВЫШАТЬ 6000
+    const PEAK = 5800;
     const MIN = 120;
 
     const BASE_CURVE = [
@@ -2577,11 +2578,14 @@ function updateOnlineCounters() {
         if (el) el.textContent = val;
     };
 
-    setTxt('online-total', formatNumber(total));
-    setTxt('online-total-2', formatNumber(total));
+    // Ограничиваем вывод в интерфейсе, чтобы он никогда не был больше 6000
+    const safeTotal = Math.min(total, 5999);
+
+    setTxt('online-total', formatNumber(safeTotal));
+    setTxt('online-total-2', formatNumber(safeTotal));
     setTxt('online-shown', shown);
     setTxt('online-shown-2', shown);
-    setTxt('online-rest', formatNumber(rest));
+    setTxt('online-rest', formatNumber(Math.max(0, safeTotal - shown)));
 }
 
 /* =========================================================
