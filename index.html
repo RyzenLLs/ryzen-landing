@@ -163,6 +163,7 @@
         border-radius: 50%;
         background: var(--green);
         flex-shrink: 0;
+        animation: pulse 2s infinite;
     }
 
     .burger {
@@ -268,27 +269,6 @@
     }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
     .hero-badge strong { color: var(--text-1); font-weight: 700; font-family: var(--font-mono); }
-
-    .hero-badge-divider {
-        color: var(--border-hover);
-        font-weight: 400;
-        letter-spacing: 0;
-    }
-
-    .hero-badge-secondary {
-        color: var(--text-3);
-        font-size: 10px;
-        letter-spacing: 1px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        text-transform: none;
-    }
-    .hero-badge-secondary strong {
-        color: var(--text-2);
-        font-family: var(--font-mono);
-        font-weight: 600;
-    }
 
     .online-trend {
         font-size: 10px;
@@ -428,6 +408,121 @@
         border-radius: var(--radius-sm);
         background: var(--bg-3); color: var(--text-2);
         font-weight: 500; font-family: var(--font-mono);
+    }
+
+    /* ========== COMMUNITY ========== */
+    .community-toolbar {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .community-filter {
+        display: flex; gap: 2px;
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 3px;
+    }
+    .community-filter button {
+        padding: 6px 14px;
+        background: transparent; border: none;
+        color: var(--text-3); font-size: 12px; font-weight: 600;
+        cursor: pointer; border-radius: var(--radius-sm);
+        font-family: inherit; transition: all 0.15s;
+    }
+    .community-filter button.active { background: var(--bg-3); color: var(--text-1); }
+    .community-filter button:hover { color: var(--text-1); }
+    .community-count {
+        font-size: 12px; color: var(--text-3);
+        font-family: var(--font-mono);
+    }
+
+    .community-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 12px;
+    }
+
+    .community-card {
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.15s var(--ease);
+    }
+    .community-card:hover { border-color: var(--border-strong); background: var(--bg-2); }
+
+    .community-card-head {
+        display: flex; align-items: center; gap: 12px;
+        margin-bottom: 14px;
+    }
+    .community-avatar {
+        position: relative;
+        width: 44px; height: 44px;
+        border-radius: 10px;
+        background: var(--bg-3);
+        border: 1px solid var(--border-strong);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px; font-weight: 700;
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+    }
+    .community-online-badge {
+        position: absolute; bottom: -2px; right: -2px;
+        width: 12px; height: 12px;
+        border-radius: 50%;
+        background: var(--green);
+        border: 2px solid var(--bg-1);
+        animation: pulse 2s infinite;
+    }
+    .community-name-wrap { flex: 1; min-width: 0; }
+    .community-name {
+        font-size: 14px; font-weight: 700;
+        margin-bottom: 3px;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .community-role {
+        display: inline-block;
+        font-size: 9px; font-weight: 800;
+        padding: 2px 6px; border-radius: 3px;
+        letter-spacing: 1px;
+    }
+    .role-admin { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+    .role-vip { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
+    .role-user { background: var(--bg-3); color: var(--text-3); border: 1px solid var(--border); }
+
+    .community-stats-mini {
+        display: flex; justify-content: space-between;
+        padding: 10px 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 10px;
+    }
+    .community-stats-mini > div {
+        display: flex; flex-direction: column; align-items: center;
+        flex: 1;
+    }
+    .community-stats-mini > div:not(:last-child) { border-right: 1px solid var(--border); }
+    .community-stats-mini span {
+        font-size: 13px; font-weight: 700;
+        font-family: var(--font-mono);
+    }
+    .community-stats-mini small {
+        font-size: 9px; color: var(--text-4);
+        text-transform: uppercase; letter-spacing: 0.5px;
+        margin-top: 2px;
+    }
+
+    .community-footer {
+        display: flex; justify-content: space-between;
+        font-size: 11px; color: var(--text-3);
+    }
+    .community-seen {
+        font-family: var(--font-mono); font-size: 10px;
+    }
+    .community-seen.online { color: var(--green); font-weight: 600; }
+
+    .community-empty {
+        grid-column: 1 / -1;
+        text-align: center; padding: 40px;
+        color: var(--text-4); font-size: 13px;
     }
 
     /* ========== PRICING ========== */
@@ -871,7 +966,7 @@
     .form-footer a:hover { text-decoration: underline; }
 
     /* ========== PROFILE MODAL ========== */
-    .profile-modal { max-width: 620px; padding: 28px; }
+    .profile-modal { max-width: 640px; padding: 28px; }
 
     .profile-header {
         display: flex; align-items: center; gap: 16px;
@@ -881,6 +976,7 @@
         position: relative;
     }
     .profile-avatar-lg {
+        position: relative;
         width: 64px; height: 64px;
         border-radius: 14px;
         background: var(--bg-3);
@@ -890,10 +986,32 @@
         border: 1px solid var(--border-strong);
         flex-shrink: 0;
     }
+    .profile-online {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--green);
+        border: 3px solid var(--bg-1);
+        animation: pulse 2s infinite;
+    }
     .profile-header-info { flex: 1; min-width: 0; }
-    .profile-name { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 2px; }
+    .profile-name-row {
+        display: flex; align-items: center; gap: 8px;
+        margin-bottom: 3px; flex-wrap: wrap;
+    }
+    .profile-name {
+        font-size: 20px; font-weight: 700;
+        letter-spacing: -0.3px;
+    }
     .profile-email { font-size: 13px; color: var(--text-3); }
-    .profile-meta { font-size: 11px; color: var(--text-4); margin-top: 4px; font-family: var(--font-mono); }
+    .profile-meta {
+        font-size: 11px; color: var(--text-4);
+        margin-top: 4px;
+        font-family: var(--font-mono);
+    }
     .profile-close {
         position: absolute; top: 0; right: 0;
         width: 32px; height: 32px;
@@ -906,11 +1024,44 @@
     }
     .profile-close:hover { background: var(--bg-3); color: var(--text-1); }
 
-    .profile-grid {
+    .profile-stats-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
         margin-bottom: 12px;
+    }
+    .profile-stat-box {
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 10px;
+        text-align: center;
+    }
+    .profile-stat-val {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-1);
+        font-family: var(--font-mono);
+        letter-spacing: -0.5px;
+    }
+    .profile-stat-lbl {
+        font-size: 9px;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    .profile-bio {
+        padding: 12px 14px;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 13px;
+        color: var(--text-2);
+        line-height: 1.6;
+        margin-bottom: 12px;
+        font-style: italic;
     }
 
     .profile-card {
@@ -918,11 +1069,9 @@
         border: 1px solid var(--border);
         border-radius: var(--radius);
         padding: 16px;
-        min-height: 104px;
         display: flex; flex-direction: column;
     }
     .profile-card.wide { grid-column: 1 / -1; }
-
     .profile-card-label {
         font-size: 10px;
         color: var(--text-3);
@@ -935,13 +1084,6 @@
         font-size: 15px;
         font-weight: 600;
         color: var(--text-1);
-        word-break: break-all;
-    }
-    .profile-card-value.mono {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        letter-spacing: 0.4px;
-        color: var(--text-1);
     }
     .profile-card-value.active { color: var(--green); }
     .profile-card-value.muted { color: var(--text-3); }
@@ -951,10 +1093,10 @@
         margin-top: 4px;
     }
     .profile-card-actions {
-        display: flex; gap: 6px; margin-top: auto; padding-top: 10px;
+        display: flex; gap: 6px; margin-top: 12px;
     }
     .profile-mini-btn {
-        padding: 5px 10px;
+        padding: 6px 12px;
         background: var(--bg-3);
         border: 1px solid var(--border);
         border-radius: 4px;
@@ -973,33 +1115,9 @@
         font-size: 11px;
         color: var(--green);
         font-family: var(--font-mono);
-        margin-top: 4px;
+        margin-top: 6px;
     }
     .sub-timer.expired { color: var(--red); }
-
-    .profile-stats-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        padding: 14px 0;
-        border-top: 1px solid var(--border);
-        margin-top: 12px;
-    }
-    .profile-stat-mini { text-align: center; }
-    .profile-stat-mini .label {
-        font-size: 9px;
-        color: var(--text-3);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 600;
-        margin-bottom: 4px;
-    }
-    .profile-stat-mini .value {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--text-1);
-        font-family: var(--font-mono);
-    }
 
     .profile-section-title {
         font-size: 10px;
@@ -1048,7 +1166,6 @@
     .activity-item.registered .dot { background: var(--green); }
     .activity-item.login .dot { background: var(--blue); }
     .activity-item.key .dot { background: var(--amber); }
-    .activity-item.hwid .dot { background: var(--red); }
     .activity-item .text { color: var(--text-2); flex: 1; }
     .activity-item .time { color: var(--text-4); font-family: var(--font-mono); font-size: 11px; }
 
@@ -1131,10 +1248,11 @@
         .auth-btn span { display: none; }
         .auth-btn { padding: 8px 10px; }
         .user-chip .user-name { display: none; }
-        .profile-grid { grid-template-columns: 1fr; }
         .profile-header { gap: 12px; }
         .profile-avatar-lg { width: 52px; height: 52px; font-size: 20px; }
         .profile-name { font-size: 17px; }
+        .profile-stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .community-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
     }
 
     @media (max-width: 480px) {
@@ -1144,7 +1262,7 @@
         .price-card { padding: 26px 20px; }
         .price-card .price { font-size: 36px; }
         .status-bar { grid-template-columns: 1fr; }
-        .profile-stats-row { grid-template-columns: 1fr 1fr; }
+        .community-toolbar { flex-direction: column; align-items: stretch; }
     }
 </style>
 </head>
@@ -1168,6 +1286,7 @@
             <div class="links" id="nav-links">
                 <a href="#games">Игры</a>
                 <a href="#pricing">Цены</a>
+                <a href="#community">Сообщество</a>
                 <a href="#changelog">Обновления</a>
                 <a href="#faq">FAQ</a>
             </div>
@@ -1201,6 +1320,7 @@
         <button class="mobile-close" id="mobile-close">✕</button>
         <a href="#games">Игры</a>
         <a href="#pricing">Цены</a>
+        <a href="#community">Сообщество</a>
         <a href="#changelog">Обновления</a>
         <a href="#faq">FAQ</a>
     </div>
@@ -1211,10 +1331,6 @@
             <span class="pulse-dot"></span>
             <span>Online — <strong id="online-count">—</strong></span>
             <span class="online-trend flat" id="online-trend">—</span>
-            <span class="hero-badge-divider">|</span>
-            <span class="hero-badge-secondary">
-                Пик 24ч: <strong id="online-peak" title="">—</strong>
-            </span>
         </div>
 
         <h1 id="hero-title">RYZEN <span class="accent">LOADER</span></h1>
@@ -1366,6 +1482,26 @@
         </div>
     </section>
 
+    <!-- ============ COMMUNITY ============ -->
+    <section class="section reveal" id="community">
+        <div class="section-head">
+            <div class="section-label">Сообщество</div>
+            <h2>Участники</h2>
+            <p>Нажми на карточку, чтобы посмотреть профиль</p>
+        </div>
+
+        <div class="community-toolbar">
+            <div class="community-filter" id="community-filter">
+                <button class="active" data-filter="all">Все</button>
+                <button data-filter="online">Онлайн</button>
+                <button data-filter="vip">VIP</button>
+            </div>
+            <span class="community-count" id="community-count">—</span>
+        </div>
+
+        <div class="community-grid" id="community-grid"></div>
+    </section>
+
     <!-- ============ CHANGELOG ============ -->
     <section class="section reveal" id="changelog">
         <div class="section-head">
@@ -1486,7 +1622,7 @@
 
         <form id="login-form" autocomplete="off">
             <h3>С возвращением</h3>
-            <p>Войди в аккаунт, чтобы управлять ключом</p>
+            <p>Войди в аккаунт, чтобы управлять профилем</p>
 
             <div class="form-group" data-field="login-email">
                 <label>Email</label>
@@ -1607,6 +1743,28 @@ const FAQ_DATA = [
     { q: 'Возврат средств возможен?', a: '<strong>Нет.</strong> После активации ключа возврат не делается. Если ключ не активирован — можно попросить замену. Пожалуйста, будь уверен в покупке перед оплатой.' }
 ];
 
+/* Демо-участники для раздела "Сообщество" */
+const SEED_COMMUNITY = [
+    { username: 'darkvoid', role: 'admin', monthsAgo: 14, reputation: 6234, messages: 1847, purchases: 12, sub: 'lifetime', bio: 'Root access. Не пишите в личку по мелочам.', online: true },
+    { username: 'xq1z', role: 'vip', monthsAgo: 8, reputation: 2187, messages: 486, purchases: 4, sub: 'lifetime', bio: 'Rage only, no legit.', online: true },
+    { username: 'midnight', role: 'vip', monthsAgo: 5, reputation: 1523, messages: 312, purchases: 3, sub: 'lifetime', bio: 'Silent aim enjoyer', online: true },
+    { username: 'nexus_', role: 'vip', monthsAgo: 4, reputation: 891, messages: 245, purchases: 2, sub: 'active', bio: '', online: false },
+    { username: 'phantom', role: 'user', monthsAgo: 6, reputation: 342, messages: 89, purchases: 1, sub: 'active', bio: '', online: false },
+    { username: 'zero', role: 'user', monthsAgo: 2, reputation: 128, messages: 34, purchases: 1, sub: 'active', bio: '', online: false },
+    { username: 'silent', role: 'vip', monthsAgo: 10, reputation: 3104, messages: 823, purchases: 6, sub: 'lifetime', bio: 'Anti-aim = life', online: true },
+    { username: 'chaos', role: 'user', monthsAgo: 1, reputation: 54, messages: 12, purchases: 0, sub: 'none', bio: '', online: false },
+    { username: 'altair', role: 'user', monthsAgo: 3, reputation: 267, messages: 67, purchases: 1, sub: 'expired', bio: '', online: false },
+    { username: 'saint', role: 'vip', monthsAgo: 7, reputation: 1876, messages: 456, purchases: 3, sub: 'lifetime', bio: '', online: true },
+    { username: 'm0nster', role: 'user', monthsAgo: 5, reputation: 421, messages: 134, purchases: 2, sub: 'active', bio: '', online: false },
+    { username: 'k1ller', role: 'user', monthsAgo: 2, reputation: 189, messages: 45, purchases: 0, sub: 'none', bio: '', online: false },
+    { username: 'nova_x', role: 'vip', monthsAgo: 9, reputation: 2456, messages: 678, purchases: 5, sub: 'lifetime', bio: 'CS2 since beta', online: false },
+    { username: 'storm', role: 'user', monthsAgo: 4, reputation: 512, messages: 156, purchases: 1, sub: 'active', bio: '', online: false },
+    { username: 'veil', role: 'user', monthsAgo: 1, reputation: 67, messages: 18, purchases: 0, sub: 'none', bio: '', online: false },
+    { username: 'krypt', role: 'user', monthsAgo: 11, reputation: 891, messages: 234, purchases: 2, sub: 'expired', bio: '', online: false },
+    { username: 'lucid', role: 'vip', monthsAgo: 3, reputation: 1203, messages: 389, purchases: 2, sub: 'active', bio: '', online: false },
+    { username: 'void', role: 'user', monthsAgo: 2, reputation: 234, messages: 56, purchases: 1, sub: 'active', bio: '', online: false }
+];
+
 /* =========================================================
    УТИЛИТЫ
    ========================================================= */
@@ -1673,49 +1831,35 @@ function formatDuration(ms) {
     return `${sec} с`;
 }
 
+function isUserOnline(u) {
+    return u.lastSeen && (Date.now() - u.lastSeen) < 5 * 60 * 1000;
+}
+
 /* =========================================================
-   ONLINE SIMULATION — "ЖИВОЙ" СЧЁТЧИК
-   ----------------------------------------------------------
-   Реалистичная симуляция:
-   - Почасовая кривая под аудиторию EU/RU (пик ~19-21 UTC)
-   - Множитель по дню недели (выходные активнее)
-   - Сезонный множитель (лето активнее)
-   - "Активность дня" — каждый календарный день свой (детерминированно)
-   - Плавное сглаживание (easing) между тиками
-   - Переменный интервал обновления (8-16 сек)
-   - Мелкий шум ±0.5-1% каждый тик
-   - Редкие всплески (2%)
-   - Обновление тренда (60с окно)
-   - Пик за последние 24 часа (максимум из истории)
+   ONLINE SIMULATION
    ========================================================= */
 const OnlineSim = (() => {
     const PEAK = 10500;
     const MIN = 120;
 
-    // Кривая по UTC-часам (0..23). Пик — вечер RU/EU.
     const BASE_CURVE = [
         0.30, 0.18, 0.10, 0.06, 0.04, 0.05,
         0.08, 0.14, 0.22, 0.32, 0.42, 0.50,
         0.56, 0.60, 0.64, 0.70, 0.78, 0.86,
         0.93, 1.00, 0.97, 0.88, 0.72, 0.50
     ];
-
-    // День недели (0 = вс)
     const DAY_MULT = [1.10, 0.88, 0.92, 0.94, 0.98, 1.04, 1.12];
 
     function noise(seed) {
         const x = Math.sin(seed) * 43758.5453;
         return x - Math.floor(x);
     }
-
     function seasonMult(month) {
         if (month === 11 || month === 0 || month === 1) return 1.04;
         if (month >= 2 && month <= 4) return 0.96;
         if (month >= 5 && month <= 7) return 1.06;
         return 1.00;
     }
-
-    // Разная "загруженность" у каждого дня (0.85–1.15)
     function dayActivity(dayOfYear) {
         return 0.85 + noise(dayOfYear * 12.34 + 7) * 0.30;
     }
@@ -1737,7 +1881,6 @@ const OnlineSim = (() => {
         v *= seasonMult(month);
         v *= dayActivity(doy);
 
-        // Мелкий детерминированный шум по минуте
         const seed = Math.floor(date.getTime() / 60000);
         const n1 = (noise(seed * 1.7) - 0.5) * 0.05;
         const n2 = (noise(seed * 3.1 + 11) - 0.5) * 0.03;
@@ -1746,18 +1889,15 @@ const OnlineSim = (() => {
         return Math.max(MIN, Math.min(PEAK, v));
     }
 
-    // State
     let current = null;
     let target = null;
-    let history = []; // [{ts, value}]
+    let history = [];
     let timer = null;
 
     function init() {
         const now = new Date();
         target = targetAt(now);
         current = target;
-
-        // Сидим историю за последние 24 часа (шаг 5 мин)
         const nowMs = now.getTime();
         for (let i = 288; i >= 0; i--) {
             const d = new Date(nowMs - i * 5 * 60 * 1000);
@@ -1768,27 +1908,16 @@ const OnlineSim = (() => {
     function tick() {
         const now = new Date();
         target = targetAt(now);
-
-        // Плавное сглаживание
         const diff = target - current;
         const ease = 0.12 + Math.random() * 0.08;
         current += diff * ease;
-
-        // Мелкий джиттер
         current += (Math.random() - 0.5) * current * 0.006;
-
-        // Редкий всплеск
         if (Math.random() < 0.015) {
-            const burst = current * (0.02 + Math.random() * 0.04);
-            current = Math.min(PEAK, current + burst);
+            current = Math.min(PEAK, current + current * (0.02 + Math.random() * 0.04));
         }
-
         current = Math.max(MIN, Math.min(PEAK, current));
-
-        // Добавляем в историю
         history.push({ ts: now.getTime(), value: current });
         if (history.length > 400) history.shift();
-
         updateDisplay();
     }
 
@@ -1816,15 +1945,6 @@ const OnlineSim = (() => {
         return { dir: pct > 0 ? 'up' : 'down', pct };
     }
 
-    function getPeak24h() {
-        const cutoff = Date.now() - 24 * 3600000;
-        const recent = history.filter(h => h.ts >= cutoff);
-        if (!recent.length) return { value: current, ts: Date.now() };
-        let max = recent[0];
-        for (const h of recent) if (h.value > max.value) max = h;
-        return { value: max.value, ts: max.ts };
-    }
-
     function updateDisplay() {
         const countEl = document.getElementById('online-count');
         if (countEl) countEl.textContent = formatNumber(current);
@@ -1838,14 +1958,6 @@ const OnlineSim = (() => {
             else trendEl.textContent = '→ 0.0%';
         }
 
-        const peak = getPeak24h();
-        const peakEl = document.getElementById('online-peak');
-        if (peakEl) {
-            peakEl.textContent = formatNumber(peak.value);
-            const d = new Date(peak.ts);
-            peakEl.title = 'Пик: ' + String(d.getUTCHours()).padStart(2,'0') + ':' + String(d.getUTCMinutes()).padStart(2,'0') + ' UTC';
-        }
-
         const footerEl = document.getElementById('footer-online');
         if (footerEl) footerEl.textContent = formatNumber(current);
     }
@@ -1857,7 +1969,6 @@ const OnlineSim = (() => {
 
         const now = Date.now();
         const points = history.filter(h => now - h.ts <= 24 * 3600000);
-        // Прореживаем до ~40 баров
         const step = Math.max(1, Math.floor(points.length / 40));
         const sampled = [];
         for (let i = 0; i < points.length; i += step) sampled.push(points[i]);
@@ -1884,11 +1995,11 @@ const OnlineSim = (() => {
         setInterval(renderChart, 3 * 60 * 1000);
     }
 
-    return { start, getCurrent: () => Math.round(current) };
+    return { start };
 })();
 
 /* =========================================================
-   AUTH + PROFILE
+   AUTH + USER MODEL
    ========================================================= */
 const AUTH_KEYS = { users: 'ryzen_users', current: 'ryzen_current_user' };
 
@@ -1910,42 +2021,26 @@ function hashPass(s) {
     return 'h' + Math.abs(h).toString(36) + '_' + btoa(unescape(encodeURIComponent(s))).slice(0, 12);
 }
 
-function generateHWID() {
-    const hex = '0123456789ABCDEF';
-    const parts = [];
-    for (let p = 0; p < 3; p++) {
-        let part = '';
-        for (let i = 0; i < 4; i++) part += hex[Math.floor(Math.random() * hex.length)];
-        parts.push(part);
-    }
-    return parts.join('-');
-}
-
-function generateKey() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    const parts = [];
-    for (let p = 0; p < 3; p++) {
-        let part = '';
-        for (let i = 0; i < 4; i++) part += chars[Math.floor(Math.random() * chars.length)];
-        parts.push(part);
-    }
-    return 'RYZ-' + parts.join('-');
-}
-
-function generateReferralCode(username) {
-    return username.toLowerCase().replace(/[^a-z0-9_]/g, '');
+function makeReferralCode(username) {
+    return (username || '').toLowerCase().replace(/[^a-z0-9_]/g, '');
 }
 
 function ensureUserFields(u) {
     if (!u.subscription) u.subscription = { plan: 'none', expiresAt: null };
-    if (!u.hwid) u.hwid = generateHWID();
-    if (!u.key) u.key = generateKey();
     if (typeof u.sessions !== 'number') u.sessions = 0;
     if (typeof u.playTime !== 'number') u.playTime = 0;
     if (!u.lastLogin) u.lastLogin = null;
+    if (!u.lastSeen) u.lastSeen = u.lastLogin;
     if (!u.activity) u.activity = [];
-    if (!u.referralCode) u.referralCode = generateReferralCode(u.username);
+    if (!u.referralCode) u.referralCode = makeReferralCode(u.username);
     if (typeof u.referrals !== 'number') u.referrals = 0;
+    if (!u.role) u.role = 'user';
+    if (typeof u.reputation !== 'number') u.reputation = 0;
+    if (typeof u.messages !== 'number') u.messages = 0;
+    if (typeof u.purchases !== 'number') u.purchases = 0;
+    if (!u.bio) u.bio = '';
+    delete u.hwid;
+    delete u.key;
     return u;
 }
 
@@ -1966,12 +2061,54 @@ function updateFullUser(updated) {
     if (idx >= 0) { users[idx] = updated; saveUsers(users); }
 }
 
-function maskKey(key) {
-    if (!key) return '—';
-    // RYZ-ABCD-EFGH-IJKL → RYZ-ABCD-••••-••••
-    return key.replace(/^(RYZ-[A-Z0-9]{4})-[A-Z0-9]{4}-[A-Z0-9]{4}$/, '$1-••••-••••');
+function seedCommunity() {
+    if (localStorage.getItem('ryzen_community_seeded')) return;
+    const users = getUsers();
+    const now = Date.now();
+
+    SEED_COMMUNITY.forEach(s => {
+        const email = s.username + '@community.ryzen';
+        if (users.find(u => u.email === email)) return;
+
+        const createdAt = now - s.monthsAgo * 30 * 24 * 60 * 60 * 1000;
+        let subscription;
+        if (s.sub === 'lifetime') subscription = { plan: 'lifetime', expiresAt: null };
+        else if (s.sub === 'active') subscription = { plan: '30d', expiresAt: now + (5 + Math.random() * 25) * 24 * 60 * 60 * 1000 };
+        else if (s.sub === 'expired') subscription = { plan: '7d', expiresAt: now - (5 + Math.random() * 20) * 24 * 60 * 60 * 1000 };
+        else subscription = { plan: 'none', expiresAt: null };
+
+        const lastSeen = s.online
+            ? now - Math.random() * 120 * 1000
+            : now - (10 * 60 * 1000 + Math.random() * 3 * 24 * 60 * 60 * 1000);
+
+        users.push({
+            username: s.username,
+            email,
+            pass: hashPass('seeded_random_' + Math.random() + '_' + s.username),
+            role: s.role,
+            createdAt,
+            lastLogin: lastSeen,
+            lastSeen,
+            sessions: Math.floor(Math.random() * 50) + 5,
+            reputation: s.reputation,
+            messages: s.messages,
+            purchases: s.purchases,
+            bio: s.bio || '',
+            referrals: Math.floor(Math.random() * 20),
+            playTime: Math.floor(Math.random() * 200) + 10,
+            subscription,
+            referralCode: makeReferralCode(s.username),
+            activity: []
+        });
+    });
+
+    saveUsers(users);
+    localStorage.setItem('ryzen_community_seeded', '1');
 }
 
+/* =========================================================
+   AUTH UI
+   ========================================================= */
 function renderAuthSlot() {
     const slot = document.getElementById('auth-slot');
     if (!slot) return;
@@ -1993,9 +2130,7 @@ function renderAuthSlot() {
     }
 }
 
-let authCurrentTab = 'login';
 function switchAuthTab(tab) {
-    authCurrentTab = tab;
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
     document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
     document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
@@ -2050,13 +2185,22 @@ function handleRegister(e) {
         playError(); return;
     }
 
+    const now = Date.now();
     const newUser = ensureUserFields({
         username,
         email,
         pass: hashPass(password),
-        createdAt: Date.now(),
-        lastLogin: Date.now(),
+        role: 'user',
+        createdAt: now,
+        lastLogin: now,
+        lastSeen: now,
         sessions: 1,
+        reputation: 0,
+        messages: 0,
+        purchases: 0,
+        bio: '',
+        referrals: 0,
+        playTime: 0,
         subscription: { plan: 'none', expiresAt: null }
     });
     addActivity(newUser, 'registered', 'Аккаунт создан');
@@ -2064,6 +2208,7 @@ function handleRegister(e) {
     saveUsers(users);
     setCurrentUser({ username: newUser.username, email: newUser.email });
     renderAuthSlot();
+    renderCommunity();
     closeAuthModal();
     form.reset();
     showToast('Добро пожаловать, ' + username + '!', 'success');
@@ -2093,11 +2238,13 @@ function handleLogin(e) {
     ensureUserFields(user);
     user.sessions = (user.sessions || 0) + 1;
     user.lastLogin = Date.now();
+    user.lastSeen = Date.now();
     addActivity(user, 'login', 'Вход в аккаунт');
     updateFullUser(user);
 
     setCurrentUser({ username: user.username, email: user.email });
     renderAuthSlot();
+    renderCommunity();
     closeAuthModal();
     form.reset();
     showToast('С возвращением, ' + user.username + '!', 'success');
@@ -2105,22 +2252,79 @@ function handleLogin(e) {
 }
 
 /* =========================================================
+   COMMUNITY RENDER
+   ========================================================= */
+let communityFilterState = 'all';
+
+function renderCommunity(filter = communityFilterState) {
+    communityFilterState = filter;
+    const grid = document.getElementById('community-grid');
+    if (!grid) return;
+
+    const all = getUsers();
+    let filtered = all.slice();
+
+    if (filter === 'online') {
+        filtered = filtered.filter(u => isUserOnline(u));
+    } else if (filter === 'vip') {
+        filtered = filtered.filter(u => u.role === 'vip' || u.role === 'admin');
+    }
+
+    filtered.sort((a, b) => {
+        const aOn = isUserOnline(a);
+        const bOn = isUserOnline(b);
+        if (aOn !== bOn) return bOn ? 1 : -1;
+        return (b.reputation || 0) - (a.reputation || 0);
+    });
+
+    grid.innerHTML = '';
+    if (!filtered.length) {
+        grid.innerHTML = '<div class="community-empty">Никого не найдено</div>';
+        document.getElementById('community-count').textContent = '0 участников';
+        return;
+    }
+
+    filtered.forEach(u => {
+        const online = isUserOnline(u);
+        const initial = (u.username || 'U').charAt(0).toUpperCase();
+        const roleLabel = { admin: 'ADMIN', vip: 'VIP', user: 'USER' }[u.role] || 'USER';
+
+        const card = document.createElement('div');
+        card.className = 'community-card';
+        card.innerHTML = `
+            <div class="community-card-head">
+                <div class="community-avatar">
+                    ${initial}
+                    ${online ? '<span class="community-online-badge"></span>' : ''}
+                </div>
+                <div class="community-name-wrap">
+                    <div class="community-name">${u.username}</div>
+                    <span class="community-role role-${u.role || 'user'}">${roleLabel}</span>
+                </div>
+            </div>
+            <div class="community-stats-mini">
+                <div><span>${formatNumber(u.reputation || 0)}</span><small>реп.</small></div>
+                <div><span>${formatNumber(u.messages || 0)}</span><small>сообщ.</small></div>
+                <div><span>${formatNumber(u.purchases || 0)}</span><small>покупок</small></div>
+            </div>
+            <div class="community-footer">
+                <span class="community-seen ${online ? 'online' : ''}">${online ? '● online' : timeAgo(u.lastSeen)}</span>
+                <span style="font-family:var(--font-mono);font-size:10px">${(u.subscription && u.subscription.plan !== 'none') ? '★ ' + (u.subscription.plan === 'lifetime' ? 'lifetime' : 'active') : ''}</span>
+            </div>
+        `;
+        card.addEventListener('click', () => openProfileModal(u.email));
+        grid.appendChild(card);
+    });
+
+    document.getElementById('community-count').textContent =
+        filtered.length + ' ' + (filtered.length === 1 ? 'участник' : 'участников');
+}
+
+/* =========================================================
    PROFILE MODAL
    ========================================================= */
 let profileTimer = null;
-
-function openProfileModal() {
-    renderProfile();
-    document.getElementById('profile-modal').classList.add('open');
-    playClick();
-    clearInterval(profileTimer);
-    profileTimer = setInterval(updateProfileCountdown, 1000);
-}
-function closeProfileModal() {
-    document.getElementById('profile-modal').classList.remove('open');
-    clearInterval(profileTimer);
-    profileTimer = null;
-}
+let profileEmail = null;
 
 function subscriptionStatus(sub) {
     if (!sub || sub.plan === 'none') return { active: false, label: 'Не активирована', plan: '—' };
@@ -2130,159 +2334,172 @@ function subscriptionStatus(sub) {
     return { active: true, label: 'Активна', plan: sub.plan };
 }
 
-function renderProfile() {
+function openProfileModal(email = null) {
     const session = getCurrentUser();
-    if (!session) return;
-    const user = findFullUser(session.email);
-    if (!user) return;
+    if (!email && !session) {
+        openAuthModal('login');
+        return;
+    }
+    profileEmail = email || session.email;
+    renderProfile(profileEmail);
+    document.getElementById('profile-modal').classList.add('open');
+    playClick();
+    clearInterval(profileTimer);
+    profileTimer = setInterval(updateProfileCountdown, 1000);
+}
+
+function closeProfileModal() {
+    document.getElementById('profile-modal').classList.remove('open');
+    clearInterval(profileTimer);
+    profileTimer = null;
+    profileEmail = null;
+}
+
+function renderProfile(email) {
+    const session = getCurrentUser();
+    const isSelf = !!(session && email === session.email);
+
+    const user = findFullUser(email);
+    if (!user) {
+        document.getElementById('profile-content').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-3)">Пользователь не найден</div>';
+        return;
+    }
 
     ensureUserFields(user);
-    updateFullUser(user);
 
+    const online = isUserOnline(user);
     const initial = (user.username || 'U').charAt(0).toUpperCase();
-    const created = new Date(user.createdAt || Date.now());
-    const createdStr = created.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
-    const subStatus = subscriptionStatus(user.subscription);
-    const subClass = subStatus.active ? 'active' : 'muted';
+    const joined = new Date(user.createdAt || Date.now()).toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
+    const lastSeenText = online ? 'online' : (user.lastSeen ? timeAgo(user.lastSeen) : '—');
+    const roleLabel = { admin: 'ADMIN', vip: 'VIP', user: 'USER' }[user.role] || 'USER';
 
-    const referralUrl = 'https://ryzenloader.gg/ref/' + (user.referralCode || user.username.toLowerCase());
+    const subStatus = subscriptionStatus(user.subscription);
+    const referralUrl = 'https://ryzenloader.gg/ref/' + (user.referralCode || makeReferralCode(user.username));
 
     const content = document.getElementById('profile-content');
     content.innerHTML = `
         <div class="profile-header">
-            <div class="profile-avatar-lg">${initial}</div>
+            <div class="profile-avatar-lg">
+                ${initial}
+                ${online ? '<span class="profile-online"></span>' : ''}
+            </div>
             <div class="profile-header-info">
-                <div class="profile-name">${user.username}</div>
-                <div class="profile-email">${user.email}</div>
-                <div class="profile-meta">member since ${createdStr}</div>
+                <div class="profile-name-row">
+                    <span class="profile-name">${user.username}</span>
+                    <span class="community-role role-${user.role || 'user'}">${roleLabel}</span>
+                </div>
+                ${isSelf ? `<div class="profile-email">${user.email}</div>` : ''}
+                <div class="profile-meta">
+                    ${online
+                        ? '<span style="color:var(--green)">● online</span>'
+                        : `был(а) ${lastSeenText}`}
+                    · с ${joined}
+                </div>
             </div>
             <button class="profile-close" id="profile-close-btn">✕</button>
         </div>
 
-        <div class="profile-grid">
-            <div class="profile-card">
-                <div class="profile-card-label">Подписка</div>
-                <div class="profile-card-value ${subClass}">${subStatus.label}</div>
-                <div class="profile-card-sub" id="sub-plan-label">${subStatus.plan}</div>
-                <div class="sub-timer" id="sub-timer">
-                    ${user.subscription.plan === 'lifetime' ? 'Lifetime' : (user.subscription.expiresAt ? '' : 'Купи доступ в Discord')}
-                </div>
-                ${!subStatus.active ? `<div class="profile-card-actions"><button class="profile-mini-btn primary" id="sub-buy-btn">Купить</button><button class="profile-mini-btn" id="sub-demo-btn">Демо 24ч</button></div>` : ''}
+        <div class="profile-stats-grid">
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">${formatNumber(user.reputation || 0)}</div>
+                <div class="profile-stat-lbl">Репутация</div>
             </div>
-
-            <div class="profile-card">
-                <div class="profile-card-label">Ключ доступа</div>
-                <div class="profile-card-value mono" title="${user.key}">${subStatus.active ? maskKey(user.key) : '—'}</div>
-                <div class="profile-card-sub">${subStatus.active ? 'Активирован' : 'Будет выдан после оплаты'}</div>
-                ${subStatus.active ? `<div class="profile-card-actions"><button class="profile-mini-btn" id="copy-key-btn">Копировать</button></div>` : ''}
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">${formatNumber(user.messages || 0)}</div>
+                <div class="profile-stat-lbl">Сообщений</div>
             </div>
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">${formatNumber(user.purchases || 0)}</div>
+                <div class="profile-stat-lbl">Покупок</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">${formatNumber(user.referrals || 0)}</div>
+                <div class="profile-stat-lbl">Рефералов</div>
+            </div>
+        </div>
 
-            <div class="profile-card">
-                <div class="profile-card-label">HWID</div>
-                <div class="profile-card-value mono">${user.hwid}</div>
-                <div class="profile-card-sub">Привязан к устройству</div>
+        ${user.bio ? `<div class="profile-bio">"${user.bio}"</div>` : ''}
+
+        <div class="profile-card wide" style="margin-bottom:12px">
+            <div class="profile-card-label">Подписка</div>
+            <div class="profile-card-value ${subStatus.active ? 'active' : 'muted'}">${subStatus.label}</div>
+            <div class="profile-card-sub">${subStatus.plan}</div>
+            ${isSelf ? `<div class="sub-timer" id="sub-timer"></div>` : ''}
+            ${isSelf && !subStatus.active ? `
                 <div class="profile-card-actions">
-                    <button class="profile-mini-btn" id="copy-hwid-btn">Копировать</button>
-                    <button class="profile-mini-btn" id="reset-hwid-btn">Сбросить</button>
+                    <button class="profile-mini-btn primary" id="sub-buy-btn">Купить</button>
+                    <button class="profile-mini-btn" id="sub-demo-btn">Демо 24ч</button>
                 </div>
+            ` : ''}
+        </div>
+
+        ${isSelf ? `
+            <div class="profile-section-title">Реферальная ссылка</div>
+            <div class="referral-row">
+                <code id="ref-url">${referralUrl}</code>
+                <button class="profile-mini-btn" id="copy-ref-btn">Копировать</button>
             </div>
 
-            <div class="profile-card">
-                <div class="profile-card-label">Сессии</div>
-                <div class="profile-card-value">${user.sessions}</div>
-                <div class="profile-card-sub">последний вход: ${timeAgo(user.lastLogin)}</div>
-                <div class="profile-card-actions">
-                    <span style="font-size:11px;color:var(--text-4);font-family:var(--font-mono)">playtime: ${user.playTime}h</span>
-                </div>
+            <div class="profile-section-title">Недавняя активность</div>
+            <div class="activity-feed" id="activity-feed">${renderActivityList(user.activity)}</div>
+
+            <div class="profile-actions-row">
+                <button class="profile-btn" id="change-password-btn">Сменить пароль</button>
+                <button class="profile-btn" id="logout-btn">Выйти</button>
+                <button class="profile-btn danger" id="delete-account-btn">Удалить</button>
             </div>
-        </div>
-
-        <div class="profile-section-title">Реферальная ссылка</div>
-        <div class="referral-row">
-            <code id="ref-url">${referralUrl}</code>
-            <button class="profile-mini-btn" id="copy-ref-btn">Копировать</button>
-        </div>
-        <div style="font-size:11px;color:var(--text-4);margin-top:6px;font-family:var(--font-mono)">
-            Приглашено: ${user.referrals || 0}
-        </div>
-
-        <div class="profile-section-title">Недавняя активность</div>
-        <div class="activity-feed" id="activity-feed">
-            ${renderActivityList(user.activity)}
-        </div>
-
-        <div class="profile-actions-row">
-            <button class="profile-btn" id="change-password-btn">Сменить пароль</button>
-            <button class="profile-btn" id="logout-btn">Выйти</button>
-            <button class="profile-btn danger" id="delete-account-btn">Удалить</button>
-        </div>
+        ` : ''}
     `;
 
-    // Bind
-    document.getElementById('profile-close-btn').onclick = closeProfileModal;
-    document.getElementById('copy-key-btn')?.addEventListener('click', () => {
-        navigator.clipboard.writeText(user.key).then(() => {
-            showToast('Ключ скопирован', 'success');
-            playSuccess();
+    // Bind close
+    document.getElementById('profile-close-btn').addEventListener('click', closeProfileModal);
+
+    if (isSelf) {
+        document.getElementById('copy-ref-btn')?.addEventListener('click', () => {
+            navigator.clipboard.writeText(referralUrl).then(() => {
+                showToast('Ссылка скопирована', 'success');
+                playSuccess();
+            });
         });
-    });
-    document.getElementById('copy-hwid-btn')?.addEventListener('click', () => {
-        navigator.clipboard.writeText(user.hwid).then(() => {
-            showToast('HWID скопирован', 'success');
-            playSuccess();
+        document.getElementById('logout-btn')?.addEventListener('click', () => {
+            setCurrentUser(null);
+            renderAuthSlot();
+            renderCommunity();
+            closeProfileModal();
+            showToast('Вы вышли из аккаунта', 'info');
+            playClick();
         });
-    });
-    document.getElementById('copy-ref-btn')?.addEventListener('click', () => {
-        navigator.clipboard.writeText(referralUrl).then(() => {
-            showToast('Ссылка скопирована', 'success');
-            playSuccess();
+        document.getElementById('delete-account-btn')?.addEventListener('click', () => {
+            if (!confirm('Удалить аккаунт безвозвратно?')) return;
+            if (!confirm('Точно? Это необратимо.')) return;
+            const users = getUsers().filter(u => u.email !== user.email);
+            saveUsers(users);
+            setCurrentUser(null);
+            renderAuthSlot();
+            renderCommunity();
+            closeProfileModal();
+            showToast('Аккаунт удалён', 'info');
+            playError();
         });
-    });
-    document.getElementById('reset-hwid-btn')?.addEventListener('click', () => {
-        if (!confirm('Сбросить HWID? Понадобится заново активировать ключ.')) return;
-        const fresh = findFullUser(user.email);
-        fresh.hwid = generateHWID();
-        addActivity(fresh, 'hwid', 'HWID сброшен');
-        updateFullUser(fresh);
-        showToast('HWID сброшен', 'success');
-        playSuccess();
-        renderProfile();
-    });
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
-        setCurrentUser(null);
-        renderAuthSlot();
-        closeProfileModal();
-        showToast('Вы вышли из аккаунта', 'info');
-        playClick();
-    });
-    document.getElementById('delete-account-btn')?.addEventListener('click', () => {
-        if (!confirm('Удалить аккаунт безвозвратно?')) return;
-        if (!confirm('Точно? Это необратимо.')) return;
-        const users = getUsers().filter(u => u.email !== user.email);
-        saveUsers(users);
-        setCurrentUser(null);
-        renderAuthSlot();
-        closeProfileModal();
-        showToast('Аккаунт удалён', 'info');
-        playError();
-    });
-    document.getElementById('change-password-btn')?.addEventListener('click', () => {
-        showToast('Смена пароля доступна в Discord-боте', 'info');
-        playClick();
-    });
-    document.getElementById('sub-buy-btn')?.addEventListener('click', () => {
-        window.open('https://discord.gg/BMsBuuk2WK', '_blank');
-        navigator.clipboard.writeText('https://discord.gg/BMsBuuk2WK').catch(() => {});
-    });
-    document.getElementById('sub-demo-btn')?.addEventListener('click', () => {
-        const fresh = findFullUser(user.email);
-        fresh.subscription = { plan: '24h', expiresAt: Date.now() + 24 * 3600 * 1000 };
-        addActivity(fresh, 'key', 'Демо-доступ активирован');
-        updateFullUser(fresh);
-        showToast('Демо-доступ активирован на 24 часа', 'success');
-        playSuccess();
-        renderProfile();
-    });
+        document.getElementById('change-password-btn')?.addEventListener('click', () => {
+            showToast('Смена пароля доступна в Discord-боте', 'info');
+            playClick();
+        });
+        document.getElementById('sub-buy-btn')?.addEventListener('click', () => {
+            window.open('https://discord.gg/BMsBuuk2WK', '_blank');
+            navigator.clipboard.writeText('https://discord.gg/BMsBuuk2WK').catch(() => {});
+        });
+        document.getElementById('sub-demo-btn')?.addEventListener('click', () => {
+            const fresh = findFullUser(user.email);
+            fresh.subscription = { plan: '24h', expiresAt: Date.now() + 24 * 3600 * 1000 };
+            addActivity(fresh, 'key', 'Демо-доступ активирован');
+            updateFullUser(fresh);
+            showToast('Демо-доступ активирован на 24 часа', 'success');
+            playSuccess();
+            renderProfile(user.email);
+            renderCommunity();
+        });
+    }
 
     updateProfileCountdown();
 }
@@ -2301,13 +2518,14 @@ function renderActivityList(activity) {
 }
 
 function updateProfileCountdown() {
+    if (!profileEmail) return;
     const session = getCurrentUser();
-    if (!session) return;
-    const user = findFullUser(session.email);
+    if (!session || profileEmail !== session.email) return;
+
+    const user = findFullUser(profileEmail);
     if (!user || !user.subscription) return;
 
     const timerEl = document.getElementById('sub-timer');
-    const planEl = document.getElementById('sub-plan-label');
     if (!timerEl) return;
 
     const sub = user.subscription;
@@ -2420,15 +2638,26 @@ function bindDiscordLinks() {
    INIT
    ========================================================= */
 document.addEventListener('DOMContentLoaded', () => {
-    // Online
+    seedCommunity();
+
     OnlineSim.start();
 
-    // Render
     renderPricing('30');
     renderChangelog('all');
     renderFAQ();
     bindDiscordLinks();
     renderAuthSlot();
+    renderCommunity('all');
+
+    // Community filter
+    document.querySelectorAll('#community-filter button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#community-filter button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCommunity(btn.dataset.filter);
+            playClick();
+        });
+    });
 
     // Billing
     document.querySelectorAll('#billing-toggle button').forEach(btn => {
