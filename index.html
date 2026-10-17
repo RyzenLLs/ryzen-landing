@@ -439,6 +439,7 @@
         color: var(--text-1);
         font-family: var(--font-mono);
         font-weight: 700;
+        font-size: 18px;
     }
     .online-toolbar-right {
         display: flex; align-items: center; gap: 16px;
@@ -517,42 +518,6 @@
         font-family: var(--font-mono);
     }
     .online-card-footer .rep { color: var(--text-3); }
-
-    .online-rest-bar {
-        display: flex; align-items: center; justify-content: center;
-        gap: 10px;
-        padding: 20px;
-        margin-top: 12px;
-        background: var(--bg-1);
-        border: 1px dashed var(--border-strong);
-        border-radius: var(--radius);
-        font-size: 13px;
-        color: var(--text-3);
-        flex-wrap: wrap;
-    }
-    .online-rest-bar strong {
-        color: var(--text-1);
-        font-family: var(--font-mono);
-        font-weight: 700;
-        font-size: 15px;
-    }
-    .online-rest-bar .dot-anim {
-        display: inline-flex;
-        gap: 3px;
-        margin-left: 4px;
-    }
-    .online-rest-bar .dot-anim span {
-        width: 4px; height: 4px;
-        border-radius: 50%;
-        background: var(--text-3);
-        animation: dotBounce 1.4s infinite;
-    }
-    .online-rest-bar .dot-anim span:nth-child(2) { animation-delay: 0.2s; }
-    .online-rest-bar .dot-anim span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes dotBounce {
-        0%, 80%, 100% { opacity: 0.3; }
-        40% { opacity: 1; }
-    }
 
     .online-rotating-hint {
         font-size: 11px;
@@ -1498,7 +1463,7 @@
             <div class="brand-logo">R</div>
             <div class="brand-text">
                 <span class="main">RYZEN</span>
-                <span class="sub">LOADER</span>
+                <span class="sub">PRIVATE</span>
             </div>
         </div>
 
@@ -1553,12 +1518,12 @@
             <span class="online-trend flat" id="online-trend">—</span>
         </div>
 
-        <h1 id="hero-title">RYZEN <span class="accent">LOADER</span></h1>
+        <h1 id="hero-title">RYZEN <span class="accent">PRIVATE</span></h1>
         <p class="tagline">Private Cheat Software</p>
 
         <div class="cta-buttons">
-            <a href="#pricing" class="btn btn-primary btn-lg">Купить доступ</a>
-            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost btn-lg discord-link">Discord</a>
+            <button class="btn btn-primary btn-lg" onclick="showToast('Продажи временно приостановлены', 'error')">Купить доступ</button>
+            <button class="btn btn-ghost btn-lg" onclick="showToast('Discord временно недоступен', 'info')">Discord</button>
         </div>
 
         <div class="stats">
@@ -1714,20 +1679,15 @@
             <div class="online-toolbar-left">
                 <div class="online-toolbar-count">
                     <span class="dot"></span>
-                    <span>В сети: <strong id="online-total">—</strong></span>
+                    <span>В сети: <strong id="online-total-main">—</strong></span>
                 </div>
             </div>
             <div class="online-toolbar-right">
-                <span>Показано: <strong id="online-shown">—</strong></span>
+                <span>Обновляется автоматически</span>
             </div>
         </div>
 
         <div class="online-grid" id="online-grid"></div>
-
-        <div class="online-rest-bar" id="online-rest-bar">
-            Показаны <strong id="online-shown-2">0</strong> из <strong id="online-total-2">0</strong> · и ещё <strong id="online-rest">0</strong> в сети
-            <span class="dot-anim"><span></span><span></span><span></span></span>
-        </div>
 
         <div class="online-rotating-hint" id="online-rotating-hint">Список обновляется каждые 20–40 секунд</div>
     </section>
@@ -1781,7 +1741,7 @@
                 <div class="t-box"><div class="t-val" id="t-secs">00</div><div class="t-lbl">Секунд</div></div>
             </div>
 
-            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary btn-lg discord-link">Написать в Discord</a>
+            <button class="btn btn-primary btn-lg" onclick="showToast('Продажи временно приостановлены', 'error')">Купить доступ</button>
         </div>
     </section>
 
@@ -1797,8 +1757,8 @@
             <div class="footer-col">
                 <h4>Поддержка</h4>
                 <a href="#faq">FAQ</a>
-                <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Discord</a>
-                <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Канал</a>
+                <a href="#" onclick="showToast('Discord временно недоступен', 'info'); return false;">Discord</a>
+                <a href="#" onclick="showToast('Discord временно недоступен', 'info'); return false;">Канал</a>
             </div>
             <div class="footer-col">
                 <h4>Правовое</h4>
@@ -1808,7 +1768,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span>© 2024 Ryzen Loader. Все права защищены.</span>
+            <span>© 2024 Ryzen Private. Все права защищены.</span>
             <span class="footer-live">
                 <span class="dot"></span>
                 сейчас на сайте: <strong id="footer-online">—</strong>
@@ -1843,7 +1803,7 @@
         </div>
         <div class="overload-actions">
             <button class="overload-btn primary" id="overload-retry">Переподключиться</button>
-            <a href="https://discord.gg/BMsBuuk2WK" class="overload-btn discord-link">Discord</a>
+            <button class="overload-btn" onclick="showToast('Discord временно недоступен', 'info')">Discord</button>
         </div>
         <div class="overload-note" id="overload-note">Автоматическое закрытие через — с</div>
         <button class="overload-skip" id="overload-skip">Продолжить на свой риск →</button>
@@ -1955,12 +1915,12 @@
 /* =========================================================
    КОНСТАНТЫ И ДАННЫЕ
    ========================================================= */
-const ONLINE_LIST_SIZE = 50;
+const ONLINE_LIST_SIZE = 12; // Сделали меньше
 
 const PRICING_DATA = {
-    7: { name: '7 дней', price: 150, note: 'Пробный период', features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления'] },
-    30: { name: '30 дней', price: 500, note: 'Оптимальный выбор', featured: true, features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка'] },
-    lifetime: { name: 'Lifetime', price: 2500, note: 'Навсегда', features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Все будущие обновления', 'Личная поддержка'] }
+    7: { name: '7 дней', price: 250, note: 'Пробный период', features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления'] },
+    30: { name: '30 дней', price: 800, note: 'Оптимальный выбор', featured: true, features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка'] },
+    lifetime: { name: 'Lifetime', price: 3990, note: 'Навсегда', features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Все будущие обновления', 'Личная поддержка'] }
 };
 
 const CHANGELOG_DATA = [
@@ -1990,14 +1950,14 @@ const CHANGELOG_DATA = [
         { text: 'Мелкие исправления багов', type: 'fix' }
     ]},
     { tag: 'Beta v1.0', date: '1 марта 2026', title: 'Первый публичный релиз', items: [
-        { text: 'Запуск Ryzen Loader для Garry\'s Mod', type: 'new' },
+        { text: 'Запуск Ryzen Private для Garry\'s Mod', type: 'new' },
         { text: 'Базовый функционал чита', type: 'new' },
         { text: 'Система ключей и HWID-привязки', type: 'new' }
     ]}
 ];
 
 const FAQ_DATA = [
-    { q: 'Можно ли получить пробную подписку?', a: '<strong>Нет.</strong> Мы не выдаём бесплатные пробные подписки. Если хочешь попробовать — покупай минимальный тариф на 7 дней за 150₽. Это недорого, но этого хватит, чтобы понять, подходит ли тебе лоадер. Так мы защищаем свой софт от слива.' },
+    { q: 'Можно ли получить пробную подписку?', a: '<strong>Нет.</strong> Мы не выдаём бесплатные пробные подписки. Если хочешь попробовать — покупай минимальный тариф на 7 дней за 250₽. Это недорого, но этого хватит, чтобы понять, подходит ли тебе лоадер. Так мы защищаем свой софт от слива.' },
     { q: 'Дадут ли VAC-бан?', a: 'Лоадер не детектится на момент публикации. Однако VAC Live обновляется, и любой чит может быть задетекчен. Использование чита — это риск, и вы принимаете его добровольно.' },
     { q: 'На каких серверах можно играть?', a: 'На любых, но помни о рисках. На официальных серверах (Premier, Competitive) VAC-бан возможен — мы не гарантируем защиту. Играй на community-серверах и локальных, там безопаснее.' },
     { q: 'Можно ли перенести ключ на другой ПК?', a: 'Нет, ключ привязан к HWID вашего компьютера. Если вы сменили железо или переустановили Windows — свяжитесь с продавцом для сброса HWID (делается один раз бесплатно).' },
@@ -2049,14 +2009,15 @@ const playClick = () => playSound(900, 0.03, 'sine', 0.012);
 const playSuccess = () => playSound(1200, 0.09, 'sine', 0.018);
 const playError = () => playSound(300, 0.09, 'sawtooth', 0.018);
 
-const showToast = throttle(function(message, type = 'info') {
+// Глобальный доступ для onclick
+window.showToast = function(message, type = 'info') {
     const toast = document.getElementById('toast');
     if (!toast) return;
     toast.textContent = message;
     toast.className = 'toast show ' + type;
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => toast.classList.remove('show'), 3200);
-}, 400);
+};
 
 function formatNumber(n) {
     return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -2211,6 +2172,9 @@ const OnlineSim = (() => {
         const countEl = document.getElementById('online-count');
         if (countEl) countEl.textContent = formatNumber(current);
 
+        const mainCountEl = document.getElementById('online-total-main');
+        if (mainCountEl) mainCountEl.textContent = formatNumber(current);
+
         const trendEl = document.getElementById('online-trend');
         if (trendEl) {
             const t = getTrend();
@@ -2222,9 +2186,6 @@ const OnlineSim = (() => {
 
         const footerEl = document.getElementById('footer-online');
         if (footerEl) footerEl.textContent = formatNumber(current);
-
-        // Обновляем счётчики онлайн-секции
-        updateOnlineCounters();
     }
 
     function renderChart() {
@@ -2364,7 +2325,7 @@ function makeSub() {
 }
 
 function ensureCommunitySeeded() {
-    if (localStorage.getItem('ryzen_community_seeded_v3')) return;
+    if (localStorage.getItem('ryzen_community_seeded_v4')) return;
 
     const users = getUsers();
     const usedNames = new Set(users.map(u => u.username.toLowerCase()));
@@ -2402,7 +2363,7 @@ function ensureCommunitySeeded() {
     });
 
     // 2. Сгенерированные
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 50; i++) {
         const nick = generateNickname(usedNames);
         const email = nick + '@community.ryzen';
 
@@ -2436,13 +2397,13 @@ function ensureCommunitySeeded() {
     }
 
     saveUsers(users);
-    localStorage.setItem('ryzen_community_seeded_v3', '1');
+    localStorage.setItem('ryzen_community_seeded_v4', '1');
 }
 
 /* =========================================================
    ONLINE STATE (какие ники сейчас видны)
    ========================================================= */
-const ONLINE_STATE_KEY = 'ryzen_online_state_v3';
+const ONLINE_STATE_KEY = 'ryzen_online_state_v4';
 
 function getOnlineState() {
     try {
@@ -2564,28 +2525,6 @@ function renderOnline() {
         card.addEventListener('click', () => openProfileModal(user.email));
         grid.appendChild(card);
     });
-
-    updateOnlineCounters();
-}
-
-function updateOnlineCounters() {
-    const shown = getOnlineState().length;
-    const total = OnlineSim.getCurrent ? OnlineSim.getCurrent() : shown;
-    const rest = Math.max(0, total - shown);
-
-    const setTxt = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val;
-    };
-
-    // Ограничиваем вывод в интерфейсе, чтобы он никогда не был больше 6000
-    const safeTotal = Math.min(total, 5999);
-
-    setTxt('online-total', formatNumber(safeTotal));
-    setTxt('online-total-2', formatNumber(safeTotal));
-    setTxt('online-shown', shown);
-    setTxt('online-shown-2', shown);
-    setTxt('online-rest', formatNumber(Math.max(0, safeTotal - shown)));
 }
 
 /* =========================================================
@@ -2835,7 +2774,7 @@ function renderProfile(email) {
             ${isSelf ? `<div class="sub-timer" id="sub-timer"></div>` : ''}
             ${isSelf && !subStatus.active ? `
                 <div class="profile-card-actions">
-                    <button class="profile-mini-btn primary" id="sub-buy-btn">Купить</button>
+                    <button class="profile-mini-btn primary" id="sub-buy-btn" onclick="showToast('Продажи временно приостановлены', 'error')">Купить</button>
                     <button class="profile-mini-btn" id="sub-demo-btn">Демо 24ч</button>
                 </div>
             ` : ''}
@@ -2895,10 +2834,6 @@ function renderProfile(email) {
         document.getElementById('change-password-btn')?.addEventListener('click', () => {
             showToast('Смена пароля доступна в Discord-боте', 'info');
             playClick();
-        });
-        document.getElementById('sub-buy-btn')?.addEventListener('click', () => {
-            window.open('https://discord.gg/BMsBuuk2WK', '_blank');
-            navigator.clipboard.writeText('https://discord.gg/BMsBuuk2WK').catch(() => {});
         });
         document.getElementById('sub-demo-btn')?.addEventListener('click', () => {
             const fresh = findFullUser(user.email);
@@ -2974,11 +2909,10 @@ function renderPricing(period = '30') {
             <div class="price">${plan.price}<span class="currency">₽</span></div>
             <div class="price-note">${plan.note}</div>
             <ul class="features">${plan.features.map(f => `<li>${f}</li>`).join('')}</ul>
-            <a href="https://discord.gg/BMsBuuk2WK" class="btn ${plan.featured ? 'btn-primary' : 'btn-ghost'} discord-link">Купить</a>
+            <button class="btn ${plan.featured ? 'btn-primary' : 'btn-ghost'}" onclick="showToast('Продажи временно приостановлены', 'error')">Купить</button>
         `;
         grid.appendChild(card);
     });
-    bindDiscordLinks();
 }
 
 function renderChangelog(filter = 'all') {
@@ -3030,21 +2964,6 @@ function updateFaqCounter() {
     counter.textContent = visible === total ? `${total} вопросов` : `${visible} из ${total}`;
 }
 
-function bindDiscordLinks() {
-    document.querySelectorAll('.discord-link').forEach(link => {
-        if (link._bound) return;
-        link._bound = true;
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const url = link.getAttribute('href');
-            navigator.clipboard.writeText(url).catch(() => {});
-            showToast('Ссылка на Discord скопирована', 'success');
-            playSuccess();
-            window.open(url, '_blank');
-        });
-    });
-}
-
 /* =========================================================
    INIT
    ========================================================= */
@@ -3059,7 +2978,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPricing('30');
     renderChangelog('all');
     renderFAQ();
-    bindDiscordLinks();
     renderAuthSlot();
 
     // Billing
@@ -3267,7 +3185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('share-btn').addEventListener('click', () => {
         playClick();
         if (navigator.share) {
-            navigator.share({ title: 'Ryzen Loader', text: 'Private Cheat Software', url: window.location.href }).catch(() => {});
+            navigator.share({ title: 'Ryzen Private', text: 'Private Cheat Software', url: window.location.href }).catch(() => {});
         } else {
             navigator.clipboard.writeText(window.location.href).then(() => showToast('Ссылка скопирована', 'success')).catch(() => {});
         }
@@ -3443,8 +3361,8 @@ document.addEventListener('DOMContentLoaded', () => {
        OVERLOAD SCREEN — авто-включение при перегрузке
        ========================================================= */
     const OVERLOAD = {
-        threshold: 5200,          // порог онлайна
-        cooldown: 55000,          // пауза после закрытия (мс)
+        threshold: 6000,
+        cooldown: 45000,
         active: false,
         lastDismissed: 0,
         hideTimer: null,
@@ -3495,7 +3413,7 @@ document.addEventListener('DOMContentLoaded', () => {
         overloadUpdateStats();
         screen.classList.add('active');
 
-        const duration = 20 + Math.floor(Math.random() * 20); // 20–40 сек
+        const duration = 20 + Math.floor(Math.random() * 20);
         overloadStartCountdown(duration);
 
         clearTimeout(OVERLOAD.hideTimer);
@@ -3527,13 +3445,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let chance = 0;
 
         if (online > OVERLOAD.threshold) {
-            chance = 0.55;                     // > 6000 — часто
+            chance = 0.55;
         } else if (online > OVERLOAD.threshold * 0.9) {
-            chance = 0.12;                     // 5400–6000 — иногда
+            chance = 0.12;
         } else if (online > OVERLOAD.threshold * 0.75) {
-            chance = 0.03;                     // 4500–5400 — редко
+            chance = 0.03;
         } else {
-            chance = 0.005;                    // ниже — совсем редко
+            chance = 0.005;
         }
 
         if (Math.random() < chance) overloadShow();
@@ -3567,7 +3485,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
             } else {
                 overloadHide(false);
-                if (typeof showToast === 'function') showToast('Соединение восстановлено', 'success');
+                showToast('Соединение восстановлено', 'success');
             }
         }, 1400);
     }
@@ -3575,23 +3493,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function overloadSkip() {
         overloadHide(false);
         OVERLOAD.lastDismissed = Date.now();
-        if (typeof showToast === 'function') showToast('Продолжаете на свой риск', 'info');
+        showToast('Продолжаете на свой риск', 'info');
     }
 
-    // Bind events
     const _ovRetry = document.getElementById('overload-retry');
     if (_ovRetry) _ovRetry.addEventListener('click', overloadRetry);
     const _ovSkip = document.getElementById('overload-skip');
     if (_ovSkip) _ovSkip.addEventListener('click', overloadSkip);
 
-    // Первый чек — через 25–45 сек после загрузки (чтобы сайт успел показаться)
     setTimeout(() => {
         overloadCheck();
-        const iv = 20000 + Math.floor(Math.random() * 15000); // 20–35 сек
+        const iv = 20000 + Math.floor(Math.random() * 15000);
         setInterval(overloadCheck, iv);
     }, 25000 + Math.floor(Math.random() * 20000));
 
-    console.log('%c Ryzen Loader', 'color:#fafafa;font-weight:800;font-size:14px;');
+    console.log('%c Ryzen Private', 'color:#fafafa;font-weight:800;font-size:14px;');
     console.log('%c Press ? for hotkeys', 'color:#707070;');
 });
 </script>
