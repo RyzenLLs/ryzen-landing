@@ -410,119 +410,157 @@
         font-weight: 500; font-family: var(--font-mono);
     }
 
-    /* ========== COMMUNITY ========== */
-    .community-toolbar {
+    /* ========== ONLINE SECTION ========== */
+    .online-toolbar {
         display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+        padding: 16px 20px;
+        background: var(--bg-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 16px;
     }
-    .community-filter {
-        display: flex; gap: 2px;
-        background: var(--bg-1); border: 1px solid var(--border);
-        border-radius: var(--radius); padding: 3px;
+    .online-toolbar-left {
+        display: flex; align-items: center; gap: 14px;
+        flex-wrap: wrap;
     }
-    .community-filter button {
-        padding: 6px 14px;
-        background: transparent; border: none;
-        color: var(--text-3); font-size: 12px; font-weight: 600;
-        cursor: pointer; border-radius: var(--radius-sm);
-        font-family: inherit; transition: all 0.15s;
+    .online-toolbar-count {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 14px; font-weight: 600;
     }
-    .community-filter button.active { background: var(--bg-3); color: var(--text-1); }
-    .community-filter button:hover { color: var(--text-1); }
-    .community-count {
+    .online-toolbar-count .dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        animation: pulse 2s infinite;
+    }
+    .online-toolbar-count strong {
+        color: var(--text-1);
+        font-family: var(--font-mono);
+        font-weight: 700;
+    }
+    .online-toolbar-right {
+        display: flex; align-items: center; gap: 16px;
         font-size: 12px; color: var(--text-3);
         font-family: var(--font-mono);
     }
+    .online-toolbar-right strong { color: var(--text-2); font-weight: 600; }
 
-    .community-grid {
+    .online-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 10px;
     }
 
-    .community-card {
+    .online-card {
         background: var(--bg-1); border: 1px solid var(--border);
         border-radius: var(--radius);
-        padding: 16px;
+        padding: 12px;
         cursor: pointer;
         transition: all 0.15s var(--ease);
-    }
-    .community-card:hover { border-color: var(--border-strong); background: var(--bg-2); }
-
-    .community-card-head {
-        display: flex; align-items: center; gap: 12px;
-        margin-bottom: 14px;
-    }
-    .community-avatar {
         position: relative;
-        width: 44px; height: 44px;
-        border-radius: 10px;
+    }
+    .online-card:hover { border-color: var(--border-strong); background: var(--bg-2); }
+
+    .online-card-head {
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 10px;
+    }
+    .online-avatar {
+        position: relative;
+        width: 36px; height: 36px;
+        border-radius: 8px;
         background: var(--bg-3);
         border: 1px solid var(--border-strong);
         display: flex; align-items: center; justify-content: center;
-        font-size: 18px; font-weight: 700;
+        font-size: 14px; font-weight: 700;
         font-family: var(--font-mono);
         flex-shrink: 0;
+        transition: all 0.3s var(--ease);
     }
-    .community-online-badge {
+    .online-avatar.role-admin { border-color: rgba(239,68,68,0.5); }
+    .online-avatar.role-vip { border-color: rgba(245,158,11,0.5); }
+
+    .online-online-badge {
         position: absolute; bottom: -2px; right: -2px;
-        width: 12px; height: 12px;
+        width: 10px; height: 10px;
         border-radius: 50%;
         background: var(--green);
         border: 2px solid var(--bg-1);
         animation: pulse 2s infinite;
     }
-    .community-name-wrap { flex: 1; min-width: 0; }
-    .community-name {
-        font-size: 14px; font-weight: 700;
-        margin-bottom: 3px;
+    .online-name-wrap { flex: 1; min-width: 0; }
+    .online-name {
+        font-size: 13px; font-weight: 700;
+        margin-bottom: 2px;
         overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .community-role {
-        display: inline-block;
-        font-size: 9px; font-weight: 800;
-        padding: 2px 6px; border-radius: 3px;
-        letter-spacing: 1px;
+    .online-badges {
+        display: flex; gap: 4px; flex-wrap: wrap;
     }
-    .role-admin { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
-    .role-vip { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
-    .role-user { background: var(--bg-3); color: var(--text-3); border: 1px solid var(--border); }
+    .online-badge {
+        font-size: 8px; font-weight: 800;
+        padding: 1px 5px; border-radius: 2px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .online-badge.admin { background: rgba(239,68,68,0.15); color: var(--red); }
+    .online-badge.vip { background: rgba(245,158,11,0.15); color: var(--amber); }
+    .online-badge.lifetime { background: rgba(245,158,11,0.1); color: var(--amber); }
+    .online-badge.active { background: rgba(34,197,94,0.1); color: var(--green); }
+    .online-badge.expired { background: rgba(239,68,68,0.1); color: var(--red); }
 
-    .community-stats-mini {
+    .online-card-footer {
         display: flex; justify-content: space-between;
-        padding: 10px 0;
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 10px;
-    }
-    .community-stats-mini > div {
-        display: flex; flex-direction: column; align-items: center;
-        flex: 1;
-    }
-    .community-stats-mini > div:not(:last-child) { border-right: 1px solid var(--border); }
-    .community-stats-mini span {
-        font-size: 13px; font-weight: 700;
+        font-size: 10px; color: var(--text-4);
         font-family: var(--font-mono);
     }
-    .community-stats-mini small {
-        font-size: 9px; color: var(--text-4);
-        text-transform: uppercase; letter-spacing: 0.5px;
-        margin-top: 2px;
+    .online-card-footer .rep { color: var(--text-3); }
+
+    .online-rest-bar {
+        display: flex; align-items: center; justify-content: center;
+        gap: 10px;
+        padding: 20px;
+        margin-top: 12px;
+        background: var(--bg-1);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius);
+        font-size: 13px;
+        color: var(--text-3);
+        flex-wrap: wrap;
+    }
+    .online-rest-bar strong {
+        color: var(--text-1);
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .online-rest-bar .dot-anim {
+        display: inline-flex;
+        gap: 3px;
+        margin-left: 4px;
+    }
+    .online-rest-bar .dot-anim span {
+        width: 4px; height: 4px;
+        border-radius: 50%;
+        background: var(--text-3);
+        animation: dotBounce 1.4s infinite;
+    }
+    .online-rest-bar .dot-anim span:nth-child(2) { animation-delay: 0.2s; }
+    .online-rest-bar .dot-anim span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+        0%, 80%, 100% { opacity: 0.3; }
+        40% { opacity: 1; }
     }
 
-    .community-footer {
-        display: flex; justify-content: space-between;
-        font-size: 11px; color: var(--text-3);
-    }
-    .community-seen {
-        font-family: var(--font-mono); font-size: 10px;
-    }
-    .community-seen.online { color: var(--green); font-weight: 600; }
-
-    .community-empty {
-        grid-column: 1 / -1;
-        text-align: center; padding: 40px;
-        color: var(--text-4); font-size: 13px;
+    .online-rotating-hint {
+        font-size: 11px;
+        color: var(--text-4);
+        text-align: center;
+        margin-top: 12px;
+        font-family: var(--font-mono);
+        letter-spacing: 0.3px;
     }
 
     /* ========== PRICING ========== */
@@ -1252,7 +1290,9 @@
         .profile-avatar-lg { width: 52px; height: 52px; font-size: 20px; }
         .profile-name { font-size: 17px; }
         .profile-stats-grid { grid-template-columns: repeat(2, 1fr); }
-        .community-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+        .online-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+        .online-toolbar { flex-direction: column; align-items: stretch; }
+        .online-toolbar-right { justify-content: space-between; }
     }
 
     @media (max-width: 480px) {
@@ -1262,7 +1302,9 @@
         .price-card { padding: 26px 20px; }
         .price-card .price { font-size: 36px; }
         .status-bar { grid-template-columns: 1fr; }
-        .community-toolbar { flex-direction: column; align-items: stretch; }
+        .online-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+        .online-card { padding: 10px; }
+        .online-name { font-size: 12px; }
     }
 </style>
 </head>
@@ -1286,7 +1328,7 @@
             <div class="links" id="nav-links">
                 <a href="#games">Игры</a>
                 <a href="#pricing">Цены</a>
-                <a href="#community">Сообщество</a>
+                <a href="#online">Онлайн</a>
                 <a href="#changelog">Обновления</a>
                 <a href="#faq">FAQ</a>
             </div>
@@ -1320,7 +1362,7 @@
         <button class="mobile-close" id="mobile-close">✕</button>
         <a href="#games">Игры</a>
         <a href="#pricing">Цены</a>
-        <a href="#community">Сообщество</a>
+        <a href="#online">Онлайн</a>
         <a href="#changelog">Обновления</a>
         <a href="#faq">FAQ</a>
     </div>
@@ -1482,24 +1524,34 @@
         </div>
     </section>
 
-    <!-- ============ COMMUNITY ============ -->
-    <section class="section reveal" id="community">
+    <!-- ============ ONLINE ============ -->
+    <section class="section reveal" id="online">
         <div class="section-head">
-            <div class="section-label">Сообщество</div>
-            <h2>Участники</h2>
-            <p>Нажми на карточку, чтобы посмотреть профиль</p>
+            <div class="section-label">Онлайн</div>
+            <h2>Сейчас в сети</h2>
+            <p>Нажми на ник, чтобы открыть профиль. Список обновляется автоматически.</p>
         </div>
 
-        <div class="community-toolbar">
-            <div class="community-filter" id="community-filter">
-                <button class="active" data-filter="all">Все</button>
-                <button data-filter="online">Онлайн</button>
-                <button data-filter="vip">VIP</button>
+        <div class="online-toolbar">
+            <div class="online-toolbar-left">
+                <div class="online-toolbar-count">
+                    <span class="dot"></span>
+                    <span>В сети: <strong id="online-total">—</strong></span>
+                </div>
             </div>
-            <span class="community-count" id="community-count">—</span>
+            <div class="online-toolbar-right">
+                <span>Показано: <strong id="online-shown">—</strong></span>
+            </div>
         </div>
 
-        <div class="community-grid" id="community-grid"></div>
+        <div class="online-grid" id="online-grid"></div>
+
+        <div class="online-rest-bar" id="online-rest-bar">
+            Показаны <strong id="online-shown-2">0</strong> из <strong id="online-total-2">0</strong> · и ещё <strong id="online-rest">0</strong> в сети
+            <span class="dot-anim"><span></span><span></span><span></span></span>
+        </div>
+
+        <div class="online-rotating-hint" id="online-rotating-hint">Список обновляется каждые 20–40 секунд</div>
     </section>
 
     <!-- ============ CHANGELOG ============ -->
@@ -1692,8 +1744,10 @@
 
 <script>
 /* =========================================================
-   ДАННЫЕ
+   КОНСТАНТЫ И ДАННЫЕ
    ========================================================= */
+const ONLINE_LIST_SIZE = 50;
+
 const PRICING_DATA = {
     7: { name: '7 дней', price: 150, note: 'Пробный период', features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления'] },
     30: { name: '30 дней', price: 500, note: 'Оптимальный выбор', featured: true, features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка'] },
@@ -1743,27 +1797,20 @@ const FAQ_DATA = [
     { q: 'Возврат средств возможен?', a: '<strong>Нет.</strong> После активации ключа возврат не делается. Если ключ не активирован — можно попросить замену. Пожалуйста, будь уверен в покупке перед оплатой.' }
 ];
 
-/* Демо-участники для раздела "Сообщество" */
-const SEED_COMMUNITY = [
-    { username: 'darkvoid', role: 'admin', monthsAgo: 14, reputation: 6234, messages: 1847, purchases: 12, sub: 'lifetime', bio: 'Root access. Не пишите в личку по мелочам.', online: true },
-    { username: 'xq1z', role: 'vip', monthsAgo: 8, reputation: 2187, messages: 486, purchases: 4, sub: 'lifetime', bio: 'Rage only, no legit.', online: true },
-    { username: 'midnight', role: 'vip', monthsAgo: 5, reputation: 1523, messages: 312, purchases: 3, sub: 'lifetime', bio: 'Silent aim enjoyer', online: true },
-    { username: 'nexus_', role: 'vip', monthsAgo: 4, reputation: 891, messages: 245, purchases: 2, sub: 'active', bio: '', online: false },
-    { username: 'phantom', role: 'user', monthsAgo: 6, reputation: 342, messages: 89, purchases: 1, sub: 'active', bio: '', online: false },
-    { username: 'zero', role: 'user', monthsAgo: 2, reputation: 128, messages: 34, purchases: 1, sub: 'active', bio: '', online: false },
-    { username: 'silent', role: 'vip', monthsAgo: 10, reputation: 3104, messages: 823, purchases: 6, sub: 'lifetime', bio: 'Anti-aim = life', online: true },
-    { username: 'chaos', role: 'user', monthsAgo: 1, reputation: 54, messages: 12, purchases: 0, sub: 'none', bio: '', online: false },
-    { username: 'altair', role: 'user', monthsAgo: 3, reputation: 267, messages: 67, purchases: 1, sub: 'expired', bio: '', online: false },
-    { username: 'saint', role: 'vip', monthsAgo: 7, reputation: 1876, messages: 456, purchases: 3, sub: 'lifetime', bio: '', online: true },
-    { username: 'm0nster', role: 'user', monthsAgo: 5, reputation: 421, messages: 134, purchases: 2, sub: 'active', bio: '', online: false },
-    { username: 'k1ller', role: 'user', monthsAgo: 2, reputation: 189, messages: 45, purchases: 0, sub: 'none', bio: '', online: false },
-    { username: 'nova_x', role: 'vip', monthsAgo: 9, reputation: 2456, messages: 678, purchases: 5, sub: 'lifetime', bio: 'CS2 since beta', online: false },
-    { username: 'storm', role: 'user', monthsAgo: 4, reputation: 512, messages: 156, purchases: 1, sub: 'active', bio: '', online: false },
-    { username: 'veil', role: 'user', monthsAgo: 1, reputation: 67, messages: 18, purchases: 0, sub: 'none', bio: '', online: false },
-    { username: 'krypt', role: 'user', monthsAgo: 11, reputation: 891, messages: 234, purchases: 2, sub: 'expired', bio: '', online: false },
-    { username: 'lucid', role: 'vip', monthsAgo: 3, reputation: 1203, messages: 389, purchases: 2, sub: 'active', bio: '', online: false },
-    { username: 'void', role: 'user', monthsAgo: 2, reputation: 234, messages: 56, purchases: 1, sub: 'active', bio: '', online: false }
+/* Специальные seed-пользователи (закреплённые в топе) */
+const SEED_SPECIAL = [
+    { username: 'darkvoid', role: 'admin', bio: 'Root access. Не пишите в личку по мелочам.', reputation: 6234, messages: 1847, purchases: 12, sub: 'lifetime' },
+    { username: 'xq1z', role: 'vip', bio: 'Rage only, no legit.', reputation: 2187, messages: 486, purchases: 4, sub: 'lifetime' },
+    { username: 'silent', role: 'vip', bio: 'Anti-aim = life', reputation: 3104, messages: 823, purchases: 6, sub: 'lifetime' },
+    { username: 'nova_x', role: 'vip', bio: 'CS2 since beta', reputation: 2456, messages: 678, purchases: 5, sub: 'lifetime' },
+    { username: 'midnight', role: 'vip', bio: 'Silent aim enjoyer', reputation: 1523, messages: 312, purchases: 3, sub: 'lifetime' },
+    { username: 'saint', role: 'vip', bio: '', reputation: 1876, messages: 456, purchases: 3, sub: 'lifetime' },
+    { username: 'lucid', role: 'vip', bio: '', reputation: 1203, messages: 389, purchases: 2, sub: 'active' },
+    { username: 'nexus_', role: 'vip', bio: '', reputation: 891, messages: 245, purchases: 2, sub: 'active' }
 ];
+
+/* Список частей ников для генерации */
+const NICK_PREFIXES = ['dark','silent','void','phantom','night','ghost','cold','toxic','neon','cyber','pixel','neo','mad','evil','fast','hyper','acid','crypt','dawn','dusk','ember','falcon','flux','frost','glitch','grim','hex','hollow','iron','lucid','lunar','moon','myst','nitro','nova','null','onyx','orbit','ozone','prime','pulse','quantum','raven','rune','sigma','silver','skull','smoke','solar','sonic','soul','speed','spike','star','steel','storm','synth','titan','venom','viper','volt','warp','wired','wraith','zenith','zodiac','ashen','blaze','brave','breeze','chrome','cobalt','comet','copper','cosmic','crimson','crypto','dagger','demon','dream','drift','eagle','eclipse','edge','fable','fable','feather','flame','flare','flint','forged','frost','gale','glide','gold','granite','gravity','halo','hammer','hazel','helm','horizon','hydra','impulse','inferno','infinite','jade','jester','jolt','jupiter','karma','kelp','krypt','laser','leaf','legend','light','lith','lore','lynx','magma','mana','maple','mars','mask','maze','mercury','mind','mirror','mist','monsoon','mystic','needle','neon','night','noble','north','oath','ocean','olive','omega','onyx','opal','oracle','orbit','origin','otter','outlaw','panda','paradox','patriot','peak','pearl','phoenix','pilot','pine','pixel','plasma','pluto','poison','polar','portal','prism','primal','prodigy','protect','pulsar','pyre','pyro','quartz','quest','quick','quill','quote','radar','radiant','rage','rain','rapid','raven','ray','razor','rebel','red','reign','rider','rift','rigid','riot','ritual','rival','river','roam','rocket','rogue','root','royal','ruby','ruin','runic','rust','saber','sage','saint','sapphire','scar','scarlet','scope','seal','seer','serpent','shadow','shard','sharp','shield','shock','shooter','shot','sidhe','sigma','signal','silk','silver','skull','sky','slate','slick','slip','smoke','snake','sniper','solar','solid','sonar','sonic','soul','spark','spear','specter','spell','spike','spirit','spite','sprint','spy','star','static','stealth','steam','steel','stellar','stone','storm','strife','strong','stud','stun','surge','swift','sword','syndicate','synth','talon','tank','tarot','tech','tempo','tense','tesla','thane','thorn','tide','tiger','titan','toast','tomb','torch','total','toxic','tracer','trade','tribe','trick','troll','trophy','tru','trunk','tundra','turbo','tusk','twist','ultra','umber','unbound','unity','untamed','urban','valor','vandal','vanguard','vapor','vault','vector','veil','venom','vent','venus','vertex','vessel','veteran','vibe','vice','vigor','viking','vile','vintage','viol','viper','viral','vision','vivid','void','volt','vortex','voyage','vulcan','waifu','wake','wander','war','warden','warp','warrior','watch','water','wave','weapon','weaver','wedge','west','whale','whirl','white','wicked','wild','willow','wind','winter','wire','wisdom','wolf','wonder','wood','wraith','wraith','wrath','xeno','xerox','yield','yonder','young','youth','zeal','zen','zenith','zero','zephyr','zeus','zigzag','zing','zion','zodiac','zone','zoom','zorro'];
 
 /* =========================================================
    УТИЛИТЫ
@@ -1831,8 +1878,13 @@ function formatDuration(ms) {
     return `${sec} с`;
 }
 
-function isUserOnline(u) {
-    return u.lastSeen && (Date.now() - u.lastSeen) < 5 * 60 * 1000;
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
 
 /* =========================================================
@@ -1960,6 +2012,9 @@ const OnlineSim = (() => {
 
         const footerEl = document.getElementById('footer-online');
         if (footerEl) footerEl.textContent = formatNumber(current);
+
+        // Обновляем счётчики онлайн-секции
+        updateOnlineCounters();
     }
 
     function renderChart() {
@@ -1995,7 +2050,7 @@ const OnlineSim = (() => {
         setInterval(renderChart, 3 * 60 * 1000);
     }
 
-    return { start };
+    return { start, getCurrent: () => Math.round(current) };
 })();
 
 /* =========================================================
@@ -2061,39 +2116,73 @@ function updateFullUser(updated) {
     if (idx >= 0) { users[idx] = updated; saveUsers(users); }
 }
 
-function seedCommunity() {
-    if (localStorage.getItem('ryzen_community_seeded')) return;
+/* =========================================================
+   SEED COMMUNITY (спец + генерированные)
+   ========================================================= */
+function generateNickname(usedSet) {
+    let attempts = 0;
+    while (attempts < 100) {
+        attempts++;
+        const p = NICK_PREFIXES[Math.floor(Math.random() * NICK_PREFIXES.length)];
+        const s = NICK_PREFIXES[Math.floor(Math.random() * NICK_PREFIXES.length)];
+        if (p === s) continue;
+
+        const style = Math.floor(Math.random() * 5);
+        let nick;
+        if (style === 0) nick = p + s;
+        else if (style === 1) nick = p + '_' + s;
+        else if (style === 2) nick = p + s + Math.floor(Math.random() * 99);
+        else if (style === 3) nick = p.charAt(0) + s + Math.floor(Math.random() * 999);
+        else nick = p + s + '_x';
+
+        if (nick.length > 20) continue;
+        if (usedSet.has(nick.toLowerCase())) continue;
+        usedSet.add(nick.toLowerCase());
+        return nick;
+    }
+    return 'user_' + Math.floor(Math.random() * 99999);
+}
+
+function makeSub() {
+    const r = Math.random();
+    const now = Date.now();
+    if (r < 0.28) return { plan: 'lifetime', expiresAt: null };
+    if (r < 0.72) return { plan: '30d', expiresAt: now + Math.floor(Math.random() * 27 * 86400000) + 3 * 86400000 };
+    if (r < 0.85) return { plan: '7d', expiresAt: now + Math.floor(Math.random() * 6 * 86400000) + 86400000 };
+    if (r < 0.95) return { plan: '30d', expiresAt: now - Math.floor(Math.random() * 27 * 86400000) - 86400000 };
+    return { plan: 'none', expiresAt: null };
+}
+
+function ensureCommunitySeeded() {
+    if (localStorage.getItem('ryzen_community_seeded_v3')) return;
+
     const users = getUsers();
+    const usedNames = new Set(users.map(u => u.username.toLowerCase()));
     const now = Date.now();
 
-    SEED_COMMUNITY.forEach(s => {
+    // 1. Special seeded
+    SEED_SPECIAL.forEach(s => {
         const email = s.username + '@community.ryzen';
         if (users.find(u => u.email === email)) return;
 
-        const createdAt = now - s.monthsAgo * 30 * 24 * 60 * 60 * 1000;
+        const createdAt = now - (3 + Math.random() * 12) * 30 * 86400000;
         let subscription;
         if (s.sub === 'lifetime') subscription = { plan: 'lifetime', expiresAt: null };
-        else if (s.sub === 'active') subscription = { plan: '30d', expiresAt: now + (5 + Math.random() * 25) * 24 * 60 * 60 * 1000 };
-        else if (s.sub === 'expired') subscription = { plan: '7d', expiresAt: now - (5 + Math.random() * 20) * 24 * 60 * 60 * 1000 };
-        else subscription = { plan: 'none', expiresAt: null };
-
-        const lastSeen = s.online
-            ? now - Math.random() * 120 * 1000
-            : now - (10 * 60 * 1000 + Math.random() * 3 * 24 * 60 * 60 * 1000);
+        else subscription = makeSub();
 
         users.push({
             username: s.username,
             email,
-            pass: hashPass('seeded_random_' + Math.random() + '_' + s.username),
+            pass: 'seeded_' + s.username,
             role: s.role,
             createdAt,
-            lastLogin: lastSeen,
-            lastSeen,
+            lastLogin: now - Math.random() * 30 * 86400000,
+            lastSeen: now - Math.random() * 30 * 86400000,
             sessions: Math.floor(Math.random() * 50) + 5,
             reputation: s.reputation,
             messages: s.messages,
             purchases: s.purchases,
-            bio: s.bio || '',
+            bio: s.bio,
             referrals: Math.floor(Math.random() * 20),
             playTime: Math.floor(Math.random() * 200) + 10,
             subscription,
@@ -2102,8 +2191,188 @@ function seedCommunity() {
         });
     });
 
+    // 2. Сгенерированные
+    for (let i = 0; i < 300; i++) {
+        const nick = generateNickname(usedNames);
+        const email = nick + '@community.ryzen';
+
+        const roleRand = Math.random();
+        let role = 'user';
+        if (roleRand < 0.02) role = 'admin';
+        else if (roleRand < 0.20) role = 'vip';
+
+        const monthsAgo = 1 + Math.floor(Math.random() * 18);
+        const createdAt = now - monthsAgo * 30 * 86400000;
+
+        users.push({
+            username: nick,
+            email,
+            pass: 'seeded_random_' + Math.random(),
+            role,
+            createdAt,
+            lastLogin: now - Math.random() * 15 * 86400000,
+            lastSeen: now - Math.random() * 15 * 86400000,
+            sessions: Math.floor(Math.random() * 40) + 2,
+            reputation: Math.floor(Math.random() * (role === 'vip' ? 3000 : 800)),
+            messages: Math.floor(Math.random() * (role === 'vip' ? 500 : 120)),
+            purchases: Math.floor(Math.random() * (role === 'vip' ? 6 : 2)),
+            bio: '',
+            referrals: Math.floor(Math.random() * 10),
+            playTime: Math.floor(Math.random() * 100) + 2,
+            subscription: makeSub(),
+            referralCode: makeReferralCode(nick),
+            activity: []
+        });
+    }
+
     saveUsers(users);
-    localStorage.setItem('ryzen_community_seeded', '1');
+    localStorage.setItem('ryzen_community_seeded_v3', '1');
+}
+
+/* =========================================================
+   ONLINE STATE (какие ники сейчас видны)
+   ========================================================= */
+const ONLINE_STATE_KEY = 'ryzen_online_state_v3';
+
+function getOnlineState() {
+    try {
+        const s = JSON.parse(localStorage.getItem(ONLINE_STATE_KEY) || 'null');
+        if (Array.isArray(s)) return s;
+    } catch {}
+    return [];
+}
+
+function setOnlineState(arr) {
+    localStorage.setItem(ONLINE_STATE_KEY, JSON.stringify(arr));
+}
+
+function initOnlineState() {
+    const allUsers = getUsers();
+    const allNicks = allUsers.map(u => u.username);
+
+    let state = getOnlineState();
+    // фильтруем тех, кого уже нет (на случай удаления)
+    state = state.filter(n => allNicks.includes(n));
+
+    // добрать если меньше
+    if (state.length < ONLINE_LIST_SIZE) {
+        const available = allNicks.filter(n => !state.includes(n));
+        const needed = ONLINE_LIST_SIZE - state.length;
+        state.push(...shuffle(available).slice(0, needed));
+    }
+
+    state = state.slice(0, ONLINE_LIST_SIZE);
+    setOnlineState(state);
+    return state;
+}
+
+function rotateOnline() {
+    const state = getOnlineState();
+    const allUsers = getUsers();
+    const allNicks = allUsers.map(u => u.username);
+
+    if (!allNicks.length) return;
+
+    // Сколько уйдёт и придёт (2-4)
+    const removeCount = 2 + Math.floor(Math.random() * 3);
+    const shuffledState = shuffle([...state]);
+    const removed = shuffledState.slice(0, removeCount);
+
+    const newState = state.filter(n => !removed.includes(n));
+
+    const candidates = allNicks.filter(n => !newState.includes(n));
+    const added = shuffle(candidates).slice(0, removeCount);
+
+    newState.push(...added);
+
+    const final = newState.slice(0, ONLINE_LIST_SIZE);
+
+    setOnlineState(final);
+    renderOnline();
+}
+
+function startRotationLoop() {
+    function loop() {
+        rotateOnline();
+        const next = 20000 + Math.random() * 20000; // 20–40 сек
+        setTimeout(loop, next);
+    }
+    // первый оборот через 25–40 сек
+    setTimeout(loop, 25000 + Math.random() * 15000);
+}
+
+/* =========================================================
+   ONLINE RENDER
+   ========================================================= */
+function renderOnline() {
+    const grid = document.getElementById('online-grid');
+    if (!grid) return;
+
+    const allUsers = getUsers();
+    const byUsername = Object.fromEntries(allUsers.map(u => [u.username, u]));
+    const state = getOnlineState();
+
+    const visible = state.map(n => byUsername[n]).filter(Boolean);
+
+    grid.innerHTML = '';
+
+    visible.forEach(u => {
+        const user = ensureUserFields({ ...u });
+        const initial = (user.username || 'U').charAt(0).toUpperCase();
+        const roleClass = user.role === 'admin' ? 'role-admin' : user.role === 'vip' ? 'role-vip' : '';
+
+        const badges = [];
+        if (user.role === 'admin') badges.push('<span class="online-badge admin">ADMIN</span>');
+        else if (user.role === 'vip') badges.push('<span class="online-badge vip">VIP</span>');
+
+        const sub = user.subscription;
+        if (sub && sub.plan === 'lifetime') badges.push('<span class="online-badge lifetime">LIFETIME</span>');
+        else if (sub && sub.plan !== 'none' && sub.expiresAt && sub.expiresAt > Date.now()) {
+            badges.push('<span class="online-badge active">ACTIVE</span>');
+        } else if (sub && sub.plan !== 'none' && sub.expiresAt && sub.expiresAt <= Date.now()) {
+            badges.push('<span class="online-badge expired">EXPIRED</span>');
+        }
+
+        const card = document.createElement('div');
+        card.className = 'online-card';
+        card.innerHTML = `
+            <div class="online-card-head">
+                <div class="online-avatar ${roleClass}">
+                    ${initial}
+                    <span class="online-online-badge"></span>
+                </div>
+                <div class="online-name-wrap">
+                    <div class="online-name">${user.username}</div>
+                    <div class="online-badges">${badges.join('')}</div>
+                </div>
+            </div>
+            <div class="online-card-footer">
+                <span class="rep">rep ${formatNumber(user.reputation || 0)}</span>
+                <span>${formatNumber(user.messages || 0)} msg</span>
+            </div>
+        `;
+        card.addEventListener('click', () => openProfileModal(user.email));
+        grid.appendChild(card);
+    });
+
+    updateOnlineCounters();
+}
+
+function updateOnlineCounters() {
+    const shown = getOnlineState().length;
+    const total = OnlineSim.getCurrent ? OnlineSim.getCurrent() : shown;
+    const rest = Math.max(0, total - shown);
+
+    const setTxt = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+
+    setTxt('online-total', formatNumber(total));
+    setTxt('online-total-2', formatNumber(total));
+    setTxt('online-shown', shown);
+    setTxt('online-shown-2', shown);
+    setTxt('online-rest', formatNumber(rest));
 }
 
 /* =========================================================
@@ -2206,9 +2475,9 @@ function handleRegister(e) {
     addActivity(newUser, 'registered', 'Аккаунт создан');
     users.push(newUser);
     saveUsers(users);
+
     setCurrentUser({ username: newUser.username, email: newUser.email });
     renderAuthSlot();
-    renderCommunity();
     closeAuthModal();
     form.reset();
     showToast('Добро пожаловать, ' + username + '!', 'success');
@@ -2244,80 +2513,10 @@ function handleLogin(e) {
 
     setCurrentUser({ username: user.username, email: user.email });
     renderAuthSlot();
-    renderCommunity();
     closeAuthModal();
     form.reset();
     showToast('С возвращением, ' + user.username + '!', 'success');
     playSuccess();
-}
-
-/* =========================================================
-   COMMUNITY RENDER
-   ========================================================= */
-let communityFilterState = 'all';
-
-function renderCommunity(filter = communityFilterState) {
-    communityFilterState = filter;
-    const grid = document.getElementById('community-grid');
-    if (!grid) return;
-
-    const all = getUsers();
-    let filtered = all.slice();
-
-    if (filter === 'online') {
-        filtered = filtered.filter(u => isUserOnline(u));
-    } else if (filter === 'vip') {
-        filtered = filtered.filter(u => u.role === 'vip' || u.role === 'admin');
-    }
-
-    filtered.sort((a, b) => {
-        const aOn = isUserOnline(a);
-        const bOn = isUserOnline(b);
-        if (aOn !== bOn) return bOn ? 1 : -1;
-        return (b.reputation || 0) - (a.reputation || 0);
-    });
-
-    grid.innerHTML = '';
-    if (!filtered.length) {
-        grid.innerHTML = '<div class="community-empty">Никого не найдено</div>';
-        document.getElementById('community-count').textContent = '0 участников';
-        return;
-    }
-
-    filtered.forEach(u => {
-        const online = isUserOnline(u);
-        const initial = (u.username || 'U').charAt(0).toUpperCase();
-        const roleLabel = { admin: 'ADMIN', vip: 'VIP', user: 'USER' }[u.role] || 'USER';
-
-        const card = document.createElement('div');
-        card.className = 'community-card';
-        card.innerHTML = `
-            <div class="community-card-head">
-                <div class="community-avatar">
-                    ${initial}
-                    ${online ? '<span class="community-online-badge"></span>' : ''}
-                </div>
-                <div class="community-name-wrap">
-                    <div class="community-name">${u.username}</div>
-                    <span class="community-role role-${u.role || 'user'}">${roleLabel}</span>
-                </div>
-            </div>
-            <div class="community-stats-mini">
-                <div><span>${formatNumber(u.reputation || 0)}</span><small>реп.</small></div>
-                <div><span>${formatNumber(u.messages || 0)}</span><small>сообщ.</small></div>
-                <div><span>${formatNumber(u.purchases || 0)}</span><small>покупок</small></div>
-            </div>
-            <div class="community-footer">
-                <span class="community-seen ${online ? 'online' : ''}">${online ? '● online' : timeAgo(u.lastSeen)}</span>
-                <span style="font-family:var(--font-mono);font-size:10px">${(u.subscription && u.subscription.plan !== 'none') ? '★ ' + (u.subscription.plan === 'lifetime' ? 'lifetime' : 'active') : ''}</span>
-            </div>
-        `;
-        card.addEventListener('click', () => openProfileModal(u.email));
-        grid.appendChild(card);
-    });
-
-    document.getElementById('community-count').textContent =
-        filtered.length + ' ' + (filtered.length === 1 ? 'участник' : 'участников');
 }
 
 /* =========================================================
@@ -2367,10 +2566,8 @@ function renderProfile(email) {
 
     ensureUserFields(user);
 
-    const online = isUserOnline(user);
     const initial = (user.username || 'U').charAt(0).toUpperCase();
     const joined = new Date(user.createdAt || Date.now()).toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
-    const lastSeenText = online ? 'online' : (user.lastSeen ? timeAgo(user.lastSeen) : '—');
     const roleLabel = { admin: 'ADMIN', vip: 'VIP', user: 'USER' }[user.role] || 'USER';
 
     const subStatus = subscriptionStatus(user.subscription);
@@ -2381,18 +2578,16 @@ function renderProfile(email) {
         <div class="profile-header">
             <div class="profile-avatar-lg">
                 ${initial}
-                ${online ? '<span class="profile-online"></span>' : ''}
+                <span class="profile-online"></span>
             </div>
             <div class="profile-header-info">
                 <div class="profile-name-row">
                     <span class="profile-name">${user.username}</span>
-                    <span class="community-role role-${user.role || 'user'}">${roleLabel}</span>
+                    <span class="online-badge ${user.role}">${roleLabel}</span>
                 </div>
                 ${isSelf ? `<div class="profile-email">${user.email}</div>` : ''}
                 <div class="profile-meta">
-                    ${online
-                        ? '<span style="color:var(--green)">● online</span>'
-                        : `был(а) ${lastSeenText}`}
+                    <span style="color:var(--green)">● online</span>
                     · с ${joined}
                 </div>
             </div>
@@ -2451,7 +2646,6 @@ function renderProfile(email) {
         ` : ''}
     `;
 
-    // Bind close
     document.getElementById('profile-close-btn').addEventListener('click', closeProfileModal);
 
     if (isSelf) {
@@ -2464,7 +2658,6 @@ function renderProfile(email) {
         document.getElementById('logout-btn')?.addEventListener('click', () => {
             setCurrentUser(null);
             renderAuthSlot();
-            renderCommunity();
             closeProfileModal();
             showToast('Вы вышли из аккаунта', 'info');
             playClick();
@@ -2474,9 +2667,14 @@ function renderProfile(email) {
             if (!confirm('Точно? Это необратимо.')) return;
             const users = getUsers().filter(u => u.email !== user.email);
             saveUsers(users);
+
+            // убрать из online state
+            const state = getOnlineState().filter(n => n !== user.username);
+            setOnlineState(state);
+            renderOnline();
+
             setCurrentUser(null);
             renderAuthSlot();
-            renderCommunity();
             closeProfileModal();
             showToast('Аккаунт удалён', 'info');
             playError();
@@ -2497,7 +2695,7 @@ function renderProfile(email) {
             showToast('Демо-доступ активирован на 24 часа', 'success');
             playSuccess();
             renderProfile(user.email);
-            renderCommunity();
+            renderOnline();
         });
     }
 
@@ -2550,7 +2748,7 @@ function updateProfileCountdown() {
 }
 
 /* =========================================================
-   РЕНДЕР
+   РЕНДЕР ОСТАЛЬНОГО
    ========================================================= */
 function renderPricing(period = '30') {
     const grid = document.getElementById('pricing-grid');
@@ -2638,26 +2836,18 @@ function bindDiscordLinks() {
    INIT
    ========================================================= */
 document.addEventListener('DOMContentLoaded', () => {
-    seedCommunity();
+    ensureCommunitySeeded();
+    initOnlineState();
 
     OnlineSim.start();
+    renderOnline();
+    startRotationLoop();
 
     renderPricing('30');
     renderChangelog('all');
     renderFAQ();
     bindDiscordLinks();
     renderAuthSlot();
-    renderCommunity('all');
-
-    // Community filter
-    document.querySelectorAll('#community-filter button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('#community-filter button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderCommunity(btn.dataset.filter);
-            playClick();
-        });
-    });
 
     // Billing
     document.querySelectorAll('#billing-toggle button').forEach(btn => {
@@ -2741,7 +2931,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('mobile-menu').classList.remove('open'); playClick();
     });
 
-    // Settings panel
+    // Settings
     const settingsBtn = document.getElementById('settings-btn');
     const settingsPanel = document.getElementById('settings-panel');
     settingsBtn.addEventListener('click', e => {
@@ -2761,7 +2951,6 @@ document.addEventListener('DOMContentLoaded', () => {
         logoClicks++;
         if (logoClicks === 5) { showToast('Секрет активирован', 'success'); logoClicks = 0; }
     });
-
     document.getElementById('hero-title').addEventListener('click', () => {
         showToast('Привет, любопытный', 'info');
         playClick();
