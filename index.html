@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ryzen Loader — Временно недоступен</title>
+<title>Ryzen Loader — Private Cheat Software</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -32,6 +32,7 @@
         --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         --font-mono: 'JetBrains Mono', monospace;
 
+        --container: 1200px;
         --radius-sm: 6px;
         --radius: 8px;
         --radius-lg: 12px;
@@ -46,286 +47,267 @@
         background: var(--bg);
         color: var(--text-1);
         min-height: 100vh;
-        overflow: hidden;
+        overflow-x: hidden;
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-        position: relative;
     }
 
-    /* Subtle grid background */
-    body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        background-image:
-            linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-        background-size: 48px 48px;
-        mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
-        -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    /* Ambient glow */
-    body::after {
-        content: '';
-        position: fixed;
-        top: -40%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 800px;
-        height: 800px;
-        background: radial-gradient(circle, rgba(245, 158, 11, 0.06) 0%, transparent 60%);
-        pointer-events: none;
-        z-index: 0;
-        animation: breathe 6s ease-in-out infinite;
-    }
-
-    @keyframes breathe {
-        0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
-        50% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+    #reading-progress {
+        position: fixed; top: 0; left: 0;
+        height: 2px; width: 0%;
+        background: var(--text-1);
+        z-index: 1001;
+        transition: width 0.1s linear;
     }
 
     .container {
-        max-width: 560px;
-        width: 100%;
-        text-align: center;
+        max-width: var(--container);
+        margin: 0 auto;
+        padding: 0 24px;
         position: relative;
-        z-index: 1;
-        animation: fadeUp 0.7s var(--ease);
+        z-index: 2;
     }
 
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    /* ========== NAV ========== */
+    nav {
+        position: sticky; top: 0;
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 16px 24px;
+        z-index: 500;
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        transition: all 0.25s var(--ease);
+        margin: 0 -24px;
     }
+    nav.scrolled { padding-top: 12px; padding-bottom: 12px; }
 
-    /* ========== LOGO ========== */
-    .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 48px;
-        user-select: none;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
     .brand-logo {
-        width: 38px; height: 38px;
+        width: 34px; height: 34px;
         border-radius: var(--radius-sm);
         background: var(--text-1);
         display: flex; align-items: center; justify-content: center;
-        font-size: 16px; font-weight: 800;
+        font-size: 15px; font-weight: 800;
         color: var(--bg);
         font-family: var(--font-mono);
     }
-    .brand-text { display: flex; flex-direction: column; line-height: 1; text-align: left; }
-    .brand-text .main { font-size: 15px; font-weight: 700; letter-spacing: 2.5px; }
-    .brand-text .sub { font-size: 9px; color: var(--text-3); letter-spacing: 2px; margin-top: 4px; font-weight: 500; }
+    .brand-text { display: flex; flex-direction: column; line-height: 1; }
+    .brand-text .main { font-size: 14px; font-weight: 700; letter-spacing: 2.5px; }
+    .brand-text .sub { font-size: 9px; color: var(--text-3); letter-spacing: 2px; margin-top: 3px; font-weight: 500; }
 
-    /* ========== STATUS ICON ========== */
-    .status-icon {
-        width: 88px; height: 88px;
-        border-radius: var(--radius-lg);
+    .nav-right { display: flex; align-items: center; gap: 6px; position: relative; }
+    .links { display: flex; align-items: center; gap: 2px; margin-right: 8px; }
+    .links a {
+        color: var(--text-2); text-decoration: none;
+        font-size: 13px; font-weight: 500;
+        padding: 8px 12px; border-radius: var(--radius-sm);
+        transition: all 0.15s var(--ease);
+    }
+    .links a:hover { color: var(--text-1); background: var(--bg-2); }
+    .links a.active { color: var(--text-1); background: var(--bg-2); }
+
+    .icon-btn {
+        width: 36px; height: 36px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        color: var(--text-2);
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 15px;
+        transition: all 0.15s var(--ease);
+    }
+    .icon-btn:hover { background: var(--bg-3); border-color: var(--border-strong); color: var(--text-1); }
+
+    .auth-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 14px;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-1);
+        font-size: 13px; font-weight: 600;
+        cursor: pointer; font-family: inherit;
+        transition: all 0.15s var(--ease);
+        white-space: nowrap;
+    }
+    .auth-btn:hover { background: var(--bg-3); border-color: var(--border-strong); }
+
+    .user-chip {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 5px 12px 5px 5px;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 13px; font-weight: 600;
+        color: var(--text-1);
+        cursor: pointer;
+        transition: all 0.15s var(--ease);
+    }
+    .user-chip:hover { background: var(--bg-3); border-color: var(--border-strong); }
+    .user-avatar {
+        width: 26px; height: 26px;
+        border-radius: 6px;
+        background: var(--bg-4);
+        color: var(--text-1);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; font-weight: 700;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        border: 1px solid var(--border-strong);
+    }
+    .user-chip .online-mini {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+        flex-shrink: 0;
+        animation: pulse 2s infinite;
+    }
+
+    .burger {
+        display: none; flex-direction: column; gap: 4px;
+        width: 36px; height: 36px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        cursor: pointer;
+        align-items: center; justify-content: center;
+    }
+    .burger span { display: block; width: 16px; height: 2px; background: var(--text-2); border-radius: 1px; }
+
+    /* ========== SETTINGS ========== */
+    .settings-panel {
+        position: absolute; top: calc(100% + 10px); right: 0;
         background: var(--bg-1);
         border: 1px solid var(--border-strong);
-        display: flex; align-items: center; justify-content: center;
-        margin: 0 auto 32px;
-        position: relative;
-        animation: pulseGlow 2.6s ease-in-out infinite;
-    }
-    @keyframes pulseGlow {
-        0%, 100% {
-            border-color: var(--border-strong);
-            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
-        }
-        50% {
-            border-color: rgba(245, 158, 11, 0.4);
-            box-shadow: 0 0 0 12px rgba(245, 158, 11, 0.03);
-        }
-    }
-    .status-icon svg { width: 38px; height: 38px; color: var(--amber); }
-    .status-icon::after {
-        content: '';
-        position: absolute;
-        top: -2px; right: -2px;
-        width: 14px; height: 14px;
-        border-radius: 50%;
-        background: var(--amber);
-        border: 3px solid var(--bg);
-        animation: blink 1.8s ease-in-out infinite;
-    }
-    @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.35; }
-    }
-
-    /* ========== ERROR CODE ========== */
-    .error-code {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-family: var(--font-mono);
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--amber);
-        background: rgba(245, 158, 11, 0.08);
-        border: 1px solid rgba(245, 158, 11, 0.25);
-        padding: 6px 12px;
-        border-radius: var(--radius-sm);
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-    }
-    .error-code .dot {
-        width: 5px; height: 5px;
-        border-radius: 50%;
-        background: var(--amber);
-        animation: blink 1.8s ease-in-out infinite;
-    }
-
-    /* ========== HEADINGS ========== */
-    h1 {
-        font-size: clamp(30px, 5.5vw, 46px);
-        font-weight: 800;
-        letter-spacing: -1.5px;
-        line-height: 1.05;
-        margin-bottom: 16px;
-    }
-    h1 .accent { color: var(--text-3); }
-
-    .tagline {
-        font-size: 14px;
-        color: var(--text-2);
-        max-width: 440px;
-        margin: 0 auto 40px;
-        line-height: 1.65;
-    }
-
-    /* ========== QUEUE BOX ========== */
-    .queue-box {
-        background: var(--bg-1);
-        border: 1px solid var(--border);
         border-radius: var(--radius-lg);
-        padding: 20px 24px;
-        margin-bottom: 20px;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        gap: 16px;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
+        padding: 14px;
+        width: 300px;
+        z-index: 100;
+        opacity: 0; visibility: hidden;
+        transform: translateY(-6px);
+        transition: all 0.2s var(--ease);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        max-height: 80vh; overflow-y: auto;
     }
-    .queue-box::before {
-        content: '';
-        position: absolute;
-        top: 0; left: -100%;
-        width: 100%; height: 2px;
-        background: linear-gradient(90deg, transparent, var(--amber), transparent);
-        animation: scanline 3s linear infinite;
-    }
-    @keyframes scanline {
-        0% { left: -100%; }
-        100% { left: 100%; }
-    }
-    .queue-item { text-align: center; }
-    .queue-value {
-        font-family: var(--font-mono);
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--text-1);
-        letter-spacing: -0.5px;
-        font-variant-numeric: tabular-nums;
-    }
-    .queue-value.warn { color: var(--amber); }
-    .queue-label {
-        font-size: 10px;
-        color: var(--text-3);
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
+    .settings-panel.open { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    .settings-title {
+        font-size: 10px; color: var(--text-3);
+        letter-spacing: 1.5px; text-transform: uppercase;
+        margin-bottom: 8px; padding-bottom: 6px;
+        border-bottom: 1px solid var(--border);
         font-weight: 600;
+    }
+    .settings-title:not(:first-child) { margin-top: 14px; }
+
+    .settings-option {
+        display: flex; align-items: center; gap: 10px;
+        padding: 8px 10px; border-radius: var(--radius-sm);
+        cursor: pointer; font-size: 13px; color: var(--text-2);
+        transition: all 0.15s; position: relative;
+    }
+    .settings-option:hover { background: var(--bg-2); color: var(--text-1); }
+    .settings-option.active { background: var(--bg-3); color: var(--text-1); }
+    .settings-option.active::after {
+        content: '✓'; position: absolute; right: 10px;
+        font-weight: 600; color: var(--green); font-size: 12px;
+    }
+    .settings-option .icon { font-size: 14px; width: 20px; text-align: center; }
+
+    .online-chart {
+        display: flex; align-items: flex-end; gap: 1px;
+        height: 54px; padding: 6px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
         margin-top: 4px;
     }
-    .queue-divider {
-        width: 1px;
-        height: 32px;
+    .online-chart .bar {
+        flex: 1;
         background: var(--border-strong);
+        border-radius: 1px 1px 0 0;
+        min-height: 2px;
+        transition: background 0.2s;
+        cursor: help;
     }
-
-    /* ========== LOAD BAR ========== */
-    .load-bar-wrap {
-        background: var(--bg-1);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 16px 18px;
-        margin-bottom: 32px;
-    }
-    .load-bar-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
-    .load-bar-head .label {
-        color: var(--text-3);
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-    }
-    .load-bar-head .value {
-        color: var(--red);
+    .online-chart .bar.current { background: var(--text-1); }
+    .online-chart .bar:hover { background: var(--text-2); }
+    .chart-labels {
+        display: flex; justify-content: space-between;
+        font-size: 9px; color: var(--text-4);
+        margin-top: 6px; letter-spacing: 0.5px;
         font-family: var(--font-mono);
-        font-size: 12px;
-    }
-    .load-bar {
-        height: 6px;
-        background: var(--bg-3);
-        border-radius: 3px;
-        overflow: hidden;
-        position: relative;
-    }
-    .load-bar-fill {
-        height: 100%;
-        width: 97%;
-        background: linear-gradient(90deg, var(--amber), var(--red));
-        border-radius: 3px;
-        position: relative;
-        transition: width 2s var(--ease);
-    }
-    .load-bar-fill::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-        animation: shimmer 2s infinite;
-    }
-    @keyframes shimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
     }
 
-    /* ========== ACTIONS ========== */
-    .actions {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-bottom: 36px;
-    }
-    .btn {
+    /* ========== HERO ========== */
+    .hero { text-align: center; padding: 80px 0 60px; }
+
+    .hero-badge {
         display: inline-flex;
-        align-items: center;
+        flex-wrap: wrap;
         justify-content: center;
-        gap: 8px;
-        text-decoration: none;
-        padding: 13px 24px;
-        font-size: 13px;
+        align-items: center;
+        gap: 10px;
+        font-size: 11px; letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-2);
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        padding: 9px 16px;
+        border-radius: var(--radius-sm);
+        margin-bottom: 28px;
         font-weight: 600;
+        max-width: 100%;
+    }
+    .hero-badge .pulse-dot {
+        width: 6px; height: 6px;
+        background: var(--green); border-radius: 50%;
+        animation: pulse 1.8s infinite; flex-shrink: 0;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+    .hero-badge strong { color: var(--text-1); font-weight: 700; font-family: var(--font-mono); }
+
+    .online-trend {
+        font-size: 10px;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        padding: 3px 7px;
+        border-radius: 3px;
+        letter-spacing: 0;
+        min-width: 48px;
+        text-align: center;
+        transition: all 0.3s;
+        text-transform: none;
+    }
+    .online-trend.up { color: var(--green); background: rgba(34,197,94,0.1); }
+    .online-trend.down { color: var(--red); background: rgba(239,68,68,0.1); }
+    .online-trend.flat { color: var(--text-3); background: var(--bg-3); }
+
+    .hero h1 {
+        font-size: clamp(36px, 6.5vw, 76px);
+        font-weight: 800; letter-spacing: -3px;
+        margin-bottom: 16px; line-height: 1;
+        user-select: none;
+    }
+    .hero h1 .accent { color: var(--text-3); }
+    .hero .tagline {
+        font-size: 12px; color: var(--text-3);
+        letter-spacing: 5px; text-transform: uppercase;
+        margin-bottom: 40px; font-weight: 500;
+        font-family: var(--font-mono);
+    }
+
+    .cta-buttons { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 60px; }
+
+    /* ========== BUTTONS ========== */
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        text-decoration: none;
+        padding: 12px 22px;
+        font-size: 13px; font-weight: 600;
         letter-spacing: 0.3px;
         border-radius: var(--radius);
         transition: all 0.15s var(--ease);
@@ -334,268 +316,3280 @@
         font-family: inherit;
         white-space: nowrap;
     }
-    .btn-primary {
+    .btn-primary { background: var(--text-1); color: var(--bg); border-color: var(--text-1); }
+    .btn-primary:hover { background: #d4d4d4; border-color: #d4d4d4; }
+    .btn-ghost { background: var(--bg-2); color: var(--text-1); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--bg-3); border-color: var(--border-strong); }
+    .btn-lg { padding: 14px 30px; font-size: 13px; }
+
+    /* ========== STATS ========== */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin-top: 16px;
+    }
+    .stat { background: var(--bg-1); padding: 26px 20px; text-align: center; transition: background 0.15s; }
+    .stat:hover { background: var(--bg-2); }
+    .stat-icon { font-size: 16px; margin-bottom: 10px; opacity: 0.5; }
+    .stat .value { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+    .stat .label { font-size: 10px; color: var(--text-3); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; font-weight: 600; }
+
+    .status-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px; margin-top: 20px;
+        padding: 16px 20px;
+        background: var(--bg-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+    }
+    .status-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .status-item .status-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--green);
+        animation: pulse 2s infinite; flex-shrink: 0;
+    }
+    .status-item .status-label { color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .status-item .status-value { color: var(--text-1); font-weight: 600; font-family: var(--font-mono); margin-left: auto; font-size: 12px; }
+    .text-green { color: var(--green); }
+
+    /* ========== SECTIONS ========== */
+    .section { padding: 80px 0; }
+    .section-head { text-align: center; margin-bottom: 48px; }
+    .section-label { display: inline-block; font-size: 10px; color: var(--text-3); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; font-weight: 600; }
+    .section-head h2 { font-size: clamp(26px, 3.5vw, 38px); font-weight: 700; letter-spacing: -1px; margin-bottom: 12px; line-height: 1.2; }
+    .section-head p { color: var(--text-3); font-size: 14px; max-width: 600px; margin: 0 auto; }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ========== GAMES ========== */
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+    .game-card {
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden; transition: all 0.2s var(--ease);
+    }
+    .game-card:hover { border-color: var(--border-strong); background: var(--bg-2); }
+    .game-preview {
+        height: 120px; background: var(--bg-2);
+        border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 52px; opacity: 0.7;
+    }
+    .game-body { padding: 22px; }
+    .game-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 12px; }
+    .game-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.2px; }
+    .game-desc { font-size: 12px; color: var(--text-3); font-family: var(--font-mono); }
+
+    .status {
+        font-size: 10px; padding: 5px 10px;
+        border-radius: var(--radius-sm);
+        letter-spacing: 0.8px; font-weight: 700;
+        text-transform: uppercase;
+        display: inline-flex; align-items: center; gap: 5px;
+        white-space: nowrap;
+    }
+    .status-green { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+    .status-green::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: pulse 1.8s infinite; }
+
+    .game-tags {
+        display: flex; flex-wrap: wrap; gap: 6px;
+        margin-top: 14px; padding-top: 14px;
+        border-top: 1px solid var(--border);
+    }
+    .game-tag {
+        font-size: 11px; padding: 4px 10px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-3); color: var(--text-2);
+        font-weight: 500; font-family: var(--font-mono);
+    }
+
+    /* ========== ONLINE SECTION ========== */
+    .online-toolbar {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 16px 20px;
+        background: var(--bg-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .online-toolbar-left {
+        display: flex; align-items: center; gap: 14px;
+        flex-wrap: wrap;
+    }
+    .online-toolbar-count {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 14px; font-weight: 600;
+    }
+    .online-toolbar-count .dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        animation: pulse 2s infinite;
+    }
+    .online-toolbar-count strong {
+        color: var(--text-1);
+        font-family: var(--font-mono);
+        font-weight: 700;
+    }
+    .online-toolbar-right {
+        display: flex; align-items: center; gap: 16px;
+        font-size: 12px; color: var(--text-3);
+        font-family: var(--font-mono);
+    }
+    .online-toolbar-right strong { color: var(--text-2); font-weight: 600; }
+
+    .online-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 10px;
+    }
+
+    .online-card {
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.15s var(--ease);
+        position: relative;
+    }
+    .online-card:hover { border-color: var(--border-strong); background: var(--bg-2); }
+
+    .online-card-head {
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 10px;
+    }
+    .online-avatar {
+        position: relative;
+        width: 36px; height: 36px;
+        border-radius: 8px;
+        background: var(--bg-3);
+        border: 1px solid var(--border-strong);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 14px; font-weight: 700;
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+        transition: all 0.3s var(--ease);
+    }
+    .online-avatar.role-admin { border-color: rgba(239,68,68,0.5); }
+    .online-avatar.role-vip { border-color: rgba(245,158,11,0.5); }
+
+    .online-online-badge {
+        position: absolute; bottom: -2px; right: -2px;
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        background: var(--green);
+        border: 2px solid var(--bg-1);
+        animation: pulse 2s infinite;
+    }
+    .online-name-wrap { flex: 1; min-width: 0; }
+    .online-name {
+        font-size: 13px; font-weight: 700;
+        margin-bottom: 2px;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .online-badges {
+        display: flex; gap: 4px; flex-wrap: wrap;
+    }
+    .online-badge {
+        font-size: 8px; font-weight: 800;
+        padding: 1px 5px; border-radius: 2px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .online-badge.admin { background: rgba(239,68,68,0.15); color: var(--red); }
+    .online-badge.vip { background: rgba(245,158,11,0.15); color: var(--amber); }
+    .online-badge.lifetime { background: rgba(245,158,11,0.1); color: var(--amber); }
+    .online-badge.active { background: rgba(34,197,94,0.1); color: var(--green); }
+    .online-badge.expired { background: rgba(239,68,68,0.1); color: var(--red); }
+
+    .online-card-footer {
+        display: flex; justify-content: space-between;
+        font-size: 10px; color: var(--text-4);
+        font-family: var(--font-mono);
+    }
+    .online-card-footer .rep { color: var(--text-3); }
+
+    .online-rest-bar {
+        display: flex; align-items: center; justify-content: center;
+        gap: 10px;
+        padding: 20px;
+        margin-top: 12px;
+        background: var(--bg-1);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius);
+        font-size: 13px;
+        color: var(--text-3);
+        flex-wrap: wrap;
+    }
+    .online-rest-bar strong {
+        color: var(--text-1);
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .online-rest-bar .dot-anim {
+        display: inline-flex;
+        gap: 3px;
+        margin-left: 4px;
+    }
+    .online-rest-bar .dot-anim span {
+        width: 4px; height: 4px;
+        border-radius: 50%;
+        background: var(--text-3);
+        animation: dotBounce 1.4s infinite;
+    }
+    .online-rest-bar .dot-anim span:nth-child(2) { animation-delay: 0.2s; }
+    .online-rest-bar .dot-anim span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+        0%, 80%, 100% { opacity: 0.3; }
+        40% { opacity: 1; }
+    }
+
+    .online-rotating-hint {
+        font-size: 11px;
+        color: var(--text-4);
+        text-align: center;
+        margin-top: 12px;
+        font-family: var(--font-mono);
+        letter-spacing: 0.3px;
+    }
+
+    /* ========== PRICING ========== */
+    .billing-toggle {
+        display: flex; justify-content: center; gap: 2px;
+        margin-bottom: 40px; padding: 4px;
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius);
+        width: fit-content;
+        margin-left: auto; margin-right: auto;
+    }
+    .billing-toggle button {
+        padding: 9px 18px; border-radius: var(--radius-sm);
+        background: transparent; border: none;
+        color: var(--text-3); font-size: 13px; font-weight: 600;
+        cursor: pointer; transition: all 0.15s;
+        font-family: inherit;
+        display: inline-flex; align-items: center;
+    }
+    .billing-toggle button.active { background: var(--bg-3); color: var(--text-1); }
+    .billing-toggle button:not(.active):hover { color: var(--text-1); }
+    .billing-toggle .save-badge {
+        font-size: 9px;
+        background: rgba(34,197,94,0.15);
+        color: var(--green);
+        border: 1px solid rgba(34,197,94,0.25);
+        padding: 2px 6px; border-radius: 3px;
+        margin-left: 8px; font-weight: 700;
+    }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: stretch; }
+    .price-card {
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 32px 26px; text-align: center;
+        position: relative;
+        display: flex; flex-direction: column;
+        transition: all 0.2s;
+    }
+    .price-card:hover { border-color: var(--border-strong); background: var(--bg-2); }
+    .price-card.featured { border-color: var(--border-hover); background: var(--bg-2); }
+    .price-card.featured::before {
+        content: 'ПОПУЛЯРНЫЙ';
+        position: absolute; top: -1px; left: 50%;
+        transform: translateX(-50%);
+        background: var(--text-1); color: var(--bg);
+        font-size: 9px; font-weight: 800;
+        padding: 4px 12px;
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+        letter-spacing: 1.2px;
+    }
+    .price-card .duration { font-size: 11px; color: var(--text-3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; font-weight: 600; }
+    .price-card .price {
+        font-size: 42px; font-weight: 800;
+        margin-bottom: 6px; line-height: 1; letter-spacing: -2px;
+        display: flex; align-items: baseline; justify-content: center; gap: 4px;
+    }
+    .price-card .price .currency { font-size: 18px; color: var(--text-3); font-weight: 500; letter-spacing: 0; }
+    .price-card .price-note { font-size: 12px; color: var(--text-3); margin-bottom: 24px; }
+    .price-card .features { list-style: none; margin-bottom: 24px; text-align: left; flex-grow: 1; }
+    .price-card .features li {
+        font-size: 13px; color: var(--text-2);
+        padding: 9px 0;
+        display: flex; align-items: flex-start; gap: 10px;
+        line-height: 1.5; border-bottom: 1px solid var(--border);
+    }
+    .price-card .features li:last-child { border-bottom: none; }
+    .price-card .features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+
+    /* ========== STEPS ========== */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .step {
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 26px 22px; transition: all 0.2s;
+    }
+    .step:hover { border-color: var(--border-strong); background: var(--bg-2); }
+    .step .num {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 40px; height: 40px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-3); border: 1px solid var(--border);
+        color: var(--text-1); font-size: 14px; font-weight: 700;
+        margin-bottom: 16px; font-family: var(--font-mono);
+    }
+    .step-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .step-desc { font-size: 13px; color: var(--text-3); line-height: 1.55; }
+
+    /* ========== CHANGELOG ========== */
+    .changelog-filters { display: flex; justify-content: center; gap: 6px; margin-bottom: 32px; flex-wrap: wrap; }
+    .filter-btn {
+        padding: 7px 14px; border-radius: var(--radius-sm);
+        background: var(--bg-1); border: 1px solid var(--border);
+        color: var(--text-3); font-size: 12px; font-weight: 600;
+        cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .filter-btn:hover { border-color: var(--border-strong); color: var(--text-1); }
+    .filter-btn.active { background: var(--bg-3); border-color: var(--border-strong); color: var(--text-1); }
+
+    .changelog { position: relative; padding-left: 30px; max-width: 820px; margin: 0 auto; }
+    .changelog::before {
+        content: ''; position: absolute;
+        left: 8px; top: 8px; bottom: 8px;
+        width: 1px; background: var(--border-strong);
+    }
+    .version {
+        position: relative; margin-bottom: 16px;
+        padding: 22px 24px;
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius);
+        transition: all 0.15s;
+    }
+    .version:hover { border-color: var(--border-strong); background: var(--bg-2); }
+    .version::before {
+        content: ''; position: absolute;
+        left: -27px; top: 28px;
+        width: 12px; height: 12px;
+        border-radius: 50%;
+        background: var(--bg-3); border: 2px solid var(--border-strong);
+    }
+    .version.latest::before { background: var(--green); border-color: var(--green); }
+    .version-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .version-tag { font-size: 16px; font-weight: 700; font-family: var(--font-mono); }
+    .version-badge { font-size: 9px; font-weight: 700; letter-spacing: 1px; padding: 3px 8px; border-radius: var(--radius-sm); text-transform: uppercase; }
+    .version-badge.latest { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+    .version-date { font-size: 12px; color: var(--text-4); margin-left: auto; font-family: var(--font-mono); }
+    .version-title { font-size: 13px; color: var(--text-2); margin-bottom: 12px; font-weight: 500; }
+    .version-list { list-style: none; }
+    .version-list li {
+        font-size: 13px; color: var(--text-2);
+        padding: 7px 0 7px 20px; position: relative;
+        line-height: 1.55;
+        border-bottom: 1px solid var(--border);
+    }
+    .version-list li:last-child { border-bottom: none; }
+    .version-list li::before {
+        content: '·'; position: absolute; left: 6px;
+        color: var(--text-3); font-weight: 800; font-size: 18px; top: 2px;
+    }
+    .tag { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.6px; padding: 2px 7px; border-radius: 3px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; }
+    .tag-new      { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+    .tag-fix      { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+    .tag-improve  { background: rgba(59,130,246,0.1); color: var(--blue); border: 1px solid rgba(59,130,246,0.25); }
+    .tag-security { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
+    .tag-remove   { background: rgba(148,148,148,0.1); color: var(--text-3); border: 1px solid var(--border-strong); }
+
+    /* ========== FAQ ========== */
+    .faq-controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; max-width: 900px; margin-left: auto; margin-right: auto; }
+    .faq-search {
+        flex: 1; min-width: 220px;
+        background: var(--bg-1); border: 1px solid var(--border);
+        color: var(--text-1);
+        padding: 12px 16px 12px 40px;
+        border-radius: var(--radius);
+        font-size: 13px; font-family: inherit; outline: none;
+        transition: all 0.15s;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23707070' stroke-width='2' stroke-linecap='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.35-4.35'/></svg>");
+        background-repeat: no-repeat; background-position: 14px center;
+    }
+    .faq-search:focus { border-color: var(--border-hover); background-color: var(--bg-2); }
+    .faq-search::placeholder { color: var(--text-4); }
+    .faq-counter {
+        display: flex; align-items: center;
+        font-size: 12px; color: var(--text-3);
+        padding: 0 14px; white-space: nowrap;
+        font-family: var(--font-mono);
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius);
+    }
+    .faq-toggle-all {
+        background: var(--bg-1); border: 1px solid var(--border);
+        color: var(--text-2); padding: 12px 18px;
+        border-radius: var(--radius); font-size: 12px; cursor: pointer;
+        letter-spacing: 0.5px; text-transform: uppercase;
+        font-family: inherit; font-weight: 600; transition: all 0.15s;
+        white-space: nowrap;
+    }
+    .faq-toggle-all:hover { border-color: var(--border-strong); color: var(--text-1); }
+
+    #faq-list { max-width: 900px; margin: 0 auto; }
+    .faq-item {
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius); margin-bottom: 8px; overflow: hidden;
+        transition: all 0.15s;
+    }
+    .faq-item:hover { border-color: var(--border-strong); }
+    .faq-item.open { border-color: var(--border-hover); background: var(--bg-2); }
+    .faq-item.hidden { display: none; }
+    .faq-question {
+        padding: 18px 22px; font-size: 14px; font-weight: 600;
+        cursor: pointer; display: flex; justify-content: space-between;
+        align-items: center; gap: 16px; user-select: none;
+    }
+    .faq-question::after {
+        content: '+'; font-size: 18px; color: var(--text-3);
+        font-weight: 300; transition: transform 0.25s;
+        line-height: 1; flex-shrink: 0;
+        width: 22px; height: 22px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .faq-item.open .faq-question::after { transform: rotate(45deg); color: var(--text-1); }
+    .faq-answer {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.35s var(--ease), padding 0.35s var(--ease);
+        padding: 0 22px; color: var(--text-2);
+        font-size: 13px; line-height: 1.7;
+    }
+    .faq-item.open .faq-answer { max-height: 600px; padding: 0 22px 22px; }
+    .faq-answer strong { color: var(--text-1); font-weight: 600; }
+
+    /* ========== CTA ========== */
+    .cta-banner {
+        background: var(--bg-1); border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 56px 32px; text-align: center;
+    }
+    .cta-banner h2 { font-size: clamp(24px, 3.5vw, 32px); font-weight: 700; margin-bottom: 10px; letter-spacing: -0.8px; }
+    .cta-banner p { color: var(--text-3); font-size: 14px; margin-bottom: 28px; }
+    .promo-timer { display: inline-flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; justify-content: center; }
+    .promo-timer .t-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; min-width: 68px; }
+    .promo-timer .t-val { font-size: 22px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; font-family: var(--font-mono); letter-spacing: -0.5px; }
+    .promo-timer .t-lbl { font-size: 9px; color: var(--text-3); letter-spacing: 1px; text-transform: uppercase; margin-top: 6px; font-weight: 600; }
+
+    /* ========== FOOTER ========== */
+    footer { padding: 50px 0 30px; margin-top: 50px; border-top: 1px solid var(--border); }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 36px; margin-bottom: 36px; }
+    .footer-col h4 { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; font-weight: 700; }
+    .footer-col a { display: block; color: var(--text-3); text-decoration: none; font-size: 13px; padding: 6px 0; transition: color 0.15s; }
+    .footer-col a:hover { color: var(--text-1); }
+    .footer-bottom {
+        display: flex; justify-content: space-between; align-items: center;
+        padding-top: 22px; border-top: 1px solid var(--border);
+        flex-wrap: wrap; gap: 16px;
+        font-size: 12px; color: var(--text-4);
+    }
+    .footer-live {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-3);
+    }
+    .footer-live .dot {
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: var(--green);
+        animation: pulse 2s infinite;
+    }
+    .footer-live strong { color: var(--text-1); font-weight: 600; }
+
+    .share-btn {
+        background: var(--bg-1); border: 1px solid var(--border);
+        color: var(--text-2); padding: 9px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 12px; cursor: pointer;
+        font-family: inherit; font-weight: 600;
+        transition: all 0.15s;
+        display: inline-flex; align-items: center; gap: 6px;
+    }
+    .share-btn:hover { border-color: var(--border-strong); color: var(--text-1); }
+
+    /* ========== TOAST ========== */
+    .toast {
+        position: fixed; bottom: 30px; left: 50%;
+        transform: translateX(-50%) translateY(120px);
+        background: var(--bg-2);
+        border: 1px solid var(--border-strong);
+        color: var(--text-1);
+        padding: 12px 20px;
+        border-radius: var(--radius);
+        font-size: 13px; z-index: 10000;
+        opacity: 0;
+        transition: all 0.3s var(--ease);
+        pointer-events: none;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        max-width: 90vw;
+        display: flex; align-items: center; gap: 10px;
+        font-weight: 500;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: rgba(34,197,94,0.4); }
+    .toast.success::before { content: '✓'; color: var(--green); font-weight: 700; font-size: 15px; }
+    .toast.error { border-color: rgba(239,68,68,0.4); }
+    .toast.error::before { content: '✕'; color: var(--red); font-weight: 700; font-size: 14px; }
+    .toast.info::before { content: 'ℹ'; color: var(--blue); font-size: 15px; }
+
+    /* ========== BACK TO TOP ========== */
+    #back-to-top {
+        position: fixed; bottom: 30px; right: 30px;
+        width: 44px; height: 44px;
+        background: var(--bg-2); border: 1px solid var(--border-strong);
+        color: var(--text-1); border-radius: var(--radius-sm);
+        cursor: pointer; font-size: 16px;
+        display: flex; align-items: center; justify-content: center;
+        z-index: 999; opacity: 0; visibility: hidden;
+        transform: translateY(12px);
+        transition: all 0.25s;
+    }
+    #back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    #back-to-top:hover { background: var(--bg-3); border-color: var(--border-hover); }
+
+    /* ========== COOKIE ========== */
+    #cookie-bar {
+        position: fixed; bottom: 20px; left: 20px; right: 20px;
+        max-width: 560px; margin: 0 auto;
+        background: var(--bg-2); border: 1px solid var(--border-strong);
+        border-radius: var(--radius); padding: 14px 18px;
+        display: flex; justify-content: space-between; align-items: center;
+        gap: 14px; z-index: 9998;
+        font-size: 13px; color: var(--text-2);
+        flex-wrap: wrap;
+        transform: translateY(150%);
+        transition: transform 0.4s var(--ease);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
+    #cookie-bar.visible { transform: translateY(0); }
+    #cookie-bar button {
+        background: var(--text-1); color: var(--bg);
+        border: none; padding: 9px 18px;
+        border-radius: var(--radius-sm);
+        font-size: 12px; font-weight: 700;
+        cursor: pointer; font-family: inherit;
+        transition: background 0.15s; white-space: nowrap;
+    }
+    #cookie-bar button:hover { background: #d4d4d4; }
+
+    /* ========== CLOCK ========== */
+    #live-clock {
+        position: fixed; bottom: 30px; left: 30px;
+        background: var(--bg-2); border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 9px 14px;
+        font-size: 12px; color: var(--text-2);
+        z-index: 900;
+        display: flex; align-items: center; gap: 8px;
+        font-family: var(--font-mono);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    #live-clock .clock-time { color: var(--text-1); font-weight: 700; }
+
+    /* ========== MODAL ========== */
+    .modal-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 10001;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; visibility: hidden;
+        transition: all 0.2s;
+        padding: 20px;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal {
+        background: var(--bg-1);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-lg);
+        max-width: 440px; width: 100%;
+        padding: 32px;
+        transform: scale(0.96) translateY(12px);
+        transition: transform 0.25s var(--ease);
+        max-height: 90vh; overflow-y: auto;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
+    .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+    .modal h3 { font-size: 20px; margin-bottom: 6px; font-weight: 700; }
+    .modal > p { font-size: 13px; color: var(--text-3); margin-bottom: 22px; }
+    .modal-close {
+        margin-top: 22px; width: 100%;
+        background: var(--text-1); color: var(--bg);
+        border: none; padding: 12px;
+        border-radius: var(--radius);
+        font-size: 13px; font-weight: 700;
+        cursor: pointer; font-family: inherit;
+        transition: background 0.15s;
+    }
+    .modal-close:hover { background: #d4d4d4; }
+
+    .hotkey-row {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 11px 0; border-bottom: 1px solid var(--border);
+        font-size: 13px; color: var(--text-2);
+    }
+    .hotkey-row:last-child { border-bottom: none; }
+    .hotkey-row kbd {
+        background: var(--bg-3); border: 1px solid var(--border-strong);
+        border-radius: 4px; padding: 3px 9px;
+        font-family: var(--font-mono); font-size: 11px;
+        color: var(--text-1); font-weight: 600;
+        min-width: 28px; text-align: center;
+        display: inline-block;
+    }
+
+    /* ========== AUTH ========== */
+    .auth-tabs {
+        display: flex; gap: 2px;
+        background: var(--bg-2); border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 3px; margin-bottom: 22px;
+    }
+    .auth-tab {
+        flex: 1; padding: 9px;
+        background: transparent; border: none;
+        color: var(--text-3); font-size: 13px; font-weight: 600;
+        cursor: pointer; border-radius: 4px;
+        font-family: inherit; transition: all 0.15s;
+    }
+    .auth-tab.active { background: var(--bg-3); color: var(--text-1); }
+    .auth-tab:not(.active):hover { color: var(--text-1); }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+        display: block; font-size: 11px;
+        color: var(--text-3); letter-spacing: 0.8px;
+        text-transform: uppercase; font-weight: 600;
+        margin-bottom: 6px;
+    }
+    .form-group input {
+        width: 100%;
+        background: var(--bg-2); border: 1px solid var(--border);
+        color: var(--text-1);
+        padding: 11px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 13px; font-family: inherit;
+        outline: none; transition: all 0.15s;
+    }
+    .form-group input:focus { border-color: var(--border-hover); background: var(--bg-3); }
+    .form-group input::placeholder { color: var(--text-4); }
+    .form-group.has-error input { border-color: rgba(239,68,68,0.5); }
+    .form-error { font-size: 11px; color: var(--red); margin-top: 5px; display: none; }
+    .form-group.has-error .form-error { display: block; }
+    .form-submit {
+        width: 100%;
+        background: var(--text-1); color: var(--bg);
+        border: none; padding: 13px;
+        border-radius: var(--radius);
+        font-size: 13px; font-weight: 700;
+        cursor: pointer; font-family: inherit;
+        margin-top: 6px; transition: background 0.15s;
+    }
+    .form-submit:hover { background: #d4d4d4; }
+    .form-footer { text-align: center; font-size: 12px; color: var(--text-3); margin-top: 16px; }
+    .form-footer a { color: var(--text-1); text-decoration: none; font-weight: 600; cursor: pointer; }
+    .form-footer a:hover { text-decoration: underline; }
+
+    /* ========== PROFILE MODAL ========== */
+    .profile-modal { max-width: 640px; padding: 28px; }
+
+    .profile-header {
+        display: flex; align-items: center; gap: 16px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 20px;
+        position: relative;
+    }
+    .profile-avatar-lg {
+        position: relative;
+        width: 64px; height: 64px;
+        border-radius: 14px;
+        background: var(--bg-3);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 26px; font-weight: 700;
+        font-family: var(--font-mono);
+        border: 1px solid var(--border-strong);
+        flex-shrink: 0;
+    }
+    .profile-online {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--green);
+        border: 3px solid var(--bg-1);
+        animation: pulse 2s infinite;
+    }
+    .profile-header-info { flex: 1; min-width: 0; }
+    .profile-name-row {
+        display: flex; align-items: center; gap: 8px;
+        margin-bottom: 3px; flex-wrap: wrap;
+    }
+    .profile-name {
+        font-size: 20px; font-weight: 700;
+        letter-spacing: -0.3px;
+    }
+    .profile-email { font-size: 13px; color: var(--text-3); }
+    .profile-meta {
+        font-size: 11px; color: var(--text-4);
+        margin-top: 4px;
+        font-family: var(--font-mono);
+    }
+    .profile-close {
+        position: absolute; top: 0; right: 0;
+        width: 32px; height: 32px;
+        background: var(--bg-2); border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-2); cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 14px; font-family: inherit;
+        transition: all 0.15s;
+    }
+    .profile-close:hover { background: var(--bg-3); color: var(--text-1); }
+
+    .profile-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .profile-stat-box {
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 10px;
+        text-align: center;
+    }
+    .profile-stat-val {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-1);
+        font-family: var(--font-mono);
+        letter-spacing: -0.5px;
+    }
+    .profile-stat-lbl {
+        font-size: 9px;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    .profile-bio {
+        padding: 12px 14px;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 13px;
+        color: var(--text-2);
+        line-height: 1.6;
+        margin-bottom: 12px;
+        font-style: italic;
+    }
+
+    .profile-card {
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        display: flex; flex-direction: column;
+    }
+    .profile-card.wide { grid-column: 1 / -1; }
+    .profile-card-label {
+        font-size: 10px;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .profile-card-value {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-1);
+    }
+    .profile-card-value.active { color: var(--green); }
+    .profile-card-value.muted { color: var(--text-3); }
+    .profile-card-sub {
+        font-size: 11px;
+        color: var(--text-3);
+        margin-top: 4px;
+    }
+    .profile-card-actions {
+        display: flex; gap: 6px; margin-top: 12px;
+    }
+    .profile-mini-btn {
+        padding: 6px 12px;
+        background: var(--bg-3);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text-2);
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+    }
+    .profile-mini-btn:hover { border-color: var(--border-strong); color: var(--text-1); }
+    .profile-mini-btn.primary { background: var(--text-1); color: var(--bg); border-color: var(--text-1); }
+    .profile-mini-btn.primary:hover { background: #d4d4d4; }
+
+    .sub-timer {
+        font-size: 11px;
+        color: var(--green);
+        font-family: var(--font-mono);
+        margin-top: 6px;
+    }
+    .sub-timer.expired { color: var(--red); }
+
+    .profile-section-title {
+        font-size: 10px;
+        color: var(--text-3);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin: 20px 0 10px;
+    }
+
+    .referral-row {
+        display: flex; gap: 8px; align-items: center;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 12px;
+    }
+    .referral-row code {
+        flex: 1;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .activity-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .activity-item {
+        display: flex; align-items: center; gap: 10px;
+        padding: 8px 10px;
+        background: var(--bg-2);
+        border-radius: 4px;
+        font-size: 12px;
+    }
+    .activity-item .dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--text-3);
+        flex-shrink: 0;
+    }
+    .activity-item.registered .dot { background: var(--green); }
+    .activity-item.login .dot { background: var(--blue); }
+    .activity-item.key .dot { background: var(--amber); }
+    .activity-item .text { color: var(--text-2); flex: 1; }
+    .activity-item .time { color: var(--text-4); font-family: var(--font-mono); font-size: 11px; }
+
+    .profile-actions-row {
+        display: flex; gap: 8px; flex-wrap: wrap;
+        margin-top: 20px; padding-top: 18px;
+        border-top: 1px solid var(--border);
+    }
+    .profile-btn {
+        flex: 1; min-width: 110px;
+        padding: 10px 14px;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-2);
+        font-size: 12px; font-weight: 600;
+        cursor: pointer; font-family: inherit;
+        transition: all 0.15s;
+    }
+    .profile-btn:hover { background: var(--bg-3); border-color: var(--border-strong); color: var(--text-1); }
+    .profile-btn.danger { color: var(--red); }
+    .profile-btn.danger:hover { border-color: rgba(239,68,68,0.4); background: rgba(239,68,68,0.05); }
+
+    /* ========== OVERLOAD SCREEN ========== */
+    .overload-screen {
+        position: fixed;
+        inset: 0;
+        background: #050505;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.35s var(--ease), visibility 0.35s var(--ease);
+    }
+
+    .overload-screen.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .overload-content {
+        max-width: 460px;
+        width: 100%;
+        font-family: var(--font-mono);
+        color: var(--text-1);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        padding: 32px 28px;
+        background: #080808;
+    }
+
+    .overload-code {
+        font-size: 10px;
+        color: var(--red);
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+    }
+
+    .overload-code::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        background: var(--red);
+        border-radius: 50%;
+        animation: overloadBlink 1.2s steps(2) infinite;
+        flex-shrink: 0;
+    }
+
+    @keyframes overloadBlink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0.15; }
+    }
+
+    .overload-title {
+        font-family: var(--font-sans);
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        line-height: 1.15;
+        margin-bottom: 14px;
+        color: var(--text-1);
+    }
+
+    .overload-desc {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        color: var(--text-3);
+        line-height: 1.65;
+        margin-bottom: 26px;
+    }
+
+    .overload-stats {
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 14px 0;
+        margin-bottom: 24px;
+    }
+
+    .overload-stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        font-size: 12px;
+    }
+
+    .overload-stat .k {
+        color: var(--text-4);
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .overload-stat .v {
+        color: var(--text-1);
+        font-weight: 600;
+        letter-spacing: -0.2px;
+    }
+
+    .overload-stat .v.danger { color: var(--red); }
+
+    .overload-actions {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .overload-btn {
+        flex: 1;
+        padding: 12px 16px;
+        background: transparent;
+        color: var(--text-1);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+        transition: all 0.15s var(--ease);
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .overload-btn:hover { background: var(--bg-2); border-color: var(--border-hover); }
+
+    .overload-btn.primary {
         background: var(--text-1);
         color: var(--bg);
         border-color: var(--text-1);
     }
-    .btn-primary:hover { background: #d4d4d4; border-color: #d4d4d4; }
-    .btn-ghost {
-        background: var(--bg-1);
-        color: var(--text-1);
-        border-color: var(--border-strong);
-    }
-    .btn-ghost:hover {
-        background: var(--bg-2);
-        border-color: var(--border-hover);
-    }
-    .btn svg { width: 15px; height: 15px; }
 
-    /* ========== FOOTER ========== */
-    .footer {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-size: 11px;
+    .overload-btn.primary:hover { background: #d4d4d4; border-color: #d4d4d4; }
+    .overload-btn:disabled { opacity: 0.6; cursor: wait; }
+
+    .overload-note {
+        font-size: 10px;
+        color: var(--text-4);
+        letter-spacing: 0.3px;
+        min-height: 14px;
+        line-height: 1.5;
+        font-family: var(--font-mono);
+    }
+
+    .overload-skip {
+        display: block;
+        width: 100%;
+        margin-top: 14px;
+        background: none;
+        border: none;
         color: var(--text-4);
         font-family: var(--font-mono);
-        letter-spacing: 0.3px;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 3px;
+        padding: 4px;
+        transition: color 0.15s;
     }
-    .footer .dot {
-        width: 4px; height: 4px;
-        border-radius: 50%;
-        background: var(--text-4);
-    }
-    .footer .live-dot {
-        width: 6px; height: 6px;
-        border-radius: 50%;
-        background: var(--red);
-        animation: blink 1.8s ease-in-out infinite;
+    .overload-skip:hover { color: var(--text-2); }
+
+    @media (max-width: 480px) {
+        .overload-content { padding: 24px 20px; }
+        .overload-title { font-size: 22px; }
+        .overload-actions { flex-direction: column; }
     }
 
-    /* ========== FLOATING PARTICLES ========== */
-    .particle {
-        position: fixed;
-        width: 2px;
-        height: 2px;
-        background: var(--text-4);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 0;
-    }
+    /* ========== SCROLLBAR ========== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
 
     /* ========== MOBILE ========== */
+    .mobile-menu {
+        position: fixed; inset: 0;
+        background: var(--bg);
+        z-index: 999;
+        display: flex; flex-direction: column;
+        padding: 24px; gap: 6px;
+        opacity: 0; visibility: hidden;
+        transition: all 0.25s;
+    }
+    .mobile-menu.open { opacity: 1; visibility: visible; }
+    .mobile-menu a {
+        color: var(--text-1); text-decoration: none;
+        font-size: 16px; font-weight: 600;
+        padding: 16px 18px;
+        border-radius: var(--radius);
+        background: var(--bg-1);
+        border: 1px solid var(--border);
+    }
+    .mobile-close {
+        align-self: flex-end;
+        width: 40px; height: 40px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-1); border: 1px solid var(--border);
+        color: var(--text-1); font-size: 18px;
+        cursor: pointer; margin-bottom: 16px;
+    }
+
+    @media (max-width: 768px) {
+        .container { padding: 0 16px; }
+        .links { display: none; }
+        .burger { display: flex; }
+        nav { padding: 12px 16px; margin: 0 -16px; }
+        .hero { padding: 50px 0 40px; }
+        .section { padding: 55px 0; }
+        .section-head { margin-bottom: 36px; }
+        .games-grid, .pricing-grid, .steps { grid-template-columns: 1fr; }
+        #back-to-top { bottom: 80px; right: 16px; }
+        #live-clock { display: none; }
+        .toast { bottom: 90px; }
+        #cookie-bar { bottom: 16px; left: 16px; right: 16px; }
+        .cta-banner { padding: 40px 20px; }
+        .modal { padding: 24px; }
+        .profile-modal { padding: 22px; }
+        .footer-bottom { flex-direction: column; text-align: center; }
+        .changelog { padding-left: 26px; }
+        .version { padding: 18px 20px; }
+        .version::before { left: -23px; }
+        .version-date { margin-left: 0; width: 100%; }
+        .brand-text .sub { display: none; }
+        .auth-btn span { display: none; }
+        .auth-btn { padding: 8px 10px; }
+        .user-chip .user-name { display: none; }
+        .profile-header { gap: 12px; }
+        .profile-avatar-lg { width: 52px; height: 52px; font-size: 20px; }
+        .profile-name { font-size: 17px; }
+        .profile-stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .online-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+        .online-toolbar { flex-direction: column; align-items: stretch; }
+        .online-toolbar-right { justify-content: space-between; }
+    }
+
     @media (max-width: 480px) {
-        body { padding: 16px; }
-        .brand { margin-bottom: 36px; }
-        .status-icon { width: 72px; height: 72px; margin-bottom: 24px; }
-        .status-icon svg { width: 30px; height: 30px; }
-        h1 { letter-spacing: -1px; }
-        .tagline { font-size: 13px; margin-bottom: 32px; }
-        .queue-box { padding: 16px 14px; gap: 10px; }
-        .queue-value { font-size: 18px; }
-        .queue-label { font-size: 9px; letter-spacing: 1px; }
-        .btn { padding: 12px 20px; font-size: 12px; flex: 1; min-width: 130px; }
-        .actions { flex-direction: column; }
-        .footer { font-size: 10px; flex-wrap: wrap; }
+        .hero h1 { letter-spacing: -2px; }
+        .btn { padding: 11px 18px; font-size: 12px; }
+        .btn-lg { padding: 13px 24px; }
+        .price-card { padding: 26px 20px; }
+        .price-card .price { font-size: 36px; }
+        .status-bar { grid-template-columns: 1fr; }
+        .online-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+        .online-card { padding: 10px; }
+        .online-name { font-size: 12px; }
     }
 </style>
 </head>
 <body>
 
+<div id="reading-progress"></div>
+
 <div class="container">
-    <div class="brand">
-        <div class="brand-logo">R</div>
-        <div class="brand-text">
-            <span class="main">RYZEN</span>
-            <span class="sub">LOADER</span>
+
+    <!-- ============ NAV ============ -->
+    <nav id="main-nav">
+        <div class="brand" id="logo-brand">
+            <div class="brand-logo">R</div>
+            <div class="brand-text">
+                <span class="main">RYZEN</span>
+                <span class="sub">LOADER</span>
+            </div>
         </div>
-    </div>
 
-    <div class="status-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-            <line x1="12" y1="9" x2="12" y2="13"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
-        </svg>
-    </div>
+        <div class="nav-right">
+            <div class="links" id="nav-links">
+                <a href="#games">Игры</a>
+                <a href="#pricing">Цены</a>
+                <a href="#online">Онлайн</a>
+                <a href="#changelog">Обновления</a>
+                <a href="#faq">FAQ</a>
+            </div>
 
-    <div class="error-code">
-        <span class="dot"></span>
-        <span>503 · Service Unavailable</span>
-    </div>
+            <div id="auth-slot"></div>
 
-    <h1>Сайт временно <span class="accent">недоступен</span></h1>
-    <p class="tagline">
-        Слишком много посетителей прямо сейчас. Мы уже работаем над расширением мощности — попробуйте зайти через несколько минут.
-    </p>
+            <button class="icon-btn" id="settings-btn" title="Настройки" aria-label="Настройки">⚙</button>
 
-    <div class="queue-box">
-        <div class="queue-item">
-            <div class="queue-value warn" id="queue-count">—</div>
-            <div class="queue-label">В очереди</div>
+            <button class="burger" id="burger" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
+
+            <div class="settings-panel" id="settings-panel">
+                <div class="settings-title">Фон</div>
+                <div class="settings-option active" data-weather="none"><span class="icon">✕</span><span>Отключено</span></div>
+                <div class="settings-option" data-weather="snow"><span class="icon">❄</span><span>Снег</span></div>
+                <div class="settings-option" data-weather="rain"><span class="icon">☂</span><span>Дождь</span></div>
+                <div class="settings-option" data-weather="storm"><span class="icon">⚡</span><span>Гроза</span></div>
+                <div class="settings-option" data-weather="stars"><span class="icon">✦</span><span>Звёзды</span></div>
+
+                <div class="settings-title">Онлайн за 24ч</div>
+                <div class="online-chart" id="online-chart"></div>
+                <div class="chart-labels">
+                    <span>−24ч</span><span>−12ч</span><span>сейчас</span>
+                </div>
+            </div>
         </div>
-        <div class="queue-divider"></div>
-        <div class="queue-item">
-            <div class="queue-value" id="queue-wait">~2 мин</div>
-            <div class="queue-label">Ожидание</div>
-        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <button class="mobile-close" id="mobile-close">✕</button>
+        <a href="#games">Игры</a>
+        <a href="#pricing">Цены</a>
+        <a href="#online">Онлайн</a>
+        <a href="#changelog">Обновления</a>
+        <a href="#faq">FAQ</a>
     </div>
 
-    <div class="load-bar-wrap">
-        <div class="load-bar-head">
-            <span class="label">Загрузка сервера</span>
-            <span class="value" id="load-value">97%</span>
+    <!-- ============ HERO ============ -->
+    <section class="hero reveal">
+        <div class="hero-badge">
+            <span class="pulse-dot"></span>
+            <span>Online — <strong id="online-count">—</strong></span>
+            <span class="online-trend flat" id="online-trend">—</span>
         </div>
-        <div class="load-bar">
-            <div class="load-bar-fill" id="load-fill"></div>
+
+        <h1 id="hero-title">RYZEN <span class="accent">LOADER</span></h1>
+        <p class="tagline">Private Cheat Software</p>
+
+        <div class="cta-buttons">
+            <a href="#pricing" class="btn btn-primary btn-lg">Купить доступ</a>
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost btn-lg discord-link">Discord</a>
         </div>
-    </div>
 
-    <div class="actions">
-        <button class="btn btn-primary" id="retry-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-                <path d="M21 3v5h-5"/>
-            </svg>
-            Обновить
-        </button>
-        <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-ghost" target="_blank" rel="noopener">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-            </svg>
-            Discord
-        </a>
-    </div>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-icon">🎮</div>
+                <div class="value" data-count="2">0</div>
+                <div class="label">Игры</div>
+            </div>
+            <div class="stat">
+                <div class="stat-icon">🛡</div>
+                <div class="value">24/7</div>
+                <div class="label">Поддержка</div>
+            </div>
+            <div class="stat">
+                <div class="stat-icon">✓</div>
+                <div class="value" data-count="100" data-suffix="%">0</div>
+                <div class="label">Undetected</div>
+            </div>
+            <div class="stat">
+                <div class="stat-icon">⚡</div>
+                <div class="value">v3.0</div>
+                <div class="label">Версия</div>
+            </div>
+        </div>
 
-    <div class="footer">
-        <span class="live-dot"></span>
-        <span>Все системы перегружены</span>
-        <span class="dot"></span>
-        <span id="footer-time">—</span>
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <span class="status-label">Статус</span>
+                <span class="status-value text-green">ONLINE</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <span class="status-label">Аптайм</span>
+                <span class="status-value">99.9%</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <span class="status-label">Инжект</span>
+                <span class="status-value">~2s</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ GAMES ============ -->
+    <section class="section reveal" id="games">
+        <div class="section-head">
+            <div class="section-label">Игры</div>
+            <h2>Поддерживаемые игры</h2>
+            <p>Один ключ — обе игры. Полный доступ ко всем функциям.</p>
+        </div>
+
+        <div class="games-grid">
+            <div class="game-card">
+                <div class="game-preview">👻</div>
+                <div class="game-body">
+                    <div class="game-head">
+                        <div>
+                            <div class="game-name">Ryzen Internal</div>
+                            <div class="game-desc">cs2.exe</div>
+                        </div>
+                        <span class="status status-green">Undetected</span>
+                    </div>
+                    <div class="game-tags">
+                        <span class="game-tag">Aimbot</span>
+                        <span class="game-tag">ESP</span>
+                        <span class="game-tag">Triggerbot</span>
+                        <span class="game-tag">Rage</span>
+                        <span class="game-tag">Legit</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">😈</div>
+                <div class="game-body">
+                    <div class="game-head">
+                        <div>
+                            <div class="game-name">Fatality Internal</div>
+                            <div class="game-desc">gmod.exe</div>
+                        </div>
+                        <span class="status status-green">Undetected</span>
+                    </div>
+                    <div class="game-tags">
+                        <span class="game-tag">Aimbot</span>
+                        <span class="game-tag">ESP</span>
+                        <span class="game-tag">Silent</span>
+                        <span class="game-tag">Anti-Aim</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section class="section reveal" id="pricing">
+        <div class="section-head">
+            <div class="section-label">Цены</div>
+            <h2>Тарифы Full Access</h2>
+            <p>Обе игры — один ключ. Без скрытых платежей.</p>
+        </div>
+
+        <div class="billing-toggle" id="billing-toggle">
+            <button class="active" data-period="7">7 дней</button>
+            <button data-period="30">30 дней <span class="save-badge">−15%</span></button>
+            <button data-period="lifetime">Lifetime <span class="save-badge">−30%</span></button>
+        </div>
+
+        <div class="pricing-grid" id="pricing-grid"></div>
+    </section>
+
+    <!-- ============ STEPS ============ -->
+    <section class="section reveal">
+        <div class="section-head">
+            <div class="section-label">Как купить</div>
+            <h2>Четыре простых шага</h2>
+            <p>От выбора тарифа до первого инжекта — меньше 10 минут</p>
+        </div>
+
+        <div class="steps">
+            <div class="step">
+                <div class="num">01</div>
+                <div class="step-title">Напиши в Discord</div>
+                <div class="step-desc">Свяжись с продавцом и выбери тариф</div>
+            </div>
+            <div class="step">
+                <div class="num">02</div>
+                <div class="step-title">Оплати</div>
+                <div class="step-desc">Перевод или криптовалюта</div>
+            </div>
+            <div class="step">
+                <div class="num">03</div>
+                <div class="step-title">Получи ключ</div>
+                <div class="step-desc">В течение 5–10 минут после оплаты</div>
+            </div>
+            <div class="step">
+                <div class="num">04</div>
+                <div class="step-title">Запусти лоадер</div>
+                <div class="step-desc">Введи ключ и играй</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ ONLINE ============ -->
+    <section class="section reveal" id="online">
+        <div class="section-head">
+            <div class="section-label">Онлайн</div>
+            <h2>Сейчас в сети</h2>
+            <p>Нажми на ник, чтобы открыть профиль. Список обновляется автоматически.</p>
+        </div>
+
+        <div class="online-toolbar">
+            <div class="online-toolbar-left">
+                <div class="online-toolbar-count">
+                    <span class="dot"></span>
+                    <span>В сети: <strong id="online-total">—</strong></span>
+                </div>
+            </div>
+            <div class="online-toolbar-right">
+                <span>Показано: <strong id="online-shown">—</strong></span>
+            </div>
+        </div>
+
+        <div class="online-grid" id="online-grid"></div>
+
+        <div class="online-rest-bar" id="online-rest-bar">
+            Показаны <strong id="online-shown-2">0</strong> из <strong id="online-total-2">0</strong> · и ещё <strong id="online-rest">0</strong> в сети
+            <span class="dot-anim"><span></span><span></span><span></span></span>
+        </div>
+
+        <div class="online-rotating-hint" id="online-rotating-hint">Список обновляется каждые 20–40 секунд</div>
+    </section>
+
+    <!-- ============ CHANGELOG ============ -->
+    <section class="section reveal" id="changelog">
+        <div class="section-head">
+            <div class="section-label">Обновления</div>
+            <h2>Update Log</h2>
+            <p>История обновлений Ryzen Loader</p>
+        </div>
+
+        <div class="changelog-filters" id="changelog-filters">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="new">New</button>
+            <button class="filter-btn" data-filter="fix">Fix</button>
+            <button class="filter-btn" data-filter="improve">Improve</button>
+            <button class="filter-btn" data-filter="security">Security</button>
+        </div>
+
+        <div class="changelog" id="changelog-list"></div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section reveal" id="faq">
+        <div class="section-head">
+            <div class="section-label">FAQ</div>
+            <h2>Частые вопросы</h2>
+            <p>Что важно знать перед покупкой</p>
+        </div>
+
+        <div class="faq-controls">
+            <input type="text" class="faq-search" id="faq-search" placeholder="Поиск по вопросам... (нажми / )" aria-label="Поиск по FAQ">
+            <span class="faq-counter" id="faq-counter">7 вопросов</span>
+            <button class="faq-toggle-all" id="faq-toggle-all">Развернуть</button>
+        </div>
+
+        <div id="faq-list"></div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="section reveal">
+        <div class="cta-banner">
+            <h2>Готов начать?</h2>
+            <p>Получи Full Access к обеим играм прямо сейчас</p>
+
+            <div class="promo-timer">
+                <div class="t-box"><div class="t-val" id="t-days">00</div><div class="t-lbl">Дней</div></div>
+                <div class="t-box"><div class="t-val" id="t-hours">00</div><div class="t-lbl">Часов</div></div>
+                <div class="t-box"><div class="t-val" id="t-mins">00</div><div class="t-lbl">Минут</div></div>
+                <div class="t-box"><div class="t-val" id="t-secs">00</div><div class="t-lbl">Секунд</div></div>
+            </div>
+
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn btn-primary btn-lg discord-link">Написать в Discord</a>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Продукт</h4>
+                <a href="#games">Игры</a>
+                <a href="#pricing">Цены</a>
+                <a href="#changelog">Обновления</a>
+            </div>
+            <div class="footer-col">
+                <h4>Поддержка</h4>
+                <a href="#faq">FAQ</a>
+                <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Discord</a>
+                <a href="https://discord.gg/BMsBuuk2WK" class="discord-link">Канал</a>
+            </div>
+            <div class="footer-col">
+                <h4>Правовое</h4>
+                <a href="#">Условия</a>
+                <a href="#">Политика</a>
+                <a href="#">Возврат</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2024 Ryzen Loader. Все права защищены.</span>
+            <span class="footer-live">
+                <span class="dot"></span>
+                сейчас на сайте: <strong id="footer-online">—</strong>
+            </span>
+            <button class="share-btn" id="share-btn">Поделиться</button>
+        </div>
+    </footer>
+
+</div>
+
+<!-- ============ OVERLOAD SCREEN ============ -->
+<div class="overload-screen" id="overload-screen">
+    <div class="overload-content">
+        <div class="overload-code">ERR 503 · SERVICE UNAVAILABLE</div>
+        <div class="overload-title">Сервис перегружен</div>
+        <div class="overload-desc">
+            Слишком много активных подключений к серверу. Доступ временно ограничен. Повторите попытку через несколько минут.
+        </div>
+        <div class="overload-stats">
+            <div class="overload-stat">
+                <span class="k">Online</span>
+                <span class="v danger" id="overload-online">—</span>
+            </div>
+            <div class="overload-stat">
+                <span class="k">Capacity</span>
+                <span class="v">6 000</span>
+            </div>
+            <div class="overload-stat">
+                <span class="k">Status</span>
+                <span class="v danger">OVERLOADED</span>
+            </div>
+        </div>
+        <div class="overload-actions">
+            <button class="overload-btn primary" id="overload-retry">Переподключиться</button>
+            <a href="https://discord.gg/BMsBuuk2WK" class="overload-btn discord-link">Discord</a>
+        </div>
+        <div class="overload-note" id="overload-note">Автоматическое закрытие через — с</div>
+        <button class="overload-skip" id="overload-skip">Продолжить на свой риск →</button>
     </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<button id="back-to-top" title="Наверх" aria-label="Наверх">↑</button>
+
+<div id="live-clock">
+    <span>🕐</span>
+    <span class="clock-time" id="clock-time">--:--</span>
+    <span id="clock-season">—</span>
+</div>
+
+<!-- ============ MODAL: HOTKEYS ============ -->
+<div class="modal-overlay" id="hotkeys-modal">
+    <div class="modal">
+        <h3>Горячие клавиши</h3>
+        <p>Быстрое управление сайтом</p>
+        <div class="hotkey-row"><span>Поиск по FAQ</span><kbd>/</kbd></div>
+        <div class="hotkey-row"><span>Наверх страницы</span><kbd>Home</kbd></div>
+        <div class="hotkey-row"><span>Вниз страницы</span><kbd>End</kbd></div>
+        <div class="hotkey-row"><span>Список клавиш</span><kbd>?</kbd></div>
+        <div class="hotkey-row"><span>Закрыть модалку</span><kbd>Esc</kbd></div>
+        <button class="modal-close" id="modal-close-btn">Понятно</button>
+    </div>
+</div>
+
+<!-- ============ MODAL: AUTH ============ -->
+<div class="modal-overlay" id="auth-modal">
+    <div class="modal">
+        <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Вход</button>
+            <button class="auth-tab" data-tab="register">Регистрация</button>
+        </div>
+
+        <form id="login-form" autocomplete="off">
+            <h3>С возвращением</h3>
+            <p>Войди в аккаунт, чтобы управлять профилем</p>
+
+            <div class="form-group" data-field="login-email">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="you@example.com" required>
+                <div class="form-error">Введите корректный email</div>
+            </div>
+
+            <div class="form-group" data-field="login-password">
+                <label>Пароль</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+                <div class="form-error">Неверный пароль</div>
+            </div>
+
+            <button type="submit" class="form-submit">Войти</button>
+            <div class="form-footer">
+                Нет аккаунта? <a data-switch-tab="register">Зарегистрироваться</a>
+            </div>
+        </form>
+
+        <form id="register-form" style="display:none" autocomplete="off">
+            <h3>Создать аккаунт</h3>
+            <p>Регистрация займёт меньше минуты</p>
+
+            <div class="form-group" data-field="reg-username">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="neo_2077" required>
+                <div class="form-error">3–20 символов: латиница, цифры, _</div>
+            </div>
+
+            <div class="form-group" data-field="reg-email">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="you@example.com" required>
+                <div class="form-error">Введите корректный email</div>
+            </div>
+
+            <div class="form-group" data-field="reg-password">
+                <label>Пароль</label>
+                <input type="password" name="password" placeholder="Минимум 6 символов" required>
+                <div class="form-error">Пароль должен содержать минимум 6 символов</div>
+            </div>
+
+            <div class="form-group" data-field="reg-confirm">
+                <label>Повтор пароля</label>
+                <input type="password" name="confirm" placeholder="Повтори пароль" required>
+                <div class="form-error">Пароли не совпадают</div>
+            </div>
+
+            <button type="submit" class="form-submit">Создать аккаунт</button>
+            <div class="form-footer">
+                Уже есть аккаунт? <a data-switch-tab="login">Войти</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ============ MODAL: PROFILE ============ -->
+<div class="modal-overlay" id="profile-modal">
+    <div class="modal profile-modal">
+        <div id="profile-content"></div>
+    </div>
+</div>
+
+<div id="cookie-bar">
+    <span>🍪 Мы используем localStorage для сохранения настроек.</span>
+    <button id="cookie-accept">ОК</button>
 </div>
 
 <script>
 /* =========================================================
-   QUEUE SIMULATION
+   КОНСТАНТЫ И ДАННЫЕ
    ========================================================= */
-const queueCountEl = document.getElementById('queue-count');
-const queueWaitEl = document.getElementById('queue-wait');
-const loadValueEl = document.getElementById('load-value');
-const loadFillEl = document.getElementById('load-fill');
-const footerTimeEl = document.getElementById('footer-time');
+const ONLINE_LIST_SIZE = 50;
 
-let queue = 1247;
-let load = 97;
+const PRICING_DATA = {
+    7: { name: '7 дней', price: 150, note: 'Пробный период', features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления'] },
+    30: { name: '30 дней', price: 500, note: 'Оптимальный выбор', featured: true, features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка'] },
+    lifetime: { name: 'Lifetime', price: 2500, note: 'Навсегда', features: ['Ryzen (CS2) + Fatality (GMod)', 'Привязка по HWID', 'Все будущие обновления', 'Личная поддержка'] }
+};
+
+const CHANGELOG_DATA = [
+    { tag: 'Beta v2', latest: true, date: '21 сентября 2026', title: 'Крупное обновление — новая версия лоадера', items: [
+        { text: 'Полностью переписан инжектор с нуля', type: 'improve' },
+        { text: 'Улучшена стабильность сайта', type: 'fix' },
+        { text: 'Добавлен счётчик онлайна с сохранением', type: 'new' },
+        { text: 'Новая система HWID-привязки с защитой от подмены', type: 'security' },
+        { text: 'Улучшена стабильность на Windows 11 24H2', type: 'fix' },
+        { text: 'Уменьшено время инжекта с 8 до 2 секунд', type: 'improve' }
+    ]},
+    { tag: 'Beta v1.3', date: '15 августа 2026', title: 'Оптимизация и новые фичи', items: [
+        { text: 'Добавлен Fatality Internal для Garry\'s Mod', type: 'new' },
+        { text: 'Исправлен краш при инжекте в CS2 после обновления', type: 'fix' },
+        { text: 'Обновлён API обхода VAC Live', type: 'security' },
+        { text: 'Снижено потребление ОЗУ на 30%', type: 'improve' }
+    ]},
+    { tag: 'Beta v1.2', date: '10 июля 2026', title: 'Глобальный рефакторинг', items: [
+        { text: 'Новый лоадер с поддержкой HWID-сброса', type: 'new' },
+        { text: 'Удалена устаревшая поддержка CS:GO', type: 'remove' },
+        { text: 'Улучшена система автообновления', type: 'improve' },
+        { text: 'Исправлены ложные срабатывания антивируса', type: 'fix' }
+    ]},
+    { tag: 'Beta v1.1.5', date: '22 мая 2026', title: 'Промежуточное обновление', items: [
+        { text: 'Добавлена поддержка CS2', type: 'new' },
+        { text: 'Оптимизация рендера меню', type: 'improve' },
+        { text: 'Мелкие исправления багов', type: 'fix' }
+    ]},
+    { tag: 'Beta v1.0', date: '1 марта 2026', title: 'Первый публичный релиз', items: [
+        { text: 'Запуск Ryzen Loader для Garry\'s Mod', type: 'new' },
+        { text: 'Базовый функционал чита', type: 'new' },
+        { text: 'Система ключей и HWID-привязки', type: 'new' }
+    ]}
+];
+
+const FAQ_DATA = [
+    { q: 'Можно ли получить пробную подписку?', a: '<strong>Нет.</strong> Мы не выдаём бесплатные пробные подписки. Если хочешь попробовать — покупай минимальный тариф на 7 дней за 150₽. Это недорого, но этого хватит, чтобы понять, подходит ли тебе лоадер. Так мы защищаем свой софт от слива.' },
+    { q: 'Дадут ли VAC-бан?', a: 'Лоадер не детектится на момент публикации. Однако VAC Live обновляется, и любой чит может быть задетекчен. Использование чита — это риск, и вы принимаете его добровольно.' },
+    { q: 'На каких серверах можно играть?', a: 'На любых, но помни о рисках. На официальных серверах (Premier, Competitive) VAC-бан возможен — мы не гарантируем защиту. Играй на community-серверах и локальных, там безопаснее.' },
+    { q: 'Можно ли перенести ключ на другой ПК?', a: 'Нет, ключ привязан к HWID вашего компьютера. Если вы сменили железо или переустановили Windows — свяжитесь с продавцом для сброса HWID (делается один раз бесплатно).' },
+    { q: 'Работает ли на пиратке?', a: 'Лоадер работает с любыми версиями игр — Steam, пиратка, локальные сборки. Главное — чтобы игра запускалась как процесс <strong>cs2.exe</strong> / <strong>gmod.exe</strong>.' },
+    { q: 'Что делать, если ключ не работает?', a: 'Проверь, что вводишь ключ без лишних пробелов, и что HWID совпадает с тем, на который выдан ключ. Если проблема остаётся — напиши продавцу в Discord, помогут.' },
+    { q: 'Возврат средств возможен?', a: '<strong>Нет.</strong> После активации ключа возврат не делается. Если ключ не активирован — можно попросить замену. Пожалуйста, будь уверен в покупке перед оплатой.' }
+];
+
+/* Специальные seed-пользователи (закреплённые в топе) */
+const SEED_SPECIAL = [
+    { username: 'darkvoid', role: 'admin', bio: 'Root access. Не пишите в личку по мелочам.', reputation: 6234, messages: 1847, purchases: 12, sub: 'lifetime' },
+    { username: 'xq1z', role: 'vip', bio: 'Rage only, no legit.', reputation: 2187, messages: 486, purchases: 4, sub: 'lifetime' },
+    { username: 'silent', role: 'vip', bio: 'Anti-aim = life', reputation: 3104, messages: 823, purchases: 6, sub: 'lifetime' },
+    { username: 'nova_x', role: 'vip', bio: 'CS2 since beta', reputation: 2456, messages: 678, purchases: 5, sub: 'lifetime' },
+    { username: 'midnight', role: 'vip', bio: 'Silent aim enjoyer', reputation: 1523, messages: 312, purchases: 3, sub: 'lifetime' },
+    { username: 'saint', role: 'vip', bio: '', reputation: 1876, messages: 456, purchases: 3, sub: 'lifetime' },
+    { username: 'lucid', role: 'vip', bio: '', reputation: 1203, messages: 389, purchases: 2, sub: 'active' },
+    { username: 'nexus_', role: 'vip', bio: '', reputation: 891, messages: 245, purchases: 2, sub: 'active' }
+];
+
+/* Список частей ников для генерации */
+const NICK_PREFIXES = ['dark','silent','void','phantom','night','ghost','cold','toxic','neon','cyber','pixel','neo','mad','evil','fast','hyper','acid','crypt','dawn','dusk','ember','falcon','flux','frost','glitch','grim','hex','hollow','iron','lucid','lunar','moon','myst','nitro','nova','null','onyx','orbit','ozone','prime','pulse','quantum','raven','rune','sigma','silver','skull','smoke','solar','sonic','soul','speed','spike','star','steel','storm','synth','titan','venom','viper','volt','warp','wired','wraith','zenith','zodiac','ashen','blaze','brave','breeze','chrome','cobalt','comet','copper','cosmic','crimson','crypto','dagger','demon','dream','drift','eagle','eclipse','edge','fable','fable','feather','flame','flare','flint','forged','frost','gale','glide','gold','granite','gravity','halo','hammer','hazel','helm','horizon','hydra','impulse','inferno','infinite','jade','jester','jolt','jupiter','karma','kelp','krypt','laser','leaf','legend','light','lith','lore','lynx','magma','mana','maple','mars','mask','maze','mercury','mind','mirror','mist','monsoon','mystic','needle','neon','night','noble','north','oath','ocean','olive','omega','onyx','opal','oracle','orbit','origin','otter','outlaw','panda','paradox','patriot','peak','pearl','phoenix','pilot','pine','pixel','plasma','pluto','poison','polar','portal','prism','primal','prodigy','protect','pulsar','pyre','pyro','quartz','quest','quick','quill','quote','radar','radiant','rage','rain','rapid','raven','ray','razor','rebel','red','reign','rider','rift','rigid','riot','ritual','rival','river','roam','rocket','rogue','root','royal','ruby','ruin','runic','rust','saber','sage','saint','sapphire','scar','scarlet','scope','seal','seer','serpent','shadow','shard','sharp','shield','shock','shooter','shot','sidhe','sigma','signal','silk','silver','skull','sky','slate','slick','slip','smoke','snake','sniper','solar','solid','sonar','sonic','soul','spark','spear','specter','spell','spike','spirit','spite','sprint','spy','star','static','stealth','steam','steel','stellar','stone','storm','strife','strong','stud','stun','surge','swift','sword','syndicate','synth','talon','tank','tarot','tech','tempo','tense','tesla','thane','thorn','tide','tiger','titan','toast','tomb','torch','total','toxic','tracer','trade','tribe','trick','troll','trophy','tru','trunk','tundra','turbo','tusk','twist','ultra','umber','unbound','unity','untamed','urban','valor','vandal','vanguard','vapor','vault','vector','veil','venom','vent','venus','vertex','vessel','veteran','vibe','vice','vigor','viking','vile','vintage','viol','viper','viral','vision','vivid','void','volt','vortex','voyage','vulcan','waifu','wake','wander','war','warden','warp','warrior','watch','water','wave','weapon','weaver','wedge','west','whale','whirl','white','wicked','wild','willow','wind','winter','wire','wisdom','wolf','wonder','wood','wraith','wraith','wrath','xeno','xerox','yield','yonder','young','youth','zeal','zen','zenith','zero','zephyr','zeus','zigzag','zing','zion','zodiac','zone','zoom','zorro'];
+
+/* =========================================================
+   УТИЛИТЫ
+   ========================================================= */
+function throttle(fn, delay) {
+    let last = 0;
+    return function(...args) {
+        const now = Date.now();
+        if (now - last >= delay) { last = now; fn.apply(this, args); }
+    };
+}
+
+let audioCtx = null;
+function playSound(freq = 800, duration = 0.05, type = 'sine', vol = 0.012) {
+    try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type; osc.frequency.value = freq; gain.gain.value = vol;
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+}
+const playClick = () => playSound(900, 0.03, 'sine', 0.012);
+const playSuccess = () => playSound(1200, 0.09, 'sine', 0.018);
+const playError = () => playSound(300, 0.09, 'sawtooth', 0.018);
+
+const showToast = throttle(function(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = 'toast show ' + type;
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.remove('show'), 3200);
+}, 400);
 
 function formatNumber(n) {
     return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-function updateQueue() {
-    // колеблется вокруг текущего значения
-    queue += Math.floor((Math.random() - 0.45) * 40);
-    if (queue < 800) queue = 800 + Math.floor(Math.random() * 100);
-    if (queue > 1800) queue = 1800 - Math.floor(Math.random() * 100);
-
-    queueCountEl.textContent = formatNumber(queue);
-
-    const waitMin = Math.max(1, Math.round(queue / 600));
-    queueWaitEl.textContent = '~' + waitMin + ' мин';
-
-    // загрузка
-    load += (Math.random() - 0.5) * 2;
-    if (load < 92) load = 92 + Math.random() * 2;
-    if (load > 99) load = 99 - Math.random() * 2;
-    load = Math.min(99.9, Math.max(92, load));
-
-    const loadStr = load.toFixed(0) + '%';
-    loadValueEl.textContent = loadStr;
-    loadFillEl.style.width = load.toFixed(1) + '%';
+function timeAgo(ts) {
+    if (!ts) return '—';
+    const diff = Math.floor((Date.now() - ts) / 1000);
+    if (diff < 10) return 'только что';
+    if (diff < 60) return diff + ' сек назад';
+    if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
+    if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад';
+    if (diff < 604800) return Math.floor(diff / 86400) + ' дн назад';
+    const d = new Date(ts);
+    return d.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-updateQueue();
-setInterval(updateQueue, 2200);
-
-/* =========================================================
-   RETRY
-   ========================================================= */
-const retryBtn = document.getElementById('retry-btn');
-retryBtn.addEventListener('click', () => {
-    retryBtn.disabled = true;
-    const originalHTML = retryBtn.innerHTML;
-    retryBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg> Проверяем...';
-
-    setTimeout(() => {
-        retryBtn.disabled = false;
-        retryBtn.innerHTML = originalHTML;
-        // небольшая встряска
-        document.querySelector('h1').animate(
-            [{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }],
-            { duration: 300, easing: 'ease-in-out' }
-        );
-        updateQueue();
-    }, 1400);
-});
-
-// inject spin keyframe
-const style = document.createElement('style');
-style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
-document.head.appendChild(style);
-
-/* =========================================================
-   LIVE CLOCK
-   ========================================================= */
-function updateTime() {
-    const now = new Date();
-    footerTimeEl.textContent =
-        String(now.getHours()).padStart(2, '0') + ':' +
-        String(now.getMinutes()).padStart(2, '0') + ':' +
-        String(now.getSeconds()).padStart(2, '0');
+function formatDuration(ms) {
+    if (ms <= 0) return 'истекла';
+    const s = Math.floor(ms / 1000);
+    const d = Math.floor(s / 86400);
+    const h = Math.floor((s % 86400) / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    if (d > 0) return `${d} дн ${h} ч`;
+    if (h > 0) return `${h} ч ${m} мин`;
+    if (m > 0) return `${m} мин ${sec} с`;
+    return `${sec} с`;
 }
-updateTime();
-setInterval(updateTime, 1000);
+
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
 
 /* =========================================================
-   AMBIENT PARTICLES
+   ONLINE SIMULATION
    ========================================================= */
-(function spawnParticles() {
-    const count = window.innerWidth < 600 ? 14 : 26;
-    for (let i = 0; i < count; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        p.style.left = Math.random() * 100 + 'vw';
-        p.style.top = Math.random() * 100 + 'vh';
-        p.style.opacity = 0.15 + Math.random() * 0.35;
-        document.body.appendChild(p);
+const OnlineSim = (() => {
+    const PEAK = 10500;
+    const MIN = 120;
 
-        const dur = 6000 + Math.random() * 8000;
-        const dx = (Math.random() - 0.5) * 80;
-        const dy = (Math.random() - 0.5) * 80;
+    const BASE_CURVE = [
+        0.30, 0.18, 0.10, 0.06, 0.04, 0.05,
+        0.08, 0.14, 0.22, 0.32, 0.42, 0.50,
+        0.56, 0.60, 0.64, 0.70, 0.78, 0.86,
+        0.93, 1.00, 0.97, 0.88, 0.72, 0.50
+    ];
+    const DAY_MULT = [1.10, 0.88, 0.92, 0.94, 0.98, 1.04, 1.12];
 
-        p.animate([
-            { transform: 'translate(0, 0)', opacity: p.style.opacity },
-            { transform: `translate(${dx}px, ${dy}px)`, opacity: 0.05 }
-        ], {
-            duration: dur,
-            iterations: Infinity,
-            direction: 'alternate',
-            easing: 'ease-in-out'
+    function noise(seed) {
+        const x = Math.sin(seed) * 43758.5453;
+        return x - Math.floor(x);
+    }
+    function seasonMult(month) {
+        if (month === 11 || month === 0 || month === 1) return 1.04;
+        if (month >= 2 && month <= 4) return 0.96;
+        if (month >= 5 && month <= 7) return 1.06;
+        return 1.00;
+    }
+    function dayActivity(dayOfYear) {
+        return 0.85 + noise(dayOfYear * 12.34 + 7) * 0.30;
+    }
+
+    function targetAt(date) {
+        const h = date.getUTCHours();
+        const m = date.getUTCMinutes();
+        const d = date.getUTCDay();
+        const month = date.getUTCMonth();
+        const doy = Math.floor((date - new Date(date.getUTCFullYear(), 0, 0)) / 86400000);
+
+        const h0 = BASE_CURVE[h];
+        const h1 = BASE_CURVE[(h + 1) % 24];
+        const frac = m / 60;
+        const curve = h0 + (h1 - h0) * frac;
+
+        let v = MIN + (PEAK - MIN) * curve;
+        v *= DAY_MULT[d];
+        v *= seasonMult(month);
+        v *= dayActivity(doy);
+
+        const seed = Math.floor(date.getTime() / 60000);
+        const n1 = (noise(seed * 1.7) - 0.5) * 0.05;
+        const n2 = (noise(seed * 3.1 + 11) - 0.5) * 0.03;
+        v *= (1 + n1 + n2);
+
+        return Math.max(MIN, Math.min(PEAK, v));
+    }
+
+    let current = null;
+    let target = null;
+    let history = [];
+    let timer = null;
+
+    function init() {
+        const now = new Date();
+        target = targetAt(now);
+        current = target;
+        const nowMs = now.getTime();
+        for (let i = 288; i >= 0; i--) {
+            const d = new Date(nowMs - i * 5 * 60 * 1000);
+            history.push({ ts: d.getTime(), value: targetAt(d) });
+        }
+    }
+
+    function tick() {
+        const now = new Date();
+        target = targetAt(now);
+        const diff = target - current;
+        const ease = 0.12 + Math.random() * 0.08;
+        current += diff * ease;
+        current += (Math.random() - 0.5) * current * 0.006;
+        if (Math.random() < 0.015) {
+            current = Math.min(PEAK, current + current * (0.02 + Math.random() * 0.04));
+        }
+        current = Math.max(MIN, Math.min(PEAK, current));
+        history.push({ ts: now.getTime(), value: current });
+        if (history.length > 400) history.shift();
+        updateDisplay();
+    }
+
+    function schedule() {
+        const interval = 8000 + Math.random() * 8000;
+        timer = setTimeout(() => { tick(); schedule(); }, interval);
+    }
+
+    function valueAgo(ms) {
+        const ref = Date.now() - ms;
+        let best = history[0];
+        let bestDiff = Infinity;
+        for (const h of history) {
+            const d = Math.abs(h.ts - ref);
+            if (d < bestDiff) { bestDiff = d; best = h; }
+        }
+        return best ? best.value : current;
+    }
+
+    function getTrend() {
+        const ref = valueAgo(60000);
+        if (!ref) return { dir: 'flat', pct: 0 };
+        const pct = ((current - ref) / ref) * 100;
+        if (Math.abs(pct) < 0.3) return { dir: 'flat', pct: 0 };
+        return { dir: pct > 0 ? 'up' : 'down', pct };
+    }
+
+    function updateDisplay() {
+        const countEl = document.getElementById('online-count');
+        if (countEl) countEl.textContent = formatNumber(current);
+
+        const trendEl = document.getElementById('online-trend');
+        if (trendEl) {
+            const t = getTrend();
+            trendEl.className = 'online-trend ' + t.dir;
+            if (t.dir === 'up') trendEl.textContent = '↑ ' + t.pct.toFixed(1) + '%';
+            else if (t.dir === 'down') trendEl.textContent = '↓ ' + Math.abs(t.pct).toFixed(1) + '%';
+            else trendEl.textContent = '→ 0.0%';
+        }
+
+        const footerEl = document.getElementById('footer-online');
+        if (footerEl) footerEl.textContent = formatNumber(current);
+
+        // Обновляем счётчики онлайн-секции
+        updateOnlineCounters();
+    }
+
+    function renderChart() {
+        const chartEl = document.getElementById('online-chart');
+        if (!chartEl) return;
+        chartEl.innerHTML = '';
+
+        const now = Date.now();
+        const points = history.filter(h => now - h.ts <= 24 * 3600000);
+        const step = Math.max(1, Math.floor(points.length / 40));
+        const sampled = [];
+        for (let i = 0; i < points.length; i += step) sampled.push(points[i]);
+        if (points.length && sampled[sampled.length - 1] !== points[points.length - 1]) {
+            sampled.push(points[points.length - 1]);
+        }
+
+        const maxVal = Math.max(...sampled.map(p => p.value), 1);
+        sampled.forEach((p, i) => {
+            const bar = document.createElement('div');
+            bar.className = 'bar' + (i === sampled.length - 1 ? ' current' : '');
+            bar.style.height = Math.max(2, (p.value / maxVal) * 100) + '%';
+            const d = new Date(p.ts);
+            bar.title = String(d.getUTCHours()).padStart(2,'0') + ':' + String(d.getUTCMinutes()).padStart(2,'0') + ' UTC — ' + formatNumber(p.value);
+            chartEl.appendChild(bar);
         });
     }
+
+    function start() {
+        init();
+        updateDisplay();
+        renderChart();
+        schedule();
+        setInterval(renderChart, 3 * 60 * 1000);
+    }
+
+    return { start, getCurrent: () => Math.round(current) };
 })();
 
 /* =========================================================
-   PREVENT ACCIDENTAL NAVIGATION (fake gate)
+   AUTH + USER MODEL
    ========================================================= */
-// ничего не делаем — просто заглушка. Если хочется показать кнопку "войти всё равно", раскомментируй:
-/*
-retryBtn.addEventListener('dblclick', () => {
-    window.location.href = 'index.html';
+const AUTH_KEYS = { users: 'ryzen_users', current: 'ryzen_current_user' };
+
+function getUsers() {
+    try { return JSON.parse(localStorage.getItem(AUTH_KEYS.users) || '[]'); } catch { return []; }
+}
+function saveUsers(u) { localStorage.setItem(AUTH_KEYS.users, JSON.stringify(u)); }
+function getCurrentUser() {
+    try { return JSON.parse(localStorage.getItem(AUTH_KEYS.current) || 'null'); } catch { return null; }
+}
+function setCurrentUser(u) {
+    if (u) localStorage.setItem(AUTH_KEYS.current, JSON.stringify(u));
+    else localStorage.removeItem(AUTH_KEYS.current);
+}
+
+function hashPass(s) {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) { h = (h << 5) - h + s.charCodeAt(i); h |= 0; }
+    return 'h' + Math.abs(h).toString(36) + '_' + btoa(unescape(encodeURIComponent(s))).slice(0, 12);
+}
+
+function makeReferralCode(username) {
+    return (username || '').toLowerCase().replace(/[^a-z0-9_]/g, '');
+}
+
+function ensureUserFields(u) {
+    if (!u.subscription) u.subscription = { plan: 'none', expiresAt: null };
+    if (typeof u.sessions !== 'number') u.sessions = 0;
+    if (typeof u.playTime !== 'number') u.playTime = 0;
+    if (!u.lastLogin) u.lastLogin = null;
+    if (!u.lastSeen) u.lastSeen = u.lastLogin;
+    if (!u.activity) u.activity = [];
+    if (!u.referralCode) u.referralCode = makeReferralCode(u.username);
+    if (typeof u.referrals !== 'number') u.referrals = 0;
+    if (!u.role) u.role = 'user';
+    if (typeof u.reputation !== 'number') u.reputation = 0;
+    if (typeof u.messages !== 'number') u.messages = 0;
+    if (typeof u.purchases !== 'number') u.purchases = 0;
+    if (!u.bio) u.bio = '';
+    delete u.hwid;
+    delete u.key;
+    return u;
+}
+
+function addActivity(user, type, text) {
+    if (!user.activity) user.activity = [];
+    user.activity.unshift({ type, text, ts: Date.now() });
+    if (user.activity.length > 10) user.activity = user.activity.slice(0, 10);
+}
+
+function findFullUser(email) {
+    const users = getUsers();
+    return users.find(u => u.email === email) || null;
+}
+
+function updateFullUser(updated) {
+    const users = getUsers();
+    const idx = users.findIndex(u => u.email === updated.email);
+    if (idx >= 0) { users[idx] = updated; saveUsers(users); }
+}
+
+/* =========================================================
+   SEED COMMUNITY (спец + генерированные)
+   ========================================================= */
+function generateNickname(usedSet) {
+    let attempts = 0;
+    while (attempts < 100) {
+        attempts++;
+        const p = NICK_PREFIXES[Math.floor(Math.random() * NICK_PREFIXES.length)];
+        const s = NICK_PREFIXES[Math.floor(Math.random() * NICK_PREFIXES.length)];
+        if (p === s) continue;
+
+        const style = Math.floor(Math.random() * 5);
+        let nick;
+        if (style === 0) nick = p + s;
+        else if (style === 1) nick = p + '_' + s;
+        else if (style === 2) nick = p + s + Math.floor(Math.random() * 99);
+        else if (style === 3) nick = p.charAt(0) + s + Math.floor(Math.random() * 999);
+        else nick = p + s + '_x';
+
+        if (nick.length > 20) continue;
+        if (usedSet.has(nick.toLowerCase())) continue;
+        usedSet.add(nick.toLowerCase());
+        return nick;
+    }
+    return 'user_' + Math.floor(Math.random() * 99999);
+}
+
+function makeSub() {
+    const r = Math.random();
+    const now = Date.now();
+    if (r < 0.28) return { plan: 'lifetime', expiresAt: null };
+    if (r < 0.72) return { plan: '30d', expiresAt: now + Math.floor(Math.random() * 27 * 86400000) + 3 * 86400000 };
+    if (r < 0.85) return { plan: '7d', expiresAt: now + Math.floor(Math.random() * 6 * 86400000) + 86400000 };
+    if (r < 0.95) return { plan: '30d', expiresAt: now - Math.floor(Math.random() * 27 * 86400000) - 86400000 };
+    return { plan: 'none', expiresAt: null };
+}
+
+function ensureCommunitySeeded() {
+    if (localStorage.getItem('ryzen_community_seeded_v3')) return;
+
+    const users = getUsers();
+    const usedNames = new Set(users.map(u => u.username.toLowerCase()));
+    const now = Date.now();
+
+    // 1. Special seeded
+    SEED_SPECIAL.forEach(s => {
+        const email = s.username + '@community.ryzen';
+        if (users.find(u => u.email === email)) return;
+
+        const createdAt = now - (3 + Math.random() * 12) * 30 * 86400000;
+        let subscription;
+        if (s.sub === 'lifetime') subscription = { plan: 'lifetime', expiresAt: null };
+        else subscription = makeSub();
+
+        users.push({
+            username: s.username,
+            email,
+            pass: 'seeded_' + s.username,
+            role: s.role,
+            createdAt,
+            lastLogin: now - Math.random() * 30 * 86400000,
+            lastSeen: now - Math.random() * 30 * 86400000,
+            sessions: Math.floor(Math.random() * 50) + 5,
+            reputation: s.reputation,
+            messages: s.messages,
+            purchases: s.purchases,
+            bio: s.bio,
+            referrals: Math.floor(Math.random() * 20),
+            playTime: Math.floor(Math.random() * 200) + 10,
+            subscription,
+            referralCode: makeReferralCode(s.username),
+            activity: []
+        });
+    });
+
+    // 2. Сгенерированные
+    for (let i = 0; i < 300; i++) {
+        const nick = generateNickname(usedNames);
+        const email = nick + '@community.ryzen';
+
+        const roleRand = Math.random();
+        let role = 'user';
+        if (roleRand < 0.02) role = 'admin';
+        else if (roleRand < 0.20) role = 'vip';
+
+        const monthsAgo = 1 + Math.floor(Math.random() * 18);
+        const createdAt = now - monthsAgo * 30 * 86400000;
+
+        users.push({
+            username: nick,
+            email,
+            pass: 'seeded_random_' + Math.random(),
+            role,
+            createdAt,
+            lastLogin: now - Math.random() * 15 * 86400000,
+            lastSeen: now - Math.random() * 15 * 86400000,
+            sessions: Math.floor(Math.random() * 40) + 2,
+            reputation: Math.floor(Math.random() * (role === 'vip' ? 3000 : 800)),
+            messages: Math.floor(Math.random() * (role === 'vip' ? 500 : 120)),
+            purchases: Math.floor(Math.random() * (role === 'vip' ? 6 : 2)),
+            bio: '',
+            referrals: Math.floor(Math.random() * 10),
+            playTime: Math.floor(Math.random() * 100) + 2,
+            subscription: makeSub(),
+            referralCode: makeReferralCode(nick),
+            activity: []
+        });
+    }
+
+    saveUsers(users);
+    localStorage.setItem('ryzen_community_seeded_v3', '1');
+}
+
+/* =========================================================
+   ONLINE STATE (какие ники сейчас видны)
+   ========================================================= */
+const ONLINE_STATE_KEY = 'ryzen_online_state_v3';
+
+function getOnlineState() {
+    try {
+        const s = JSON.parse(localStorage.getItem(ONLINE_STATE_KEY) || 'null');
+        if (Array.isArray(s)) return s;
+    } catch {}
+    return [];
+}
+
+function setOnlineState(arr) {
+    localStorage.setItem(ONLINE_STATE_KEY, JSON.stringify(arr));
+}
+
+function initOnlineState() {
+    const allUsers = getUsers();
+    const allNicks = allUsers.map(u => u.username);
+
+    let state = getOnlineState();
+    // фильтруем тех, кого уже нет (на случай удаления)
+    state = state.filter(n => allNicks.includes(n));
+
+    // добрать если меньше
+    if (state.length < ONLINE_LIST_SIZE) {
+        const available = allNicks.filter(n => !state.includes(n));
+        const needed = ONLINE_LIST_SIZE - state.length;
+        state.push(...shuffle(available).slice(0, needed));
+    }
+
+    state = state.slice(0, ONLINE_LIST_SIZE);
+    setOnlineState(state);
+    return state;
+}
+
+function rotateOnline() {
+    const state = getOnlineState();
+    const allUsers = getUsers();
+    const allNicks = allUsers.map(u => u.username);
+
+    if (!allNicks.length) return;
+
+    // Сколько уйдёт и придёт (2-4)
+    const removeCount = 2 + Math.floor(Math.random() * 3);
+    const shuffledState = shuffle([...state]);
+    const removed = shuffledState.slice(0, removeCount);
+
+    const newState = state.filter(n => !removed.includes(n));
+
+    const candidates = allNicks.filter(n => !newState.includes(n));
+    const added = shuffle(candidates).slice(0, removeCount);
+
+    newState.push(...added);
+
+    const final = newState.slice(0, ONLINE_LIST_SIZE);
+
+    setOnlineState(final);
+    renderOnline();
+}
+
+function startRotationLoop() {
+    function loop() {
+        rotateOnline();
+        const next = 20000 + Math.random() * 20000; // 20–40 сек
+        setTimeout(loop, next);
+    }
+    // первый оборот через 25–40 сек
+    setTimeout(loop, 25000 + Math.random() * 15000);
+}
+
+/* =========================================================
+   ONLINE RENDER
+   ========================================================= */
+function renderOnline() {
+    const grid = document.getElementById('online-grid');
+    if (!grid) return;
+
+    const allUsers = getUsers();
+    const byUsername = Object.fromEntries(allUsers.map(u => [u.username, u]));
+    const state = getOnlineState();
+
+    const visible = state.map(n => byUsername[n]).filter(Boolean);
+
+    grid.innerHTML = '';
+
+    visible.forEach(u => {
+        const user = ensureUserFields({ ...u });
+        const initial = (user.username || 'U').charAt(0).toUpperCase();
+        const roleClass = user.role === 'admin' ? 'role-admin' : user.role === 'vip' ? 'role-vip' : '';
+
+        const badges = [];
+        if (user.role === 'admin') badges.push('<span class="online-badge admin">ADMIN</span>');
+        else if (user.role === 'vip') badges.push('<span class="online-badge vip">VIP</span>');
+
+        const sub = user.subscription;
+        if (sub && sub.plan === 'lifetime') badges.push('<span class="online-badge lifetime">LIFETIME</span>');
+        else if (sub && sub.plan !== 'none' && sub.expiresAt && sub.expiresAt > Date.now()) {
+            badges.push('<span class="online-badge active">ACTIVE</span>');
+        } else if (sub && sub.plan !== 'none' && sub.expiresAt && sub.expiresAt <= Date.now()) {
+            badges.push('<span class="online-badge expired">EXPIRED</span>');
+        }
+
+        const card = document.createElement('div');
+        card.className = 'online-card';
+        card.innerHTML = `
+            <div class="online-card-head">
+                <div class="online-avatar ${roleClass}">
+                    ${initial}
+                    <span class="online-online-badge"></span>
+                </div>
+                <div class="online-name-wrap">
+                    <div class="online-name">${user.username}</div>
+                    <div class="online-badges">${badges.join('')}</div>
+                </div>
+            </div>
+            <div class="online-card-footer">
+                <span class="rep">rep ${formatNumber(user.reputation || 0)}</span>
+                <span>${formatNumber(user.messages || 0)} msg</span>
+            </div>
+        `;
+        card.addEventListener('click', () => openProfileModal(user.email));
+        grid.appendChild(card);
+    });
+
+    updateOnlineCounters();
+}
+
+function updateOnlineCounters() {
+    const shown = getOnlineState().length;
+    const total = OnlineSim.getCurrent ? OnlineSim.getCurrent() : shown;
+    const rest = Math.max(0, total - shown);
+
+    const setTxt = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+
+    setTxt('online-total', formatNumber(total));
+    setTxt('online-total-2', formatNumber(total));
+    setTxt('online-shown', shown);
+    setTxt('online-shown-2', shown);
+    setTxt('online-rest', formatNumber(rest));
+}
+
+/* =========================================================
+   AUTH UI
+   ========================================================= */
+function renderAuthSlot() {
+    const slot = document.getElementById('auth-slot');
+    if (!slot) return;
+    const user = getCurrentUser();
+
+    if (user) {
+        const initial = (user.username || 'U').charAt(0).toUpperCase();
+        slot.innerHTML = `
+            <button class="user-chip" id="open-profile" title="Открыть профиль">
+                <span class="user-avatar">${initial}</span>
+                <span class="user-name">${user.username}</span>
+                <span class="online-mini"></span>
+            </button>
+        `;
+        document.getElementById('open-profile').addEventListener('click', () => openProfileModal());
+    } else {
+        slot.innerHTML = `<button class="auth-btn" id="open-auth">👤 <span>Войти</span></button>`;
+        document.getElementById('open-auth').addEventListener('click', () => openAuthModal('login'));
+    }
+}
+
+function switchAuthTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
+    document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+}
+function openAuthModal(tab = 'login') {
+    switchAuthTab(tab);
+    document.getElementById('auth-modal').classList.add('open');
+    playClick();
+}
+function closeAuthModal() {
+    document.getElementById('auth-modal').classList.remove('open');
+}
+function setFieldError(sel, has) {
+    const el = document.querySelector(sel);
+    if (el) el.classList.toggle('has-error', !!has);
+}
+
+function validateEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+function validateUsername(v) { return /^[a-zA-Z0-9_]{3,20}$/.test(v); }
+function validatePassword(v) { return typeof v === 'string' && v.length >= 6; }
+
+function handleRegister(e) {
+    e.preventDefault();
+    const form = e.target;
+    const username = form.username.value.trim();
+    const email = form.email.value.trim().toLowerCase();
+    const password = form.password.value;
+    const confirm = form.confirm.value;
+
+    let ok = true;
+    setFieldError('[data-field="reg-username"]', false);
+    setFieldError('[data-field="reg-email"]', false);
+    setFieldError('[data-field="reg-password"]', false);
+    setFieldError('[data-field="reg-confirm"]', false);
+
+    if (!validateUsername(username)) { setFieldError('[data-field="reg-username"]', true); ok = false; }
+    if (!validateEmail(email)) { setFieldError('[data-field="reg-email"]', true); ok = false; }
+    if (!validatePassword(password)) { setFieldError('[data-field="reg-password"]', true); ok = false; }
+    if (password !== confirm) { setFieldError('[data-field="reg-confirm"]', true); ok = false; }
+
+    if (!ok) { playError(); return; }
+
+    const users = getUsers();
+    if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        showToast('Username уже занят', 'error');
+        setFieldError('[data-field="reg-username"]', true);
+        playError(); return;
+    }
+    if (users.some(u => u.email === email)) {
+        showToast('Этот email уже зарегистрирован', 'error');
+        setFieldError('[data-field="reg-email"]', true);
+        playError(); return;
+    }
+
+    const now = Date.now();
+    const newUser = ensureUserFields({
+        username,
+        email,
+        pass: hashPass(password),
+        role: 'user',
+        createdAt: now,
+        lastLogin: now,
+        lastSeen: now,
+        sessions: 1,
+        reputation: 0,
+        messages: 0,
+        purchases: 0,
+        bio: '',
+        referrals: 0,
+        playTime: 0,
+        subscription: { plan: 'none', expiresAt: null }
+    });
+    addActivity(newUser, 'registered', 'Аккаунт создан');
+    users.push(newUser);
+    saveUsers(users);
+
+    setCurrentUser({ username: newUser.username, email: newUser.email });
+    renderAuthSlot();
+    closeAuthModal();
+    form.reset();
+    showToast('Добро пожаловать, ' + username + '!', 'success');
+    playSuccess();
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value.trim().toLowerCase();
+    const password = form.password.value;
+
+    setFieldError('[data-field="login-email"]', false);
+    setFieldError('[data-field="login-password"]', false);
+
+    if (!validateEmail(email)) { setFieldError('[data-field="login-email"]', true); playError(); return; }
+    if (!password) { setFieldError('[data-field="login-password"]', true); playError(); return; }
+
+    const users = getUsers();
+    const user = users.find(u => u.email === email);
+    if (!user || user.pass !== hashPass(password)) {
+        showToast('Неверный email или пароль', 'error');
+        setFieldError('[data-field="login-password"]', true);
+        playError(); return;
+    }
+
+    ensureUserFields(user);
+    user.sessions = (user.sessions || 0) + 1;
+    user.lastLogin = Date.now();
+    user.lastSeen = Date.now();
+    addActivity(user, 'login', 'Вход в аккаунт');
+    updateFullUser(user);
+
+    setCurrentUser({ username: user.username, email: user.email });
+    renderAuthSlot();
+    closeAuthModal();
+    form.reset();
+    showToast('С возвращением, ' + user.username + '!', 'success');
+    playSuccess();
+}
+
+/* =========================================================
+   PROFILE MODAL
+   ========================================================= */
+let profileTimer = null;
+let profileEmail = null;
+
+function subscriptionStatus(sub) {
+    if (!sub || sub.plan === 'none') return { active: false, label: 'Не активирована', plan: '—' };
+    if (sub.plan === 'lifetime') return { active: true, label: 'Lifetime', plan: 'Навсегда' };
+    const now = Date.now();
+    if (!sub.expiresAt || sub.expiresAt <= now) return { active: false, label: 'Истекла', plan: '—' };
+    return { active: true, label: 'Активна', plan: sub.plan };
+}
+
+function openProfileModal(email = null) {
+    const session = getCurrentUser();
+    if (!email && !session) {
+        openAuthModal('login');
+        return;
+    }
+    profileEmail = email || session.email;
+    renderProfile(profileEmail);
+    document.getElementById('profile-modal').classList.add('open');
+    playClick();
+    clearInterval(profileTimer);
+    profileTimer = setInterval(updateProfileCountdown, 1000);
+}
+
+function closeProfileModal() {
+    document.getElementById('profile-modal').classList.remove('open');
+    clearInterval(profileTimer);
+    profileTimer = null;
+    profileEmail = null;
+}
+
+function renderProfile(email) {
+    const session = getCurrentUser();
+    const isSelf = !!(session && email === session.email);
+
+    const user = findFullUser(email);
+    if (!user) {
+        document.getElementById('profile-content').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-3)">Пользователь не найден</div>';
+        return;
+    }
+
+    ensureUserFields(user);
+
+    const initial = (user.username || 'U').charAt(0).toUpperCase();
+    const joined = new Date(user.createdAt || Date.now()).toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
+    const roleLabel = { admin: 'ADMIN', vip: 'VIP', user: 'USER' }[user.role] || 'USER';
+
+    const subStatus = subscriptionStatus(user.subscription);
+    const referralUrl = 'https://ryzenloader.gg/ref/' + (user.referralCode || makeReferralCode(user.username));
+
+    const content = document.getElementById('profile-content');
+    content.innerHTML = `
+        <div class="profile-header">
+            <div class="profile-avatar-lg">
+                ${initial}
+                <span class="profile-online"></span>
+            </div>
+            <div class="profile-header-info">
+                <div class="profile-name-row">
+                    <span class="profile-name">${user.username}</span>
+                    <span class="online-badge ${user.role}">${roleLabel}</span>
+                </div>
+                ${isSelf ? `<div class="profile-email">${user.email}</div>` : ''}
+                <div class="profile-meta">
+                    <span style="color:var(--green)">● online</span>
+                    · с ${joined}
+                </div>
+            </div>
+            <button class="profile-close" id="profile-close-btn">✕</button>
+        </div>
+
+        <div class="profile-stats-grid">
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">${formatNumber(user.reputation || 0)}</div>
+                <div class="profile-stat-lbl">Репутация</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">${formatNumber(user.messages || 0)}</div>
+                <div class="profile-stat-lbl">Сообщений</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">${formatNumber(user.purchases || 0)}</div>
+                <div class="profile-stat-lbl">Покупок</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">${formatNumber(user.referrals || 0)}</div>
+                <div class="profile-stat-lbl">Рефералов</div>
+            </div>
+        </div>
+
+        ${user.bio ? `<div class="profile-bio">"${user.bio}"</div>` : ''}
+
+        <div class="profile-card wide" style="margin-bottom:12px">
+            <div class="profile-card-label">Подписка</div>
+            <div class="profile-card-value ${subStatus.active ? 'active' : 'muted'}">${subStatus.label}</div>
+            <div class="profile-card-sub">${subStatus.plan}</div>
+            ${isSelf ? `<div class="sub-timer" id="sub-timer"></div>` : ''}
+            ${isSelf && !subStatus.active ? `
+                <div class="profile-card-actions">
+                    <button class="profile-mini-btn primary" id="sub-buy-btn">Купить</button>
+                    <button class="profile-mini-btn" id="sub-demo-btn">Демо 24ч</button>
+                </div>
+            ` : ''}
+        </div>
+
+        ${isSelf ? `
+            <div class="profile-section-title">Реферальная ссылка</div>
+            <div class="referral-row">
+                <code id="ref-url">${referralUrl}</code>
+                <button class="profile-mini-btn" id="copy-ref-btn">Копировать</button>
+            </div>
+
+            <div class="profile-section-title">Недавняя активность</div>
+            <div class="activity-feed" id="activity-feed">${renderActivityList(user.activity)}</div>
+
+            <div class="profile-actions-row">
+                <button class="profile-btn" id="change-password-btn">Сменить пароль</button>
+                <button class="profile-btn" id="logout-btn">Выйти</button>
+                <button class="profile-btn danger" id="delete-account-btn">Удалить</button>
+            </div>
+        ` : ''}
+    `;
+
+    document.getElementById('profile-close-btn').addEventListener('click', closeProfileModal);
+
+    if (isSelf) {
+        document.getElementById('copy-ref-btn')?.addEventListener('click', () => {
+            navigator.clipboard.writeText(referralUrl).then(() => {
+                showToast('Ссылка скопирована', 'success');
+                playSuccess();
+            });
+        });
+        document.getElementById('logout-btn')?.addEventListener('click', () => {
+            setCurrentUser(null);
+            renderAuthSlot();
+            closeProfileModal();
+            showToast('Вы вышли из аккаунта', 'info');
+            playClick();
+        });
+        document.getElementById('delete-account-btn')?.addEventListener('click', () => {
+            if (!confirm('Удалить аккаунт безвозвратно?')) return;
+            if (!confirm('Точно? Это необратимо.')) return;
+            const users = getUsers().filter(u => u.email !== user.email);
+            saveUsers(users);
+
+            // убрать из online state
+            const state = getOnlineState().filter(n => n !== user.username);
+            setOnlineState(state);
+            renderOnline();
+
+            setCurrentUser(null);
+            renderAuthSlot();
+            closeProfileModal();
+            showToast('Аккаунт удалён', 'info');
+            playError();
+        });
+        document.getElementById('change-password-btn')?.addEventListener('click', () => {
+            showToast('Смена пароля доступна в Discord-боте', 'info');
+            playClick();
+        });
+        document.getElementById('sub-buy-btn')?.addEventListener('click', () => {
+            window.open('https://discord.gg/BMsBuuk2WK', '_blank');
+            navigator.clipboard.writeText('https://discord.gg/BMsBuuk2WK').catch(() => {});
+        });
+        document.getElementById('sub-demo-btn')?.addEventListener('click', () => {
+            const fresh = findFullUser(user.email);
+            fresh.subscription = { plan: '24h', expiresAt: Date.now() + 24 * 3600 * 1000 };
+            addActivity(fresh, 'key', 'Демо-доступ активирован');
+            updateFullUser(fresh);
+            showToast('Демо-доступ активирован на 24 часа', 'success');
+            playSuccess();
+            renderProfile(user.email);
+            renderOnline();
+        });
+    }
+
+    updateProfileCountdown();
+}
+
+function renderActivityList(activity) {
+    if (!activity || !activity.length) {
+        return '<div style="padding:14px;color:var(--text-4);font-size:12px;text-align:center">Пока нет активности</div>';
+    }
+    return activity.slice(0, 8).map(a => `
+        <div class="activity-item ${a.type || ''}">
+            <span class="dot"></span>
+            <span class="text">${a.text}</span>
+            <span class="time">${timeAgo(a.ts)}</span>
+        </div>
+    `).join('');
+}
+
+function updateProfileCountdown() {
+    if (!profileEmail) return;
+    const session = getCurrentUser();
+    if (!session || profileEmail !== session.email) return;
+
+    const user = findFullUser(profileEmail);
+    if (!user || !user.subscription) return;
+
+    const timerEl = document.getElementById('sub-timer');
+    if (!timerEl) return;
+
+    const sub = user.subscription;
+    if (sub.plan === 'lifetime') {
+        timerEl.textContent = 'Бессрочный доступ';
+        timerEl.classList.remove('expired');
+        return;
+    }
+    if (!sub.expiresAt) {
+        timerEl.textContent = 'Купи доступ в Discord';
+        timerEl.classList.remove('expired');
+        return;
+    }
+    const left = sub.expiresAt - Date.now();
+    if (left <= 0) {
+        timerEl.textContent = 'Подписка истекла';
+        timerEl.classList.add('expired');
+        return;
+    }
+    timerEl.classList.remove('expired');
+    timerEl.textContent = 'Осталось: ' + formatDuration(left);
+}
+
+/* =========================================================
+   РЕНДЕР ОСТАЛЬНОГО
+   ========================================================= */
+function renderPricing(period = '30') {
+    const grid = document.getElementById('pricing-grid');
+    grid.innerHTML = '';
+    Object.entries(PRICING_DATA).forEach(([key, plan]) => {
+        const card = document.createElement('div');
+        card.className = 'price-card' + (plan.featured ? ' featured' : '');
+        card.innerHTML = `
+            <div class="duration">${plan.name}</div>
+            <div class="price">${plan.price}<span class="currency">₽</span></div>
+            <div class="price-note">${plan.note}</div>
+            <ul class="features">${plan.features.map(f => `<li>${f}</li>`).join('')}</ul>
+            <a href="https://discord.gg/BMsBuuk2WK" class="btn ${plan.featured ? 'btn-primary' : 'btn-ghost'} discord-link">Купить</a>
+        `;
+        grid.appendChild(card);
+    });
+    bindDiscordLinks();
+}
+
+function renderChangelog(filter = 'all') {
+    const list = document.getElementById('changelog-list');
+    list.innerHTML = '';
+    CHANGELOG_DATA.forEach(version => {
+        const items = filter === 'all' ? version.items : version.items.filter(i => i.type === filter);
+        if (items.length === 0 && filter !== 'all') return;
+        const div = document.createElement('div');
+        div.className = 'version' + (version.latest ? ' latest' : '');
+        div.innerHTML = `
+            <div class="version-head">
+                <span class="version-tag">${version.tag}</span>
+                ${version.latest ? '<span class="version-badge latest">Latest</span>' : ''}
+                <span class="version-date">${version.date}</span>
+            </div>
+            <div class="version-title">${version.title}</div>
+            <ul class="version-list">
+                ${items.map(i => `<li>${i.text} <span class="tag tag-${i.type}">${i.type}</span></li>`).join('')}
+            </ul>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function renderFAQ() {
+    const list = document.getElementById('faq-list');
+    list.innerHTML = '';
+    FAQ_DATA.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'faq-item';
+        div.dataset.index = i;
+        div.innerHTML = `<div class="faq-question">${item.q}</div><div class="faq-answer">${item.a}</div>`;
+        list.appendChild(div);
+    });
+    list.querySelectorAll('.faq-question').forEach(q => {
+        q.addEventListener('click', () => {
+            q.parentElement.classList.toggle('open');
+            playClick();
+        });
+    });
+    updateFaqCounter();
+}
+
+function updateFaqCounter() {
+    const counter = document.getElementById('faq-counter');
+    const visible = document.querySelectorAll('.faq-item:not(.hidden)').length;
+    const total = FAQ_DATA.length;
+    counter.textContent = visible === total ? `${total} вопросов` : `${visible} из ${total}`;
+}
+
+function bindDiscordLinks() {
+    document.querySelectorAll('.discord-link').forEach(link => {
+        if (link._bound) return;
+        link._bound = true;
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = link.getAttribute('href');
+            navigator.clipboard.writeText(url).catch(() => {});
+            showToast('Ссылка на Discord скопирована', 'success');
+            playSuccess();
+            window.open(url, '_blank');
+        });
+    });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+    ensureCommunitySeeded();
+    initOnlineState();
+
+    OnlineSim.start();
+    renderOnline();
+    startRotationLoop();
+
+    renderPricing('30');
+    renderChangelog('all');
+    renderFAQ();
+    bindDiscordLinks();
+    renderAuthSlot();
+
+    // Billing
+    document.querySelectorAll('#billing-toggle button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#billing-toggle button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPricing(btn.dataset.period);
+            playClick();
+        });
+    });
+
+    // Changelog filters
+    document.querySelectorAll('#changelog-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#changelog-filters .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderChangelog(btn.dataset.filter);
+            playClick();
+        });
+    });
+
+    // FAQ
+    const faqToggleAll = document.getElementById('faq-toggle-all');
+    let allExpanded = false;
+    faqToggleAll.addEventListener('click', () => {
+        allExpanded = !allExpanded;
+        document.querySelectorAll('.faq-item').forEach(item => item.classList.toggle('open', allExpanded));
+        faqToggleAll.textContent = allExpanded ? 'Свернуть' : 'Развернуть';
+        playClick();
+    });
+
+    const faqSearch = document.getElementById('faq-search');
+    faqSearch.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.classList.toggle('hidden', q !== '' && !item.textContent.toLowerCase().includes(q));
+        });
+        updateFaqCounter();
+    });
+
+    // Auth
+    document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', () => {
+        switchAuthTab(t.dataset.tab); playClick();
+    }));
+    document.querySelectorAll('[data-switch-tab]').forEach(a => a.addEventListener('click', () => {
+        switchAuthTab(a.dataset.switchTab); playClick();
+    }));
+    const authModal = document.getElementById('auth-modal');
+    authModal.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
+    document.getElementById('login-form').addEventListener('submit', handleLogin);
+    document.getElementById('register-form').addEventListener('submit', handleRegister);
+
+    // Profile
+    const profileModal = document.getElementById('profile-modal');
+    profileModal.addEventListener('click', e => { if (e.target === profileModal) closeProfileModal(); });
+
+    // Hotkeys modal
+    const hotkeysModal = document.getElementById('hotkeys-modal');
+    window.openModal = () => { hotkeysModal.classList.add('open'); playClick(); };
+    window.closeModal = () => hotkeysModal.classList.remove('open');
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+    hotkeysModal.addEventListener('click', e => { if (e.target === hotkeysModal) closeModal(); });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.getElementById('mobile-menu').classList.remove('open');
+            }
+        });
+    });
+
+    // Mobile menu
+    document.getElementById('burger').addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.add('open'); playClick();
+    });
+    document.getElementById('mobile-close').addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.remove('open'); playClick();
+    });
+
+    // Settings
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+    settingsBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        settingsPanel.classList.toggle('open');
+        playClick();
+    });
+    document.addEventListener('click', e => {
+        if (!settingsPanel.contains(e.target) && e.target !== settingsBtn) {
+            settingsPanel.classList.remove('open');
+        }
+    });
+
+    // Easter eggs
+    let logoClicks = 0;
+    document.getElementById('logo-brand').addEventListener('click', () => {
+        logoClicks++;
+        if (logoClicks === 5) { showToast('Секрет активирован', 'success'); logoClicks = 0; }
+    });
+    document.getElementById('hero-title').addEventListener('click', () => {
+        showToast('Привет, любопытный', 'info');
+        playClick();
+    });
+
+    // Konami
+    const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let konamiProgress = 0;
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        if (key === konamiCode[konamiProgress]) {
+            konamiProgress++;
+            if (konamiProgress === konamiCode.length) {
+                showToast('Konami code!', 'success');
+                konamiProgress = 0;
+            }
+        } else { konamiProgress = 0; }
+    });
+
+    // Global keys
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            if (e.key === 'Escape') e.target.blur();
+            return;
+        }
+        if (e.key === '/') {
+            e.preventDefault();
+            faqSearch.focus();
+            faqSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            playClick();
+        }
+        if (e.key === '?' || (e.shiftKey && e.key === '/')) { e.preventDefault(); openModal(); }
+        if (e.key === 'Escape') {
+            closeModal(); closeAuthModal(); closeProfileModal();
+            settingsPanel.classList.remove('open');
+            document.getElementById('mobile-menu').classList.remove('open');
+        }
+    });
+
+    // Scroll
+    const readingProgress = document.getElementById('reading-progress');
+    const mainNav = document.getElementById('main-nav');
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        readingProgress.style.width = progress + '%';
+        mainNav.classList.toggle('scrolled', scrollTop > 40);
+        backToTop.classList.toggle('visible', scrollTop > 400);
+    });
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        playClick();
+    });
+
+    // Scroll spy
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('#nav-links a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(s => {
+            if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+        });
+        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+    });
+
+    // Reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Stats
+    function animateCounters() {
+        document.querySelectorAll('.value[data-count]').forEach(el => {
+            const target = parseInt(el.dataset.count);
+            const suffix = el.dataset.suffix || '';
+            let cur = 0;
+            const step = Math.max(1, Math.floor(target / 30));
+            const timer = setInterval(() => {
+                cur += step;
+                if (cur >= target) { cur = target; clearInterval(timer); }
+                el.textContent = cur + suffix;
+            }, 40);
+        });
+    }
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { animateCounters(); statsObserver.disconnect(); } });
+    });
+    const statsEl = document.querySelector('.stats');
+    if (statsEl) statsObserver.observe(statsEl);
+
+    // Share
+    document.getElementById('share-btn').addEventListener('click', () => {
+        playClick();
+        if (navigator.share) {
+            navigator.share({ title: 'Ryzen Loader', text: 'Private Cheat Software', url: window.location.href }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(window.location.href).then(() => showToast('Ссылка скопирована', 'success')).catch(() => {});
+        }
+    });
+
+    // Cookie
+    const cookieBar = document.getElementById('cookie-bar');
+    if (!localStorage.getItem('ryzen_cookie_ok')) {
+        setTimeout(() => cookieBar.classList.add('visible'), 1500);
+    }
+    document.getElementById('cookie-accept').addEventListener('click', () => {
+        localStorage.setItem('ryzen_cookie_ok', '1');
+        cookieBar.classList.remove('visible');
+    });
+
+    // Clock
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock-time').textContent =
+            String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        const m = now.getMonth();
+        let s;
+        if (m === 11 || m === 0 || m === 1) s = 'Зима';
+        else if (m >= 2 && m <= 4) s = 'Весна';
+        else if (m >= 5 && m <= 7) s = 'Лето';
+        else s = 'Осень';
+        document.getElementById('clock-season').textContent = s;
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    // Promo timer
+    const promoEnd = Date.now() + 24 * 60 * 60 * 1000;
+    function updatePromoTimer() {
+        const diff = promoEnd - Date.now();
+        if (diff <= 0) return;
+        const pad = (n) => String(n).padStart(2, '0');
+        document.getElementById('t-days').textContent = pad(Math.floor(diff / 86400000));
+        document.getElementById('t-hours').textContent = pad(Math.floor((diff / 3600000) % 24));
+        document.getElementById('t-mins').textContent = pad(Math.floor((diff / 60000) % 60));
+        document.getElementById('t-secs').textContent = pad(Math.floor((diff / 1000) % 60));
+    }
+    updatePromoTimer();
+    setInterval(updatePromoTimer, 1000);
+
+    // Weather
+    const weatherCanvas = (() => {
+        const c = document.createElement('canvas');
+        c.id = 'weather-canvas';
+        c.style.cssText = 'position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity 0.4s;';
+        document.body.appendChild(c);
+        return c;
+    })();
+    let currentWeather = localStorage.getItem('ryzen_weather') || 'none';
+    let weatherAnimId = null;
+
+    function updateSettingsUI() {
+        document.querySelectorAll('.settings-option[data-weather]').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.weather === currentWeather);
+        });
+    }
+    function stopWeather() {
+        if (weatherAnimId) { cancelAnimationFrame(weatherAnimId); weatherAnimId = null; }
+        weatherCanvas.getContext('2d').clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+    }
+    function setWeather(mode) {
+        stopWeather();
+        currentWeather = mode;
+        localStorage.setItem('ryzen_weather', mode);
+        updateSettingsUI();
+        if (mode === 'none') { weatherCanvas.style.opacity = 0; return; }
+        weatherCanvas.style.opacity = 0.6;
+        weatherCanvas.width = window.innerWidth;
+        weatherCanvas.height = window.innerHeight;
+        if (mode === 'snow') startSnow();
+        else if (mode === 'rain') startRain();
+        else if (mode === 'storm') startStorm();
+        else if (mode === 'stars') startStars();
+    }
+    function startSnow() {
+        const ctx = weatherCanvas.getContext('2d');
+        const flakes = [];
+        for (let i = 0; i < 120; i++) flakes.push({
+            x: Math.random() * weatherCanvas.width, y: Math.random() * weatherCanvas.height,
+            r: Math.random() * 1.6 + 0.8, speed: Math.random() * 0.8 + 0.4, drift: Math.random() * 0.4 - 0.2
+        });
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            flakes.forEach(f => {
+                ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fill();
+                f.y += f.speed; f.x += f.drift;
+                if (f.y > weatherCanvas.height) { f.y = -5; f.x = Math.random() * weatherCanvas.width; }
+                if (f.x < 0) f.x = weatherCanvas.width;
+                if (f.x > weatherCanvas.width) f.x = 0;
+            });
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    function startRain() {
+        const ctx = weatherCanvas.getContext('2d');
+        const drops = [];
+        for (let i = 0; i < 160; i++) drops.push({
+            x: Math.random() * weatherCanvas.width, y: Math.random() * weatherCanvas.height,
+            len: Math.random() * 12 + 6, speed: Math.random() * 5 + 4
+        });
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            ctx.strokeStyle = 'rgba(180,200,255,0.3)';
+            ctx.lineWidth = 1;
+            drops.forEach(d => {
+                ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 1, d.y + d.len); ctx.stroke();
+                d.y += d.speed; d.x -= 0.5;
+                if (d.y > weatherCanvas.height) { d.y = -20; d.x = Math.random() * weatherCanvas.width; }
+                if (d.x < 0) d.x = weatherCanvas.width;
+            });
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    function startStorm() {
+        startRain();
+        const flash = document.createElement('div');
+        flash.style.cssText = 'position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:2;transition:opacity 0.1s;';
+        document.body.appendChild(flash);
+        (function schedule() {
+            setTimeout(() => {
+                flash.style.opacity = '0.2';
+                setTimeout(() => flash.style.opacity = '0', 90);
+                if (currentWeather === 'storm') schedule();
+            }, Math.random() * 5000 + 3000);
+        })();
+    }
+    function startStars() {
+        const ctx = weatherCanvas.getContext('2d');
+        const stars = [];
+        for (let i = 0; i < 150; i++) stars.push({
+            x: Math.random() * weatherCanvas.width, y: Math.random() * weatherCanvas.height,
+            r: Math.random() * 1.2 + 0.3, phase: Math.random() * Math.PI * 2, speed: Math.random() * 0.015 + 0.005
+        });
+        function draw() {
+            ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+            stars.forEach(s => {
+                s.phase += s.speed;
+                const a = 0.3 + Math.abs(Math.sin(s.phase)) * 0.6;
+                ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,' + a + ')';
+                ctx.fill();
+            });
+            weatherAnimId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    document.querySelectorAll('.settings-option[data-weather]').forEach(opt => {
+        opt.addEventListener('click', () => {
+            setWeather(opt.dataset.weather);
+            settingsPanel.classList.remove('open');
+            playClick();
+        });
+    });
+    updateSettingsUI();
+    if (currentWeather !== 'none') setWeather(currentWeather);
+    window.addEventListener('resize', () => {
+        if (weatherCanvas.style.opacity !== '0') {
+            weatherCanvas.width = window.innerWidth;
+            weatherCanvas.height = window.innerHeight;
+        }
+    });
+
+    /* =========================================================
+       OVERLOAD SCREEN — авто-включение при перегрузке
+       ========================================================= */
+    const OVERLOAD = {
+        threshold: 6000,          // порог онлайна
+        cooldown: 45000,          // пауза после закрытия (мс)
+        active: false,
+        lastDismissed: 0,
+        hideTimer: null,
+        checkTimer: null,
+        countdownTimer: null,
+        retryCount: 0
+    };
+
+    function overloadGetOnline() {
+        try {
+            return (typeof OnlineSim !== 'undefined' && typeof OnlineSim.getCurrent === 'function')
+                ? OnlineSim.getCurrent() : 0;
+        } catch (e) { return 0; }
+    }
+
+    function overloadUpdateStats() {
+        const el = document.getElementById('overload-online');
+        if (el) el.textContent = formatNumber(overloadGetOnline()) + ' / 6 000';
+    }
+
+    function overloadStartCountdown(seconds) {
+        const note = document.getElementById('overload-note');
+        if (!note) return;
+        let remaining = seconds;
+        clearInterval(OVERLOAD.countdownTimer);
+        const tick = () => {
+            if (!OVERLOAD.active) { clearInterval(OVERLOAD.countdownTimer); return; }
+            if (remaining <= 0) {
+                note.textContent = 'Автоматическое закрытие через 0 с';
+                clearInterval(OVERLOAD.countdownTimer);
+                return;
+            }
+            note.textContent = 'Автоматическое закрытие через ' + remaining + ' с';
+            remaining--;
+        };
+        tick();
+        OVERLOAD.countdownTimer = setInterval(tick, 1000);
+    }
+
+    function overloadShow() {
+        if (OVERLOAD.active) return;
+        OVERLOAD.active = true;
+        OVERLOAD.retryCount = 0;
+
+        const screen = document.getElementById('overload-screen');
+        if (!screen) return;
+
+        overloadUpdateStats();
+        screen.classList.add('active');
+
+        const duration = 20 + Math.floor(Math.random() * 20); // 20–40 сек
+        overloadStartCountdown(duration);
+
+        clearTimeout(OVERLOAD.hideTimer);
+        OVERLOAD.hideTimer = setTimeout(() => overloadHide(true), duration * 1000);
+
+        clearInterval(OVERLOAD.checkTimer);
+        OVERLOAD.checkTimer = setInterval(overloadUpdateStats, 2000);
+    }
+
+    function overloadHide(auto = false) {
+        if (!OVERLOAD.active) return;
+        OVERLOAD.active = false;
+
+        const screen = document.getElementById('overload-screen');
+        if (screen) screen.classList.remove('active');
+
+        clearTimeout(OVERLOAD.hideTimer);
+        clearInterval(OVERLOAD.checkTimer);
+        clearInterval(OVERLOAD.countdownTimer);
+
+        if (!auto) OVERLOAD.lastDismissed = Date.now();
+    }
+
+    function overloadCheck() {
+        if (OVERLOAD.active) return;
+        if (Date.now() - OVERLOAD.lastDismissed < OVERLOAD.cooldown) return;
+
+        const online = overloadGetOnline();
+        let chance = 0;
+
+        if (online > OVERLOAD.threshold) {
+            chance = 0.55;                     // > 6000 — часто
+        } else if (online > OVERLOAD.threshold * 0.9) {
+            chance = 0.12;                     // 5400–6000 — иногда
+        } else if (online > OVERLOAD.threshold * 0.75) {
+            chance = 0.03;                     // 4500–5400 — редко
+        } else {
+            chance = 0.005;                    // ниже — совсем редко
+        }
+
+        if (Math.random() < chance) overloadShow();
+    }
+
+    function overloadRetry() {
+        const btn = document.getElementById('overload-retry');
+        const note = document.getElementById('overload-note');
+        if (!btn || btn.disabled) return;
+
+        const original = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Проверка...';
+        clearInterval(OVERLOAD.countdownTimer);
+        if (note) note.textContent = 'Проверяем соединение...';
+
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = original;
+
+            const online = overloadGetOnline();
+            if (online > OVERLOAD.threshold * 0.95) {
+                OVERLOAD.retryCount++;
+                overloadUpdateStats();
+                if (note) note.textContent = 'Всё ещё перегружено (' + formatNumber(online) + ' online) · попытка ' + OVERLOAD.retryCount;
+                const content = document.querySelector('.overload-content');
+                if (content) content.animate(
+                    [{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' },
+                     { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }],
+                    { duration: 260, easing: 'ease-in-out' }
+                );
+            } else {
+                overloadHide(false);
+                if (typeof showToast === 'function') showToast('Соединение восстановлено', 'success');
+            }
+        }, 1400);
+    }
+
+    function overloadSkip() {
+        overloadHide(false);
+        OVERLOAD.lastDismissed = Date.now();
+        if (typeof showToast === 'function') showToast('Продолжаете на свой риск', 'info');
+    }
+
+    // Bind events
+    const _ovRetry = document.getElementById('overload-retry');
+    if (_ovRetry) _ovRetry.addEventListener('click', overloadRetry);
+    const _ovSkip = document.getElementById('overload-skip');
+    if (_ovSkip) _ovSkip.addEventListener('click', overloadSkip);
+
+    // Первый чек — через 25–45 сек после загрузки (чтобы сайт успел показаться)
+    setTimeout(() => {
+        overloadCheck();
+        const iv = 20000 + Math.floor(Math.random() * 15000); // 20–35 сек
+        setInterval(overloadCheck, iv);
+    }, 25000 + Math.floor(Math.random() * 20000));
+
+    console.log('%c Ryzen Loader', 'color:#fafafa;font-weight:800;font-size:14px;');
+    console.log('%c Press ? for hotkeys', 'color:#707070;');
 });
-*/
 </script>
 
 </body>
