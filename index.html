@@ -1588,12 +1588,12 @@
                         <span class="status status-green">Undetected</span>
                     </div>
                     <div class="game-tags">
-                        <span class="game-tag">Silent Aimbot</span>
+                        <span class="game-tag">Aimbot</span>
                         <span class="game-tag">ESP</span>
                         <span class="game-tag">Fly</span>
                         <span class="game-tag">Speed</span>
                         <span class="game-tag">Teleport</span>
-                        <span class="game-tag">Anti</span>
+                        <span class="game-tag">Auto-Farm</span>
                     </div>
                 </div>
             </div>
@@ -1948,7 +1948,7 @@ const FAQ_DATA = [
     { q: 'Возврат средств возможен?', a: '<strong>Нет.</strong> После активации ключа возврат не делается. Если ключ не активирован — можно попросить замену. Пожалуйста, будь уверен в покупке перед оплатой.' }
 ];
 
-/* Специальные seed-пользователи (закреплённые в топе) */
+/* Специальные seed-пользователи */
 const SEED_SPECIAL = [
     { username: 'darkvoid', role: 'admin', bio: 'Root access. Не пишите в личку по мелочам.', reputation: 6234, messages: 1847, purchases: 12, sub: 'lifetime' },
     { username: 'xq1z', role: 'vip', bio: 'Rage only, no legit.', reputation: 2187, messages: 486, purchases: 4, sub: 'lifetime' },
@@ -1960,7 +1960,6 @@ const SEED_SPECIAL = [
     { username: 'nexus_', role: 'vip', bio: '', reputation: 891, messages: 245, purchases: 2, sub: 'active' }
 ];
 
-/* Список частей ников для генерации */
 const NICK_PREFIXES = ['dark','silent','void','phantom','night','ghost','cold','toxic','neon','cyber','pixel','neo','mad','evil','fast','hyper','acid','crypt','dawn','dusk','ember','falcon','flux','frost','glitch','grim','hex','hollow','iron','lucid','lunar','moon','myst','nitro','nova','null','onyx','orbit','ozone','prime','pulse','quantum','raven','rune','sigma','silver','skull','smoke','solar','sonic','soul','speed','spike','star','steel','storm','synth','titan','venom','viper','volt','warp','wired','wraith','zenith','zodiac','ashen','blaze','brave','breeze','chrome','cobalt','comet','copper','cosmic','crimson','crypto','dagger','demon','dream','drift','eagle','eclipse','edge','fable','fable','feather','flame','flare','flint','forged','frost','gale','glide','gold','granite','gravity','halo','hammer','hazel','helm','horizon','hydra','impulse','inferno','infinite','jade','jester','jolt','jupiter','karma','kelp','krypt','laser','leaf','legend','light','lith','lore','lynx','magma','mana','maple','mars','mask','maze','mercury','mind','mirror','mist','monsoon','mystic','needle','neon','night','noble','north','oath','ocean','olive','omega','onyx','opal','oracle','orbit','origin','otter','outlaw','panda','paradox','patriot','peak','pearl','phoenix','pilot','pine','pixel','plasma','pluto','poison','polar','portal','prism','primal','prodigy','protect','pulsar','pyre','pyro','quartz','quest','quick','quill','quote','radar','radiant','rage','rain','rapid','raven','ray','razor','rebel','red','reign','rider','rift','rigid','riot','ritual','rival','river','roam','rocket','rogue','root','royal','ruby','ruin','runic','rust','saber','sage','saint','sapphire','scar','scarlet','scope','seal','seer','serpent','shadow','shard','sharp','shield','shock','shooter','shot','sidhe','sigma','signal','silk','silver','skull','sky','slate','slick','slip','smoke','snake','sniper','solar','solid','sonar','sonic','soul','spark','spear','specter','spell','spike','spirit','spite','sprint','spy','star','static','stealth','steam','steel','stellar','stone','storm','strife','strong','stud','stun','surge','swift','sword','syndicate','synth','talon','tank','tarot','tech','tempo','tense','tesla','thane','thorn','tide','tiger','titan','toast','tomb','torch','total','toxic','tracer','trade','tribe','trick','troll','trophy','tru','trunk','tundra','turbo','tusk','twist','ultra','umber','unbound','unity','untamed','urban','valor','vandal','vanguard','vapor','vault','vector','veil','venom','vent','venus','vertex','vessel','veteran','vibe','vice','vigor','viking','vile','vintage','viol','viper','viral','vision','vivid','void','volt','vortex','voyage','vulcan','waifu','wake','wander','war','warden','warp','warrior','watch','water','wave','weapon','weaver','wedge','west','whale','whirl','white','wicked','wild','willow','wind','winter','wire','wisdom','wolf','wonder','wood','wraith','wraith','wrath','xeno','xerox','yield','yonder','young','youth','zeal','zen','zenith','zero','zephyr','zeus','zigzag','zing','zion','zodiac','zone','zoom','zorro'];
 
 /* =========================================================
@@ -1991,7 +1990,6 @@ const playClick = () => playSound(900, 0.03, 'sine', 0.012);
 const playSuccess = () => playSound(1200, 0.09, 'sine', 0.018);
 const playError = () => playSound(300, 0.09, 'sawtooth', 0.018);
 
-// Глобальный доступ для onclick
 window.showToast = function(message, type = 'info') {
     const toast = document.getElementById('toast');
     if (!toast) return;
@@ -2040,112 +2038,106 @@ function shuffle(arr) {
 }
 
 /* =========================================================
-   ONLINE SIMULATION
+   ONLINE SIMULATION — ПОЛНЫЙ РАНДОМ
    ========================================================= */
 const OnlineSim = (() => {
-    const PEAK = 5800;
-    const MIN = 120;
-
-    const BASE_CURVE = [
-        0.30, 0.18, 0.10, 0.06, 0.04, 0.05,
-        0.08, 0.14, 0.22, 0.32, 0.42, 0.50,
-        0.56, 0.60, 0.64, 0.70, 0.78, 0.86,
-        0.93, 1.00, 0.97, 0.88, 0.72, 0.50
-    ];
-    const DAY_MULT = [1.10, 0.88, 0.92, 0.94, 0.98, 1.04, 1.12];
-
-    function noise(seed) {
-        const x = Math.sin(seed) * 43758.5453;
-        return x - Math.floor(x);
-    }
-    function seasonMult(month) {
-        if (month === 11 || month === 0 || month === 1) return 1.04;
-        if (month >= 2 && month <= 4) return 0.96;
-        if (month >= 5 && month <= 7) return 1.06;
-        return 1.00;
-    }
-    function dayActivity(dayOfYear) {
-        return 0.85 + noise(dayOfYear * 12.34 + 7) * 0.30;
-    }
-
-    function targetAt(date) {
-        const h = date.getUTCHours();
-        const m = date.getUTCMinutes();
-        const d = date.getUTCDay();
-        const month = date.getUTCMonth();
-        const doy = Math.floor((date - new Date(date.getUTCFullYear(), 0, 0)) / 86400000);
-
-        const h0 = BASE_CURVE[h];
-        const h1 = BASE_CURVE[(h + 1) % 24];
-        const frac = m / 60;
-        const curve = h0 + (h1 - h0) * frac;
-
-        let v = MIN + (PEAK - MIN) * curve;
-        v *= DAY_MULT[d];
-        v *= seasonMult(month);
-        v *= dayActivity(doy);
-
-        const seed = Math.floor(date.getTime() / 60000);
-        const n1 = (noise(seed * 1.7) - 0.5) * 0.05;
-        const n2 = (noise(seed * 3.1 + 11) - 0.5) * 0.03;
-        v *= (1 + n1 + n2);
-
-        return Math.max(MIN, Math.min(PEAK, v));
-    }
-
+    // Нет потолка. База меняется каждый день.
+    // В зависимости от сезона и дня недели.
+    
     let current = null;
-    let target = null;
     let history = [];
     let timer = null;
+    let lastDate = new Date().toDateString();
+
+    // Функция для генерации "базового" онлайна на сегодня.
+    // Использует дату как seed, чтобы в течение дня цифра была стабильной.
+    function getDailyBase(date) {
+        const d = new Date(date);
+        const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+        
+        // Симуляция шума
+        const noise1 = Math.sin(seed) * 43758.5453;
+        const rand1 = noise1 - Math.floor(noise1);
+
+        // Сезонный множитель
+        const month = d.getMonth(); // 0-11
+        let seasonMult = 1;
+        if (month === 11 || month === 0 || month === 1) seasonMult = 1.4; // Зима (каникулы)
+        else if (month >= 2 && month <= 4) seasonMult = 0.8; // Весна (сессия/школа)
+        else if (month >= 5 && month <= 7) seasonMult = 1.5; // Лето (каникулы)
+        else seasonMult = 1.0; // Осень
+
+        // День недели (выходные выше)
+        const day = d.getDay(); // 0 = Sunday
+        const weekendMult = (day === 0 || day === 6) ? 1.3 : 0.9;
+
+        // База от 600 до 9000
+        const base = 600 + rand1 * 8400;
+
+        // Итог
+        return Math.floor(base * seasonMult * weekendMult);
+    }
 
     function init() {
         const now = new Date();
-        target = targetAt(now);
-        current = target;
+        current = getDailyBase(now);
         const nowMs = now.getTime();
+        
+        // Заполняем историю за 24 часа (чтобы график был красивый)
         for (let i = 288; i >= 0; i--) {
-            const d = new Date(nowMs - i * 5 * 60 * 1000);
-            history.push({ ts: d.getTime(), value: targetAt(d) });
+            const pastDate = new Date(nowMs - i * 5 * 60 * 1000);
+            const baseVal = getDailyBase(pastDate);
+            
+            // Небольшой шум, чтобы не было ровной линии
+            const noise = (Math.random() - 0.5) * (baseVal * 0.2);
+            history.push({ ts: pastDate.getTime(), value: Math.max(100, baseVal + noise) });
         }
     }
 
     function tick() {
         const now = new Date();
-        target = targetAt(now);
-        const diff = target - current;
-        const ease = 0.12 + Math.random() * 0.08;
-        current += diff * ease;
-        current += (Math.random() - 0.5) * current * 0.006;
-        if (Math.random() < 0.015) {
-            current = Math.min(PEAK, current + current * (0.02 + Math.random() * 0.04));
+        
+        // Каждый день генерируем новую базу
+        if (now.toDateString() !== lastDate) {
+            lastDate = now.toDateString();
+            current = getDailyBase(now);
         }
-        current = Math.max(MIN, Math.min(PEAK, current));
+
+        // В течение дня сильно хаотичное поведение
+        const base = getDailyBase(now);
+        
+        // Хаотичное блуждание
+        const change = (Math.random() - 0.5) * (base * 0.15);
+        current += change;
+
+        // Иногда резкий скачок
+        if (Math.random() < 0.05) {
+            current += (Math.random() - 0.5) * (base * 0.4);
+        }
+
+        // Ограничиваем только нижней планкой (100 человек), верхней нет
+        current = Math.max(100, current);
+
         history.push({ ts: now.getTime(), value: current });
         if (history.length > 400) history.shift();
+        
         updateDisplay();
     }
 
     function schedule() {
-        const interval = 8000 + Math.random() * 8000;
+        const interval = 5000 + Math.random() * 7000; // 5–12 секунд
         timer = setTimeout(() => { tick(); schedule(); }, interval);
     }
 
-    function valueAgo(ms) {
-        const ref = Date.now() - ms;
-        let best = history[0];
-        let bestDiff = Infinity;
-        for (const h of history) {
-            const d = Math.abs(h.ts - ref);
-            if (d < bestDiff) { bestDiff = d; best = h; }
-        }
-        return best ? best.value : current;
-    }
-
     function getTrend() {
-        const ref = valueAgo(60000);
-        if (!ref) return { dir: 'flat', pct: 0 };
-        const pct = ((current - ref) / ref) * 100;
-        if (Math.abs(pct) < 0.3) return { dir: 'flat', pct: 0 };
+        if (history.length < 2) return { dir: 'flat', pct: 0 };
+        const last = history[history.length - 1].value;
+        const prev = history[Math.max(0, history.length - 10)].value;
+        
+        if (prev === 0) return { dir: 'flat', pct: 0 };
+        const pct = ((last - prev) / prev) * 100;
+        
+        if (Math.abs(pct) < 0.5) return { dir: 'flat', pct: 0 };
         return { dir: pct > 0 ? 'up' : 'down', pct };
     }
 
@@ -2199,7 +2191,7 @@ const OnlineSim = (() => {
         updateDisplay();
         renderChart();
         schedule();
-        setInterval(renderChart, 3 * 60 * 1000);
+        setInterval(renderChart, 2 * 60 * 1000);
     }
 
     return { start, getCurrent: () => Math.round(current) };
@@ -2306,13 +2298,12 @@ function makeSub() {
 }
 
 function ensureCommunitySeeded() {
-    if (localStorage.getItem('ryzen_community_seeded_v5')) return;
+    if (localStorage.getItem('ryzen_community_seeded_v6')) return;
 
     const users = getUsers();
     const usedNames = new Set(users.map(u => u.username.toLowerCase()));
     const now = Date.now();
 
-    // 1. Special seeded
     SEED_SPECIAL.forEach(s => {
         const email = s.username + '@community.ryzen';
         if (users.find(u => u.email === email)) return;
@@ -2343,7 +2334,6 @@ function ensureCommunitySeeded() {
         });
     });
 
-    // 2. Сгенерированные
     for (let i = 0; i < 50; i++) {
         const nick = generateNickname(usedNames);
         const email = nick + '@community.ryzen';
@@ -2378,13 +2368,13 @@ function ensureCommunitySeeded() {
     }
 
     saveUsers(users);
-    localStorage.setItem('ryzen_community_seeded_v5', '1');
+    localStorage.setItem('ryzen_community_seeded_v6', '1');
 }
 
 /* =========================================================
-   ONLINE STATE (какие ники сейчас видны)
+   ONLINE STATE
    ========================================================= */
-const ONLINE_STATE_KEY = 'ryzen_online_state_v5';
+const ONLINE_STATE_KEY = 'ryzen_online_state_v6';
 
 function getOnlineState() {
     try {
@@ -2403,10 +2393,8 @@ function initOnlineState() {
     const allNicks = allUsers.map(u => u.username);
 
     let state = getOnlineState();
-    // фильтруем тех, кого уже нет (на случай удаления)
     state = state.filter(n => allNicks.includes(n));
 
-    // добрать если меньше
     if (state.length < ONLINE_LIST_SIZE) {
         const available = allNicks.filter(n => !state.includes(n));
         const needed = ONLINE_LIST_SIZE - state.length;
@@ -3338,8 +3326,12 @@ document.addEventListener('DOMContentLoaded', () => {
     /* =========================================================
        OVERLOAD SCREEN — авто-включение при перегрузке
        ========================================================= */
+    // Так как потолок убран, этот экран теперь появляется чисто случайно,
+    // чтобы показать, что сервис перегружен (шанс 1 к 1000 при проверке).
+    // При этом порог 6000 оставлен только как "декорация" для текста.
+    
     const OVERLOAD = {
-        threshold: 6000,
+        threshold: 6000, // Отображается в тексте, но больше не блокирует логику
         cooldown: 45000,
         active: false,
         lastDismissed: 0,
@@ -3419,20 +3411,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (OVERLOAD.active) return;
         if (Date.now() - OVERLOAD.lastDismissed < OVERLOAD.cooldown) return;
 
-        const online = overloadGetOnline();
-        let chance = 0;
-
-        if (online > OVERLOAD.threshold) {
-            chance = 0.55;
-        } else if (online > OVERLOAD.threshold * 0.9) {
-            chance = 0.12;
-        } else if (online > OVERLOAD.threshold * 0.75) {
-            chance = 0.03;
-        } else {
-            chance = 0.005;
+        // Абсолютно случайный шанс, не зависящий от онлайна
+        // 1 к 1000 каждые 20-35 секунд (примерно раз в 6-10 часов)
+        if (Math.random() < 0.001) {
+            overloadShow();
         }
-
-        if (Math.random() < chance) overloadShow();
     }
 
     function overloadRetry() {
@@ -3450,21 +3433,9 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = false;
             btn.textContent = original;
 
-            const online = overloadGetOnline();
-            if (online > OVERLOAD.threshold * 0.95) {
-                OVERLOAD.retryCount++;
-                overloadUpdateStats();
-                if (note) note.textContent = 'Всё ещё перегружено (' + formatNumber(online) + ' online) · попытка ' + OVERLOAD.retryCount;
-                const content = document.querySelector('.overload-content');
-                if (content) content.animate(
-                    [{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' },
-                     { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }],
-                    { duration: 260, easing: 'ease-in-out' }
-                );
-            } else {
-                overloadHide(false);
-                showToast('Соединение восстановлено', 'success');
-            }
+            // Просто закрываем, так как реального ограничения нет
+            overloadHide(false);
+            showToast('Соединение восстановлено', 'success');
         }, 1400);
     }
 
