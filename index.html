@@ -1900,13 +1900,18 @@
 const ONLINE_LIST_SIZE = 12;
 
 const PRICING_DATA = {
-    7: { name: '7 дней', price: 250, note: 'Пробный период', features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Обновления'] },
-    30: { name: '30 дней', price: 800, note: 'Оптимальный выбор', featured: true, features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка'] },
-    lifetime: { name: 'Lifetime', price: 3990, note: 'Навсегда', features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Все будущие обновления', 'Личная поддержка'] }
+    7: { name: '7 дней', price: 350, note: 'Пробный период', features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Обновления', 'Release Version'] },
+    30: { name: '30 дней', price: 1000, note: 'Оптимальный выбор', featured: true, features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка', 'Release Version'] },
+    lifetime: { name: 'Lifetime', price: 5999, note: 'Навсегда', features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Все будущие обновления', 'Личная поддержка', 'Alpha Version'] }
 };
 
 const CHANGELOG_DATA = [
-    { tag: 'Beta v2', latest: true, date: '21 сентября 2026', title: 'Крупное обновление — переход на Roblox', items: [
+    { tag: 'Beta v2.1', latest: true, date: '18 октября 2026', title: 'Обновление системы распределения нагрузки', items: [
+        { text: 'Полностью переработана серверная инфраструктура — улучшена стабильность при пиковых нагрузках', type: 'improve' },
+        { text: 'Экран перегрузки (ERR 503) теперь корректно реагирует на реальное количество активных сессий', type: 'new' },
+        { text: 'Исправлен баг, при котором экран перегрузки мог появиться при низкой нагрузке', type: 'fix' }
+    ]},
+    { tag: 'Beta v2', date: '21 сентября 2026', title: 'Крупное обновление — переход на Roblox', items: [
         { text: 'Полностью переписан движок лоадера под Roblox', type: 'improve' },
         { text: 'Удалена поддержка CS2 и Garry\'s Mod', type: 'remove' },
         { text: 'Добавлен новый эксплойт для инжекта в Roblox', type: 'new' },
