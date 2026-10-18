@@ -1345,25 +1345,6 @@
         font-family: var(--font-mono);
     }
 
-    .overload-skip {
-        display: block;
-        width: 100%;
-        margin-top: 14px;
-        background: none;
-        border: none;
-        color: var(--text-4);
-        font-family: var(--font-mono);
-        font-size: 10px;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        text-decoration: underline;
-        text-decoration-style: dotted;
-        text-underline-offset: 3px;
-        padding: 4px;
-        transition: color 0.15s;
-    }
-    .overload-skip:hover { color: var(--text-2); }
-
     @media (max-width: 480px) {
         .overload-content { padding: 24px 20px; }
         .overload-title { font-size: 22px; }
@@ -1788,7 +1769,6 @@
             <button class="overload-btn" onclick="showToast('Discord временно недоступен', 'info')">Discord</button>
         </div>
         <div class="overload-note" id="overload-note">Автоматическое закрытие через — с</div>
-        <button class="overload-skip" id="overload-skip">Продолжить на свой риск →</button>
     </div>
 </div>
 
@@ -1900,15 +1880,16 @@
 const ONLINE_LIST_SIZE = 12;
 
 const PRICING_DATA = {
-    7: { name: '7 дней', price: 350, note: 'Пробный период', features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Обновления', 'Release Version'] },
-    30: { name: '30 дней', price: 1000, note: 'Оптимальный выбор', featured: true, features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка', 'Release Version'] },
-    lifetime: { name: 'Lifetime', price: 5999, note: 'Навсегда', features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Все будущие обновления', 'Личная поддержка', 'Alpha Version'] }
+    7: { name: '7 дней', price: 250, note: 'Пробный период', features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Обновления'] },
+    30: { name: '30 дней', price: 800, note: 'Оптимальный выбор', featured: true, features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Обновления', 'Приоритетная поддержка'] },
+    lifetime: { name: 'Lifetime', price: 3990, note: 'Навсегда', features: ['Ryzen Private для Roblox', 'Привязка по HWID', 'Все будущие обновления', 'Личная поддержка'] }
 };
 
 const CHANGELOG_DATA = [
     { tag: 'Beta v2.1', latest: true, date: '18 октября 2026', title: 'Обновление системы распределения нагрузки', items: [
         { text: 'Полностью переработана серверная инфраструктура — улучшена стабильность при пиковых нагрузках', type: 'improve' },
         { text: 'Экран перегрузки (ERR 503) теперь корректно реагирует на реальное количество активных сессий', type: 'new' },
+        { text: 'Внедрена сезонная и дневная корректировка лимитов подключений (учёт праздников и выходных)', type: 'improve' },
         { text: 'Исправлен баг, при котором экран перегрузки мог появиться при низкой нагрузке', type: 'fix' }
     ]},
     { tag: 'Beta v2', date: '21 сентября 2026', title: 'Крупное обновление — переход на Roblox', items: [
@@ -1953,7 +1934,6 @@ const FAQ_DATA = [
     { q: 'Возврат средств возможен?', a: '<strong>Нет.</strong> После активации ключа возврат не делается. Если ключ не активирован — можно попросить замену. Пожалуйста, будь уверен в покупке перед оплатой.' }
 ];
 
-/* Специальные seed-пользователи */
 const SEED_SPECIAL = [
     { username: 'darkvoid', role: 'admin', bio: 'Root access. Не пишите в личку по мелочам.', reputation: 6234, messages: 1847, purchases: 12, sub: 'lifetime' },
     { username: 'xq1z', role: 'vip', bio: 'Rage only, no legit.', reputation: 2187, messages: 486, purchases: 4, sub: 'lifetime' },
@@ -3388,26 +3368,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function overloadCheck() {
         if (OVERLOAD.active) return;
-        if (Date.now() - OVERLOAD.lastDismissed < 45000) return; // кулдаун
+        if (Date.now() - OVERLOAD.lastDismissed < 45000) return;
 
         const online = overloadGetOnline();
         let chance = 0;
 
-        // Если онлайн меньше 5500 — всё окей, не выскакивает
         if (online < 5500) {
             chance = 0;
         } 
-        // 5500 - 8000: сервер начинает забиваться
         else if (online < 8000) {
-            chance = 0.12; // 12% шанс
+            chance = 0.12; 
         } 
-        // 8000 - 10000: сильная перегрузка
         else if (online < 10000) {
-            chance = 0.50; // 50% шанс
+            chance = 0.50; 
         } 
-        // 10000+: критические значения
         else {
-            chance = 0.85; // 85% шанс
+            chance = 0.85; 
         }
 
         if (Math.random() < chance) {
@@ -3431,7 +3407,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.textContent = original;
 
             const online = overloadGetOnline();
-            // Если всё ещё выше 6000, не пускаем
             if (online > 6000) {
                 OVERLOAD.retryCount++;
                 overloadUpdateStats();
@@ -3449,21 +3424,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1400);
     }
 
-    function overloadSkip() {
-        overloadHide(false);
-        OVERLOAD.lastDismissed = Date.now();
-        showToast('Продолжаете на свой риск', 'info');
-    }
-
     const _ovRetry = document.getElementById('overload-retry');
     if (_ovRetry) _ovRetry.addEventListener('click', overloadRetry);
-    const _ovSkip = document.getElementById('overload-skip');
-    if (_ovSkip) _ovSkip.addEventListener('click', overloadSkip);
 
-    // Первая проверка через 10 секунд после загрузки
     setTimeout(() => {
         overloadCheck();
-        // Проверяем каждые 15-25 секунд
         const iv = 15000 + Math.floor(Math.random() * 10000);
         setInterval(overloadCheck, iv);
     }, 10000);
