@@ -193,15 +193,8 @@
         line-height: 1.5;
     }
 
-    .note b {
-        color: var(--text-1);
-        font-weight: 600;
-    }
-
-    .note .warn {
-        color: var(--amber);
-        font-weight: 600;
-    }
+    .note b { color: var(--text-1); font-weight: 600; }
+    .note .warn { color: var(--amber); font-weight: 600; }
 
     .btn {
         width: 100%;
@@ -219,12 +212,6 @@
     }
 
     .btn:hover { background: #d4d4d4; }
-    .btn:disabled {
-        background: var(--bg-2);
-        color: var(--text-4);
-        border: 1px solid var(--border);
-        cursor: not-allowed;
-    }
 
     .footer {
         display: flex;
@@ -241,7 +228,7 @@
     .overload {
         position: fixed;
         inset: 0;
-        background: #050505;
+        background: rgba(5, 5, 5, 0.92);
         z-index: 100;
         display: flex;
         align-items: center;
@@ -389,15 +376,15 @@
             <div class="bar" id="online-bar"></div>
         </div>
         <div class="capacity">
-            <span>capacity: <b id="capacity">150</b></span>
+            <span>capacity: <b id="capacity">500</b></span>
             <span id="load-pct">0%</span>
         </div>
     </div>
 
     <div class="note">
-        <b>Внимание:</b> сайт работает на дешёвом хостинге с лимитом <b>150 онлайн</b>.
-        Если лимит превышен — сайт <span class="warn">автоматически отключается</span>
-        до снижения нагрузки.
+        <b>Внимание:</b> сайт работает на дешёвом хостинге с лимитом <b>500 онлайн</b>.
+        Если лимит превышен — сайт <span class="warn">временно перегружается</span>.
+        Зайти всё равно можно — просто будет медленно.
     </div>
 
     <button class="btn" id="enter-btn">Войти на сайт</button>
@@ -412,10 +399,10 @@
 <div class="overload" id="overload">
     <div class="overload-box">
         <div class="ov-code">ERR 503 · OVERLOADED</div>
-        <div class="ov-title">Сайт выключен</div>
+        <div class="ov-title">Хостинг перегружен</div>
         <div class="ov-desc">
-            Превышен лимит дешёвого хостинга (150 онлайн). Сайт автоматически
-            отключён до снижения нагрузки. Подождите — и попробуйте снова.
+            Превышен лимит дешёвого хостинга (500 онлайн). Сайт работает медленно,
+            но зайти можно. Подождите немного — нагрузка спадёт сама.
         </div>
         <div class="ov-stats">
             <div class="ov-row">
@@ -424,16 +411,16 @@
             </div>
             <div class="ov-row">
                 <span class="k">Capacity</span>
-                <span class="v">150</span>
+                <span class="v">500</span>
             </div>
             <div class="ov-row">
                 <span class="k">Status</span>
-                <span class="v danger">OFFLINE</span>
+                <span class="v danger">OVERLOADED</span>
             </div>
         </div>
         <div class="ov-actions">
             <button class="ov-btn primary" id="ov-retry">Переподключиться</button>
-            <button class="ov-btn" id="ov-close">Закрыть</button>
+            <button class="ov-btn" id="ov-close">Всё равно зайти</button>
         </div>
         <div class="ov-note" id="ov-note">Автозакрытие через — с</div>
     </div>
@@ -442,15 +429,15 @@
 <script>
 /* =========================================================
    CHEAP HOSTING SIMULATION
-   — лимит 150 онлайн
-   — при превышении сайт отключается
-   — при снижении — снова доступен
+   — лимит 500 онлайн
+   — при превышении показывается оверлей, но зайти можно
+   — при снижении — оверлей уходит сам
    ========================================================= */
-const CAPACITY = 150;
-const STORAGE_KEY = 'ryzen_cheap_online_v1';
+const CAPACITY = 500;
+const STORAGE_KEY = 'ryzen_cheap_online_v2';
 
-// Текущий онлайн (сохраняется в localStorage)
 let online = loadOnline();
+let overloadShownOnce = false;
 
 function loadOnline() {
     try {
@@ -460,7 +447,6 @@ function loadOnline() {
             if (!isNaN(v) && v > 0) return v;
         }
     } catch (e) {}
-    // стартовое значение — 40% от лимита
     return Math.floor(CAPACITY * (0.35 + Math.random() * 0.15));
 }
 
@@ -468,18 +454,15 @@ function saveOnline() {
     try { localStorage.setItem(STORAGE_KEY, String(Math.round(online))); } catch (e) {}
 }
 
-// Плавное изменение онлайна
 function tick() {
-    // базовый дрейф к 60% от лимита
-    const target = CAPACITY * 0.6;
+    const target = CAPACITY * 0.55;
     const diff = (target - online) * 0.03;
-    const noise = (Math.random() - 0.5) * (CAPACITY * 0.08);
+    const noise = (Math.random() - 0.5) * (CAPACITY * 0.06);
     online += diff + noise;
-    if (Math.random() < 0.04) {
-        // редкий всплеск
-        online += (Math.random() - 0.4) * (CAPACITY * 0.4);
+    if (Math.random() < 0.02) {
+        online += (Math.random() - 0.3) * (CAPACITY * 0.3);
     }
-    online = Math.max(1, Math.min(CAPACITY * 1.4, online));
+    online = Math.max(1, Math.min(CAPACITY * 1.5, online));
     saveOnline();
     updateUI();
     checkOverload();
@@ -508,7 +491,7 @@ function updateUI() {
     const statusEl = document.getElementById('main-status');
     if (statusEl) {
         if (rounded >= CAPACITY) {
-            statusEl.textContent = 'Offline';
+            statusEl.textContent = 'Laggy';
             statusEl.classList.add('danger');
         } else {
             statusEl.textContent = 'Online';
@@ -525,19 +508,17 @@ function updateUI() {
    ========================================================= */
 const OVERLOAD = {
     active: false,
-    hideTimer: null,
-    countdownTimer: null,
-    checkTimer: null,
-    lastDismissed: 0
+    autoCloseTimer: null,
+    countdownTimer: null
 };
 
 function checkOverload() {
     const rounded = Math.round(online);
+
     if (rounded >= CAPACITY && !OVERLOAD.active) {
         showOverload();
     } else if (rounded < CAPACITY && OVERLOAD.active) {
-        // сайт снова доступен — можно дать шанс, но не закрывать автоматически сразу
-        // (пользователь сам закроет или автозакроется)
+        hideOverload();
     }
 }
 
@@ -548,7 +529,7 @@ function showOverload() {
     if (!screen) return;
     screen.classList.add('active');
     updateUI();
-    startCountdown(15);
+    startCountdown(12);
 }
 
 function hideOverload() {
@@ -556,7 +537,7 @@ function hideOverload() {
     const screen = document.getElementById('overload');
     if (screen) screen.classList.remove('active');
     clearInterval(OVERLOAD.countdownTimer);
-    clearTimeout(OVERLOAD.hideTimer);
+    clearTimeout(OVERLOAD.autoCloseTimer);
 }
 
 function startCountdown(sec) {
@@ -567,7 +548,7 @@ function startCountdown(sec) {
     const tickFn = () => {
         if (!OVERLOAD.active) { clearInterval(OVERLOAD.countdownTimer); return; }
         if (r <= 0) {
-            note.textContent = 'Можно закрыть вручную';
+            note.textContent = 'Закрывается...';
             clearInterval(OVERLOAD.countdownTimer);
             return;
         }
@@ -576,8 +557,8 @@ function startCountdown(sec) {
     };
     tickFn();
     OVERLOAD.countdownTimer = setInterval(tickFn, 1000);
-    clearTimeout(OVERLOAD.hideTimer);
-    OVERLOAD.hideTimer = setTimeout(() => hideOverload(), sec * 1000);
+    clearTimeout(OVERLOAD.autoCloseTimer);
+    OVERLOAD.autoCloseTimer = setTimeout(() => hideOverload(), sec * 1000);
 }
 
 function retry() {
@@ -592,23 +573,19 @@ function retry() {
     setTimeout(() => {
         btn.disabled = false;
         btn.textContent = orig;
+
+        // Искусственно снижаем онлайн, как будто часть юзеров ушла
+        online = Math.max(1, CAPACITY * (0.55 + Math.random() * 0.15));
+        saveOnline();
+        updateUI();
+
         const rounded = Math.round(online);
-        if (rounded >= CAPACITY) {
-            // всё ещё перегружено — снижаем онлайн искусственно (как будто юзеры ушли)
-            online = Math.max(1, CAPACITY * (0.6 + Math.random() * 0.2));
-            saveOnline();
-            updateUI();
-            if (note) note.textContent = 'Слишком много онлайн, попробуйте позже';
-            // лёгкий шейк
-            const box = document.querySelector('.overload-box');
-            if (box) box.animate(
-                [{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],
-                {duration:240, easing:'ease-in-out'}
-            );
-        } else {
+        if (rounded < CAPACITY) {
             hideOverload();
+        } else {
+            startCountdown(12);
         }
-    }, 1200);
+    }, 900);
 }
 
 /* =========================================================
@@ -617,32 +594,23 @@ function retry() {
 document.addEventListener('DOMContentLoaded', () => {
     updateUI();
 
-    // кнопка "войти" — если сайт перегружен, показываем оверлей
     document.getElementById('enter-btn').addEventListener('click', () => {
-        const rounded = Math.round(online);
-        if (rounded >= CAPACITY) {
-            showOverload();
-        } else {
-            // просто показываем, что всё ок
-            const btn = document.getElementById('enter-btn');
-            const orig = btn.textContent;
-            btn.disabled = true;
-            btn.textContent = 'Загрузка...';
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.textContent = orig;
-            }, 600);
-        }
+        // Войти можно всегда — даже при перегрузке
+        const btn = document.getElementById('enter-btn');
+        const orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Загрузка...';
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = orig;
+        }, 700);
     });
 
     document.getElementById('ov-retry').addEventListener('click', retry);
     document.getElementById('ov-close').addEventListener('click', hideOverload);
 
-    // Автотик
-    setInterval(tick, 2500);
-
-    // Периодическая проверка оверлея
-    setInterval(checkOverload, 1500);
+    setInterval(tick, 3000);
+    setInterval(checkOverload, 2000);
 });
 </script>
 
