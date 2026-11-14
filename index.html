@@ -3,1174 +3,1185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aether — Personal Bio</title>
+<title>BioForge — Личный конструктор био</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg: #0c0a09;
-        --bg-1: #14110f;
-        --bg-2: #1c1815;
-        --bg-3: #262019;
+        --bg: #08080c;
+        --bg-1: #0e0e14;
+        --bg-2: #14141c;
+        --bg-3: #1c1c26;
+        --bg-4: #262632;
 
-        --border: rgba(255, 236, 214, 0.08);
-        --border-strong: rgba(255, 236, 214, 0.16);
+        --border: rgba(255,255,255,0.07);
+        --border-strong: rgba(255,255,255,0.14);
+        --border-hover: rgba(255,255,255,0.22);
 
-        --cream: #f5ede1;
-        --cream-soft: rgba(245, 237, 225, 0.72);
-        --cream-dim: rgba(245, 237, 225, 0.48);
-        --cream-mute: rgba(245, 237, 225, 0.28);
+        --text-1: #f5f5f8;
+        --text-2: rgba(245,245,248,0.72);
+        --text-3: rgba(245,245,248,0.48);
+        --text-4: rgba(245,245,248,0.28);
 
-        --amber: #d4a574;
-        --amber-soft: #e8c19a;
-        --ember: #c97b4a;
-        --sage: #8a9a7e;
+        --accent: #a855f7;
+        --accent-soft: #c4b5fd;
+        --accent-dim: rgba(168,85,247,0.15);
+        --accent-glow: rgba(168,85,247,0.35);
+        --emerald: #34d399;
+        --rose: #fb7185;
+        --amber: #fbbf24;
 
-        --font-serif: 'Instrument Serif', Georgia, serif;
-        --font-sans: 'Inter', -apple-system, sans-serif;
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         --font-mono: 'JetBrains Mono', monospace;
 
         --radius-sm: 8px;
-        --radius: 14px;
-        --radius-lg: 20px;
+        --radius: 12px;
+        --radius-lg: 18px;
+        --radius-full: 999px;
 
         --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
         font-family: var(--font-sans);
         background: var(--bg);
-        color: var(--cream);
+        color: var(--text-1);
         min-height: 100vh;
         overflow-x: hidden;
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
-        position: relative;
     }
 
-    /* ================== ФОН ================== */
-    .bg-base {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        background:
-            radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 165, 116, 0.08), transparent 60%),
-            radial-gradient(ellipse 60% 40% at 80% 100%, rgba(201, 123, 74, 0.05), transparent 60%),
-            var(--bg);
-        pointer-events: none;
-    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
 
-    .bg-grain {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        opacity: 0.35;
-        mix-blend-mode: overlay;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
-    }
-
-    .bg-lines {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        background-image:
-            linear-gradient(rgba(245, 237, 225, 0.012) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(245, 237, 225, 0.012) 1px, transparent 1px);
-        background-size: 80px 80px;
-        mask-image: radial-gradient(ellipse at 50% 40%, black 30%, transparent 75%);
-        -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 30%, transparent 75%);
-    }
-
-    .bg-glow {
-        position: fixed;
-        width: 700px;
-        height: 700px;
-        border-radius: 50%;
-        filter: blur(140px);
-        z-index: 0;
-        pointer-events: none;
-        opacity: 0.5;
-    }
-    .bg-glow-1 {
-        top: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: radial-gradient(circle, rgba(212, 165, 116, 0.35), transparent 65%);
-    }
-    .bg-glow-2 {
-        bottom: -300px;
-        right: -200px;
-        background: radial-gradient(circle, rgba(201, 123, 74, 0.22), transparent 65%);
-    }
-
-    /* ================== LAYOUT ================== */
-    .page {
-        position: relative;
-        z-index: 2;
+    /* ========== APP LAYOUT ========== */
+    .app {
+        display: flex;
         min-height: 100vh;
+    }
+
+    /* ========== SIDEBAR ========== */
+    .sidebar {
+        width: 340px;
+        flex-shrink: 0;
+        background: var(--bg-1);
+        border-right: 1px solid var(--border);
+        padding: 24px;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        padding: 60px 24px 40px;
+        gap: 20px;
+        max-height: 100vh;
+        overflow-y: auto;
+        position: sticky;
+        top: 0;
     }
 
-    .content {
-        width: 100%;
-        max-width: 620px;
-        flex: 1;
-    }
-
-    /* ================== HERO / AVATAR ================== */
-    .hero {
-        text-align: center;
-        padding: 20px 0 48px;
-        animation: fadeUp 0.8s var(--ease) both;
-    }
-
-    .avatar-wrap {
-        position: relative;
-        width: 128px;
-        height: 128px;
-        margin: 0 auto 28px;
-    }
-
-    .avatar-ring {
-        position: absolute;
-        inset: -8px;
-        border-radius: 50%;
-        background: conic-gradient(from 0deg, transparent 0%, rgba(212, 165, 116, 0.4) 30%, transparent 60%, rgba(201, 123, 74, 0.3) 80%, transparent 100%);
-        animation: spin 12s linear infinite;
-        opacity: 0.8;
-    }
-
-    .avatar-ring::after {
-        content: '';
-        position: absolute;
-        inset: 3px;
-        border-radius: 50%;
-        background: var(--bg);
-    }
-
-    .avatar {
-        position: relative;
-        width: 128px;
-        height: 128px;
-        border-radius: 50%;
-        background:
-            radial-gradient(circle at 30% 30%, rgba(232, 193, 154, 0.4), transparent 50%),
-            linear-gradient(135deg, #2a2219, #1a1512);
-        border: 2px solid var(--border-strong);
+    .sidebar-brand {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-family: var(--font-serif);
-        font-size: 52px;
-        color: var(--amber-soft);
-        overflow: hidden;
-        z-index: 1;
+        gap: 12px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
     }
-
-    .avatar::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
-        opacity: 0.5;
-        pointer-events: none;
-    }
-
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 6px 14px;
-        background: rgba(138, 154, 126, 0.1);
-        border: 1px solid rgba(138, 154, 126, 0.25);
-        border-radius: 100px;
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        color: var(--sage);
-        margin-bottom: 24px;
-        text-transform: uppercase;
-    }
-    .status-pill .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--sage);
-        box-shadow: 0 0 10px rgba(138, 154, 126, 0.8);
-        animation: pulse 2.5s infinite;
-    }
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
-    }
-
-    .hero-name {
-        font-family: var(--font-serif);
-        font-size: clamp(48px, 9vw, 76px);
-        font-weight: 400;
-        line-height: 1;
-        letter-spacing: -2px;
-        margin-bottom: 12px;
-        color: var(--cream);
-    }
-    .hero-name em {
-        font-style: italic;
-        color: var(--amber-soft);
-    }
-
-    .hero-handle {
+    .brand-mark {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--accent), #7c3aed);
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 900; font-size: 15px;
+        color: #fff;
         font-family: var(--font-mono);
-        font-size: 12px;
-        color: var(--cream-dim);
-        letter-spacing: 1px;
-        margin-bottom: 20px;
+        box-shadow: 0 0 24px var(--accent-glow);
+    }
+    .brand-text { line-height: 1.1; }
+    .brand-text .name { font-size: 15px; font-weight: 800; letter-spacing: 1px; }
+    .brand-text .sub { font-size: 9px; color: var(--text-3); letter-spacing: 2px; font-weight: 600; margin-top: 2px; }
+
+    .editor-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .editor-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-3);
+        font-weight: 700;
+        margin-bottom: 2px;
     }
 
-    .hero-tagline {
-        font-size: 16px;
-        color: var(--cream-soft);
-        line-height: 1.6;
-        max-width: 420px;
-        margin: 0 auto 8px;
-    }
-
-    .hero-location {
+    .editor-input, .editor-textarea {
+        width: 100%;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-1);
+        padding: 10px 12px;
         font-size: 13px;
-        color: var(--cream-dim);
+        font-family: inherit;
+        outline: none;
+        transition: all 0.2s;
+    }
+    .editor-input:focus, .editor-textarea:focus {
+        border-color: var(--accent);
+        background: var(--bg-3);
+        box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    .editor-input::placeholder, .editor-textarea::placeholder { color: var(--text-4); }
+    .editor-textarea { resize: vertical; min-height: 72px; }
+
+    .editor-row {
+        display: flex;
+        gap: 8px;
+    }
+    .editor-row > * { flex: 1; min-width: 0; }
+
+    /* ========== AVATAR PICKER ========== */
+    .avatar-picker {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .avatar-preview {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        background: var(--bg-3);
+        border: 2px solid var(--border-strong);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px; font-weight: 700;
+        font-family: var(--font-mono);
+        color: var(--accent-soft);
+        flex-shrink: 0;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+    .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-actions { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .avatar-actions .hint { font-size: 11px; color: var(--text-4); }
+
+    .btn-mini {
+        padding: 6px 12px;
+        background: var(--bg-3);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text-2);
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+        text-align: center;
+    }
+    .btn-mini:hover { border-color: var(--border-strong); color: var(--text-1); background: var(--bg-4); }
+    .btn-mini.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn-mini.primary:hover { background: #9333ea; border-color: #9333ea; }
+
+    /* ========== TAG MANAGER ========== */
+    .tag-input-wrap {
+        display: flex;
+        gap: 6px;
+    }
+    .tag-input-wrap .editor-input { flex: 1; }
+
+    .tags-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 4px;
+    }
+
+    .tag-pill {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        margin-top: 12px;
-    }
-
-    /* ================== SOCIALS ================== */
-    .socials {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        margin-top: 32px;
-        flex-wrap: wrap;
-    }
-
-    .social-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: var(--bg-1);
-        border: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--cream-soft);
-        text-decoration: none;
-        transition: all 0.25s var(--ease);
-        position: relative;
-        overflow: hidden;
-    }
-    .social-btn::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(212, 165, 116, 0.15), transparent);
-        opacity: 0;
-        transition: opacity 0.25s;
-    }
-    .social-btn:hover {
-        border-color: var(--amber);
-        color: var(--amber);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 24px rgba(212, 165, 116, 0.15);
-    }
-    .social-btn:hover::before { opacity: 1; }
-    .social-btn svg {
-        width: 18px;
-        height: 18px;
-        position: relative;
-        z-index: 1;
-    }
-
-    /* ================== SECTIONS ================== */
-    .section {
-        margin-top: 56px;
-        animation: fadeUp 0.8s var(--ease) both;
-    }
-
-    .section:nth-child(2) { animation-delay: 0.1s; }
-    .section:nth-child(3) { animation-delay: 0.2s; }
-    .section:nth-child(4) { animation-delay: 0.3s; }
-    .section:nth-child(5) { animation-delay: 0.4s; }
-
-    .section-label {
-        font-family: var(--font-mono);
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 2.5px;
-        color: var(--cream-mute);
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .section-label::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(90deg, var(--border-strong), transparent);
-    }
-
-    /* ================== ABOUT CARD ================== */
-    .about-card {
-        background: linear-gradient(135deg, rgba(28, 24, 21, 0.9), rgba(20, 17, 15, 0.6));
-        border: 1px solid var(--border);
-        border-radius: var(--radius-lg);
-        padding: 28px;
-        position: relative;
-        overflow: hidden;
-    }
-    .about-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--amber), transparent);
-        opacity: 0.4;
-    }
-
-    .about-text {
-        font-size: 15px;
-        line-height: 1.75;
-        color: var(--cream-soft);
-    }
-    .about-text strong {
-        color: var(--amber-soft);
-        font-weight: 500;
-    }
-    .about-text em {
-        font-family: var(--font-serif);
-        font-style: italic;
-        color: var(--cream);
-        font-size: 17px;
-    }
-
-    /* ================== SKILLS / TAGS ================== */
-    .tags-cloud {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .tag {
-        padding: 8px 14px;
-        background: var(--bg-1);
-        border: 1px solid var(--border);
-        border-radius: 100px;
-        font-size: 12px;
-        color: var(--cream-soft);
-        font-weight: 500;
+        padding: 5px 10px;
+        background: var(--accent-dim);
+        border: 1px solid rgba(168,85,247,0.3);
+        border-radius: var(--radius-full);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent-soft);
         transition: all 0.2s;
+        animation: tagIn 0.25s var(--ease-bounce);
     }
-    .tag:hover {
-        border-color: var(--amber);
-        color: var(--amber);
-        background: rgba(212, 165, 116, 0.05);
+    @keyframes tagIn {
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .tag-pill .tag-remove {
+        background: none; border: none;
+        color: var(--accent-soft);
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        padding: 0;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+        font-family: inherit;
+    }
+    .tag-pill .tag-remove:hover { opacity: 1; color: var(--rose); }
+
+    .tags-empty {
+        font-size: 11px;
+        color: var(--text-4);
+        font-style: italic;
+        padding: 4px 0;
     }
 
-    /* ================== LINKS LIST ================== */
-    .links-list {
+    /* ========== LINKS EDITOR ========== */
+    .links-editor-list {
         display: flex;
         flex-direction: column;
         gap: 8px;
     }
 
-    .link-item {
+    .link-edit-row {
         display: flex;
         align-items: center;
-        gap: 16px;
-        padding: 16px 20px;
-        background: var(--bg-1);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        text-decoration: none;
-        color: var(--cream);
-        transition: all 0.25s var(--ease);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .link-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: var(--amber);
-        transform: scaleY(0);
-        transform-origin: top;
-        transition: transform 0.3s var(--ease);
-    }
-
-    .link-item:hover {
-        border-color: var(--border-strong);
-        background: var(--bg-2);
-        transform: translateX(2px);
-    }
-    .link-item:hover::before { transform: scaleY(1); }
-
-    .link-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+        gap: 8px;
         background: var(--bg-2);
         border: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        border-radius: var(--radius-sm);
+        padding: 8px 10px;
+        transition: all 0.2s;
+        animation: rowIn 0.25s var(--ease);
+    }
+    @keyframes rowIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .link-edit-row:hover { border-color: var(--border-strong); }
+
+    .link-edit-icon {
+        width: 30px; height: 30px;
+        border-radius: 6px;
+        background: var(--bg-3);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px;
         flex-shrink: 0;
-        color: var(--amber-soft);
-        transition: all 0.25s;
-    }
-    .link-item:hover .link-icon {
-        background: rgba(212, 165, 116, 0.1);
-        border-color: rgba(212, 165, 116, 0.3);
-    }
-    .link-icon svg {
-        width: 18px;
-        height: 18px;
     }
 
-    .link-body { flex: 1; min-width: 0; }
-    .link-title {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--cream);
-        margin-bottom: 2px;
+    .link-edit-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
     }
-    .link-sub {
+    .link-edit-fields input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-1);
         font-size: 12px;
-        color: var(--cream-dim);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        font-family: inherit;
+        padding: 2px 0;
+        width: 100%;
     }
+    .link-edit-fields input:first-child { font-weight: 600; }
+    .link-edit-fields input:last-child { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); }
+    .link-edit-fields input::placeholder { color: var(--text-4); }
 
-    .link-arrow {
-        color: var(--cream-mute);
-        transition: all 0.25s;
-        flex-shrink: 0;
+    .link-edit-del {
+        background: none; border: none;
+        color: var(--text-4);
+        cursor: pointer;
+        font-size: 16px;
+        padding: 4px;
+        transition: color 0.2s;
+        font-family: inherit;
     }
-    .link-item:hover .link-arrow {
-        color: var(--amber);
-        transform: translateX(4px);
-    }
-    .link-arrow svg { width: 16px; height: 16px; }
+    .link-edit-del:hover { color: var(--rose); }
 
-    /* ================== MUSIC / NOW PLAYING ================== */
-    .now-playing {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 16px;
-        background: linear-gradient(135deg, rgba(212, 165, 116, 0.06), rgba(201, 123, 74, 0.04));
-        border: 1px solid var(--border-strong);
-        border-radius: var(--radius);
-        position: relative;
-        overflow: hidden;
-    }
-    .now-playing::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--amber), transparent);
-        opacity: 0.5;
-    }
-
-    .np-cover {
-        width: 52px;
-        height: 52px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #3a2e22, #1a1512);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid var(--border-strong);
-    }
-    .np-cover::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at 30% 30%, rgba(212, 165, 116, 0.3), transparent 60%);
-    }
-    .np-cover .np-note {
-        font-family: var(--font-serif);
-        font-size: 24px;
-        color: var(--amber-soft);
-        position: relative;
-        z-index: 1;
-        font-style: italic;
-    }
-
-    .np-info { flex: 1; min-width: 0; }
-    .np-label {
-        font-family: var(--font-mono);
-        font-size: 9px;
-        letter-spacing: 1.5px;
-        color: var(--cream-mute);
-        text-transform: uppercase;
-        margin-bottom: 4px;
-    }
-    .np-track {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--cream);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 2px;
-    }
-    .np-artist {
-        font-size: 12px;
-        color: var(--cream-dim);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .np-bars {
-        display: flex;
-        align-items: flex-end;
-        gap: 2px;
-        height: 20px;
-        flex-shrink: 0;
-    }
-    .np-bars span {
-        width: 3px;
-        background: var(--amber);
-        border-radius: 2px;
-        opacity: 0.7;
-        animation: eq 1.2s ease-in-out infinite;
-    }
-    .np-bars span:nth-child(1) { height: 8px; animation-delay: 0s; }
-    .np-bars span:nth-child(2) { height: 14px; animation-delay: 0.2s; }
-    .np-bars span:nth-child(3) { height: 6px; animation-delay: 0.4s; }
-    .np-bars span:nth-child(4) { height: 16px; animation-delay: 0.6s; }
-    .np-bars span:nth-child(5) { height: 10px; animation-delay: 0.8s; }
-    @keyframes eq {
-        0%, 100% { transform: scaleY(1); opacity: 0.7; }
-        50% { transform: scaleY(0.4); opacity: 1; }
-    }
-
-    /* ================== PROJECTS / CARDS ================== */
-    .projects {
-        display: grid;
-        gap: 10px;
-    }
-
-    .project-card {
-        display: flex;
-        gap: 16px;
-        padding: 18px;
-        background: var(--bg-1);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        text-decoration: none;
-        color: inherit;
-        transition: all 0.25s var(--ease);
-    }
-    .project-card:hover {
-        border-color: var(--border-strong);
-        background: var(--bg-2);
-        transform: translateY(-2px);
-    }
-
-    .project-emoji {
-        font-size: 28px;
-        line-height: 1;
-        flex-shrink: 0;
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--bg-2);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-    }
-
-    .project-body { flex: 1; min-width: 0; }
-    .project-title {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--cream);
-        margin-bottom: 4px;
-    }
-    .project-desc {
-        font-size: 12.5px;
-        color: var(--cream-dim);
-        line-height: 1.5;
-        margin-bottom: 8px;
-    }
-    .project-meta {
-        display: flex;
-        gap: 12px;
+    .links-empty {
         font-size: 11px;
-        color: var(--cream-mute);
-        font-family: var(--font-mono);
+        color: var(--text-4);
+        font-style: italic;
+        text-align: center;
+        padding: 16px;
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-sm);
     }
-    .project-meta span {
-        display: inline-flex;
+
+    /* ========== COLOR PICKERS ========== */
+    .colors-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .color-swatch {
+        display: flex;
+        flex-direction: column;
         align-items: center;
         gap: 4px;
+        cursor: pointer;
     }
+    .color-swatch input[type="color"] {
+        width: 36px; height: 36px;
+        border: 2px solid var(--border-strong);
+        border-radius: 8px;
+        cursor: pointer;
+        background: none;
+        padding: 0;
+        overflow: hidden;
+    }
+    .color-swatch input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    .color-swatch input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+    .color-swatch span { font-size: 9px; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.5px; }
 
-    /* ================== QUOTE ================== */
-    .quote-block {
-        text-align: center;
-        padding: 32px 20px;
-        background: linear-gradient(180deg, transparent, rgba(212, 165, 116, 0.03), transparent);
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-        border-radius: 4px;
-        margin-top: 8px;
-    }
-    .quote-mark {
-        font-family: var(--font-serif);
-        font-size: 48px;
-        color: var(--amber);
-        line-height: 1;
-        opacity: 0.4;
-        margin-bottom: 8px;
-    }
-    .quote-text {
-        font-family: var(--font-serif);
-        font-style: italic;
-        font-size: 19px;
-        line-height: 1.5;
-        color: var(--cream-soft);
-        max-width: 440px;
-        margin: 0 auto 12px;
-    }
-    .quote-author {
-        font-family: var(--font-mono);
-        font-size: 11px;
-        color: var(--cream-mute);
-        letter-spacing: 1px;
-    }
-
-    /* ================== FOOTER ================== */
-    .footer {
-        width: 100%;
-        max-width: 620px;
-        margin-top: 60px;
-        padding-top: 24px;
-        border-top: 1px solid var(--border);
-        text-align: center;
-        font-size: 12px;
-        color: var(--cream-mute);
+    /* ========== SIDEBAR ACTIONS ========== */
+    .sidebar-actions {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        align-items: center;
-        animation: fadeUp 0.8s var(--ease) 0.5s both;
-    }
-    .footer .heart {
-        color: var(--ember);
-        font-style: normal;
-    }
-    .footer-meta {
-        font-family: var(--font-mono);
-        font-size: 10px;
-        letter-spacing: 1px;
-        color: var(--cream-mute);
-        display: inline-flex;
-        align-items: center;
         gap: 8px;
-    }
-    .footer-meta span {
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background: var(--cream-mute);
-        opacity: 0.5;
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
     }
 
-    /* ================== КНОПКА "НАВЕРХ" ================== */
-    #back-to-top {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: var(--bg-2);
-        border: 1px solid var(--border-strong);
-        color: var(--cream);
+    .btn-action {
+        padding: 12px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 12px;
+        font-weight: 700;
         cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+        text-align: center;
+        border: 1px solid transparent;
+        letter-spacing: 0.3px;
+    }
+    .btn-action.primary {
+        background: linear-gradient(135deg, var(--accent), #7c3aed);
+        color: #fff;
+        box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-action.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 28px var(--accent-glow); }
+    .btn-action.ghost {
+        background: var(--bg-2);
+        border-color: var(--border);
+        color: var(--text-2);
+    }
+    .btn-action.ghost:hover { border-color: var(--border-strong); color: var(--text-1); background: var(--bg-3); }
+    .btn-action.danger { color: var(--rose); }
+    .btn-action.danger:hover { background: rgba(251,113,133,0.08); border-color: rgba(251,113,133,0.3); }
+
+    /* ========== PREVIEW ========== */
+    .preview {
+        flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(10px);
-        transition: all 0.3s var(--ease);
-        z-index: 100;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-    }
-    #back-to-top.visible {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
-    #back-to-top:hover {
-        background: var(--amber);
-        border-color: var(--amber);
-        color: var(--bg);
-        transform: translateY(-2px);
+        padding: 40px 24px;
+        position: relative;
+        background:
+            radial-gradient(ellipse 60% 50% at 50% 0%, rgba(168,85,247,0.06), transparent 60%),
+            var(--bg);
+        overflow-y: auto;
     }
 
-    /* ================== TOAST ================== */
+    .preview-frame {
+        width: 100%;
+        max-width: 420px;
+        background: var(--bg-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        animation: previewIn 0.6s var(--ease) both;
+    }
+    @keyframes previewIn {
+        from { opacity: 0; transform: translateY(16px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .preview-banner {
+        height: 100px;
+        background: linear-gradient(135deg, #1a1a24, #252535);
+        position: relative;
+        overflow: hidden;
+    }
+    .preview-banner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 30% 50%, rgba(168,85,247,0.2), transparent 60%);
+    }
+
+    .preview-body {
+        padding: 0 24px 28px;
+        margin-top: -36px;
+        position: relative;
+    }
+
+    .preview-avatar {
+        width: 72px; height: 72px;
+        border-radius: 50%;
+        background: var(--bg-3);
+        border: 3px solid var(--bg-1);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 26px; font-weight: 700;
+        font-family: var(--font-mono);
+        color: var(--accent-soft);
+        margin-bottom: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .preview-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .preview-name {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        margin-bottom: 4px;
+        word-break: break-word;
+    }
+
+    .preview-handle {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--accent-soft);
+        margin-bottom: 12px;
+    }
+
+    .preview-bio {
+        font-size: 13px;
+        color: var(--text-2);
+        line-height: 1.6;
+        margin-bottom: 16px;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .preview-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 20px;
+    }
+
+    .preview-tag {
+        padding: 4px 10px;
+        background: rgba(168,85,247,0.12);
+        border: 1px solid rgba(168,85,247,0.25);
+        border-radius: var(--radius-full);
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--accent-soft);
+        letter-spacing: 0.3px;
+    }
+
+    .preview-links {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .preview-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 14px;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        text-decoration: none;
+        color: var(--text-1);
+        transition: all 0.2s;
+        font-size: 13px;
+        font-weight: 500;
+    }
+    .preview-link:hover {
+        border-color: var(--accent);
+        background: rgba(168,85,247,0.06);
+        transform: translateX(2px);
+    }
+    .preview-link .link-emoji { font-size: 15px; flex-shrink: 0; }
+    .preview-link .link-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .preview-link .link-arrow { color: var(--text-4); font-size: 12px; flex-shrink: 0; transition: color 0.2s; }
+    .preview-link:hover .link-arrow { color: var(--accent-soft); }
+
+    .preview-empty-links {
+        text-align: center;
+        padding: 20px;
+        color: var(--text-4);
+        font-size: 12px;
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
+    }
+
+    .preview-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 10px;
+        color: var(--text-4);
+        font-family: var(--font-mono);
+        letter-spacing: 0.5px;
+    }
+
+    /* ========== TOAST ========== */
     .toast {
         position: fixed;
         bottom: 30px;
         left: 50%;
         transform: translateX(-50%) translateY(120px);
-        padding: 12px 22px;
-        background: var(--bg-2);
+        background: var(--bg-3);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
-        color: var(--cream);
+        padding: 12px 22px;
         font-size: 13px;
         font-weight: 500;
+        color: var(--text-1);
+        z-index: 10000;
         opacity: 0;
         pointer-events: none;
-        transition: all 0.35s var(--ease);
-        z-index: 200;
-        max-width: 90vw;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        transition: all 0.4s var(--ease-bounce);
         display: flex;
         align-items: center;
         gap: 10px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        max-width: 90vw;
     }
-    .toast.show {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: rgba(52,211,153,0.4); }
+    .toast.success::before { content: '✓'; color: var(--emerald); font-weight: 800; }
+    .toast.info::before { content: 'ℹ'; color: var(--accent-soft); }
+    .toast.error { border-color: rgba(251,113,133,0.4); }
+    .toast.error::before { content: '✕'; color: var(--rose); font-weight: 800; }
+
+    /* ========== MODAL ========== */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(8px);
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.25s;
+        padding: 20px;
     }
-    .toast::before {
-        content: '✓';
-        color: var(--sage);
-        font-weight: 700;
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal-box {
+        background: var(--bg-1);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-lg);
+        max-width: 440px;
+        width: 100%;
+        padding: 28px;
+        transform: scale(0.96) translateY(12px);
+        transition: transform 0.3s var(--ease-bounce);
+        box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    }
+    .modal-overlay.open .modal-box { transform: scale(1) translateY(0); }
+    .modal-box h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .modal-box p { font-size: 13px; color: var(--text-3); margin-bottom: 20px; line-height: 1.6; }
+    .modal-box .btn-action { width: 100%; margin-top: 8px; }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 900px) {
+        .app { flex-direction: column; }
+        .sidebar {
+            width: 100%;
+            max-height: none;
+            position: static;
+            border-right: none;
+            border-bottom: 1px solid var(--border);
+            padding: 20px 16px;
+        }
+        .preview { padding: 24px 16px 40px; }
+        .preview-frame { max-width: 100%; }
     }
 
-    /* ================== MOBILE ================== */
-    @media (max-width: 640px) {
-        .page { padding: 40px 18px 30px; }
-        .avatar-wrap { width: 104px; height: 104px; margin-bottom: 24px; }
-        .avatar { width: 104px; height: 104px; font-size: 42px; }
-        .hero-name { letter-spacing: -1px; }
-        .hero-tagline { font-size: 15px; }
-        .about-card { padding: 22px; }
-        .about-text { font-size: 14px; }
-        .section { margin-top: 44px; }
-        .link-item { padding: 14px 16px; gap: 12px; }
-        .link-icon { width: 36px; height: 36px; }
-        .quote-text { font-size: 17px; }
-        .projects { gap: 8px; }
-        .project-card { padding: 14px; gap: 12px; }
-        .project-emoji { width: 38px; height: 38px; font-size: 22px; }
-        .social-btn { width: 42px; height: 42px; }
-        #back-to-top { bottom: 16px; right: 16px; }
+    @media (max-width: 480px) {
+        .preview-name { font-size: 20px; }
+        .sidebar { padding: 16px 12px; }
+        .brand-text .name { font-size: 14px; }
     }
-
-    /* ================== SCROLLBAR ================== */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb {
-        background: var(--bg-3);
-        border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(212, 165, 116, 0.3); }
 </style>
 </head>
 <body>
 
-<div class="bg-base"></div>
-<div class="bg-glow bg-glow-1"></div>
-<div class="bg-glow bg-glow-2"></div>
-<div class="bg-lines"></div>
-<div class="bg-grain"></div>
+<div class="app">
 
-<div class="page">
-    <div class="content">
-
-        <!-- HERO -->
-        <header class="hero">
-            <div class="avatar-wrap">
-                <div class="avatar-ring"></div>
-                <div class="avatar">A</div>
+    <!-- ============ SIDEBAR (РЕДАКТОР) ============ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-mark">B</div>
+            <div class="brand-text">
+                <div class="name">BIOFORGE</div>
+                <div class="sub">PERSONAL BUILDER</div>
             </div>
-
-            <div class="status-pill">
-                <span class="dot"></span>
-                <span>Available for work</span>
-            </div>
-
-            <h1 class="hero-name">Aether <em>Kane</em></h1>
-            <div class="hero-handle">@aether.k</div>
-
-            <p class="hero-tagline">
-                Дизайнер интерфейсов и цифровой ремесленник. Собираю тихие, осмысленные продукты, в которых каждая деталь на своём месте.
-            </p>
-
-            <div class="hero-location">
-                <span>📍</span>
-                <span>Санкт-Петербург · UTC+3</span>
-            </div>
-
-            <div class="socials">
-                <a href="#" class="social-btn" aria-label="Telegram" title="Telegram">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-                </a>
-                <a href="#" class="social-btn" aria-label="GitHub" title="GitHub">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-                </a>
-                <a href="#" class="social-btn" aria-label="Twitter" title="Twitter">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-                </a>
-                <a href="#" class="social-btn" aria-label="Dribbble" title="Dribbble">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M19.13 5.09C15.22 9.14 10 10.44 2.25 10.94"/><path d="M21.75 12.84c-6.62-1.41-12.14 1-16.38 6.32"/><path d="M8.56 2.75c4.37 6 6 9.42 8 17.72"/></svg>
-                </a>
-                <a href="#" class="social-btn" aria-label="Email" title="Email">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                </a>
-            </div>
-        </header>
-
-        <!-- ABOUT -->
-        <section class="section">
-            <div class="section-label"><span>About</span></div>
-            <div class="about-card">
-                <p class="about-text">
-                    Привет. Меня зовут <strong>Аэтер</strong>, и последние шесть лет я проектирую интерфейсы для продуктов, которые уважают внимание пользователя. Работал с командами от <em>ранних стартапов</em> до крупных финтех-платформ.
-                </p>
-                <p class="about-text" style="margin-top:14px;">
-                    Верю, что хороший дизайн — это не про то, что <strong>добавлено</strong>, а про то, что <strong>убрано</strong>. Люблю типографику, продуманные состояния и маленькие детали, которые замечаешь только тогда, когда их нет.
-                </p>
-            </div>
-        </section>
-
-        <!-- NOW PLAYING -->
-        <section class="section">
-            <div class="section-label"><span>Now playing</span></div>
-            <div class="now-playing">
-                <div class="np-cover">
-                    <span class="np-note">♪</span>
-                </div>
-                <div class="np-info">
-                    <div class="np-label">Spotify · сейчас</div>
-                    <div class="np-track" id="np-track">Weightless</div>
-                    <div class="np-artist" id="np-artist">Marconi Union</div>
-                </div>
-                <div class="np-bars">
-                    <span></span><span></span><span></span><span></span><span></span>
-                </div>
-            </div>
-        </section>
-
-        <!-- SKILLS -->
-        <section class="section">
-            <div class="section-label"><span>Focus</span></div>
-            <div class="tags-cloud">
-                <span class="tag">Product Design</span>
-                <span class="tag">Interface Systems</span>
-                <span class="tag">Typography</span>
-                <span class="tag">Motion</span>
-                <span class="tag">Design Tokens</span>
-                <span class="tag">Figma</span>
-                <span class="tag">Prototyping</span>
-                <span class="tag">Accessibility</span>
-                <span class="tag">Frontend</span>
-                <span class="tag">Svelte</span>
-            </div>
-        </section>
-
-        <!-- LINKS -->
-        <section class="section">
-            <div class="section-label"><span>Elsewhere</span></div>
-            <div class="links-list">
-
-                <a href="#" class="link-item">
-                    <div class="link-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10h10V2Z"/><path d="M22 12h-10v10h10V12Z"/><path d="M2 22h10V12H2v10Z"/><path d="M22 2h-10v10h10V2Z"/></svg>
-                    </div>
-                    <div class="link-body">
-                        <div class="link-title">Портфолио</div>
-                        <div class="link-sub">Избранные работы 2021–2024</div>
-                    </div>
-                    <div class="link-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </div>
-                </a>
-
-                <a href="#" class="link-item">
-                    <div class="link-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-                    </div>
-                    <div class="link-body">
-                        <div class="link-title">Заметки</div>
-                        <div class="link-sub">Про дизайн, тишину и внимание</div>
-                    </div>
-                    <div class="link-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </div>
-                </a>
-
-                <a href="#" class="link-item">
-                    <div class="link-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-                    </div>
-                    <div class="link-body">
-                        <div class="link-title">Setup</div>
-                        <div class="link-sub">Чем работаю каждый день</div>
-                    </div>
-                    <div class="link-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </div>
-                </a>
-
-                <a href="#" class="link-item">
-                    <div class="link-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                    </div>
-                    <div class="link-body">
-                        <div class="link-title">CV / Резюме</div>
-                        <div class="link-sub">PDF · последнее обновление в марте</div>
-                    </div>
-                    <div class="link-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </div>
-                </a>
-
-            </div>
-        </section>
-
-        <!-- PROJECTS -->
-        <section class="section">
-            <div class="section-label"><span>Selected work</span></div>
-            <div class="projects">
-
-                <a href="#" class="project-card">
-                    <div class="project-emoji">🌿</div>
-                    <div class="project-body">
-                        <div class="project-title">Verdant — тихий трекер привычек</div>
-                        <div class="project-desc">Приложение без стриков, уведомлений и давления. Помогает замечать, а не считать.</div>
-                        <div class="project-meta">
-                            <span>2024</span>
-                            <span>·</span>
-                            <span>iOS · Design + Code</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="#" class="project-card">
-                    <div class="project-emoji">📖</div>
-                    <div class="project-body">
-                        <div class="project-title">Margin — читалка для медленного чтения</div>
-                        <div class="project-desc">Один абзац за раз. Крупная типографика, встроенные заметки на полях, ноль отвлечений.</div>
-                        <div class="project-meta">
-                            <span>2023</span>
-                            <span>·</span>
-                            <span>Web · Design</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="#" class="project-card">
-                    <div class="project-emoji">🗺</div>
-                    <div class="project-body">
-                        <div class="project-title">Atlas — карта скрытых мест</div>
-                        <div class="project-desc">Кураторская карта мест, о которых не пишут путеводители. Только то, что стоит увидеть.</div>
-                        <div class="project-meta">
-                            <span>2023</span>
-                            <span>·</span>
-                            <span>Web · Design + Code</span>
-                        </div>
-                    </div>
-                </a>
-
-            </div>
-        </section>
-
-        <!-- QUOTE -->
-        <section class="section">
-            <div class="quote-block">
-                <div class="quote-mark">"</div>
-                <p class="quote-text">Совершенство достигается не тогда, когда нечего добавить, а когда нечего убрать.</p>
-                <div class="quote-author">— Антуан де Сент-Экзюпери</div>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div>
-            Сделано с <span class="heart">♥</span> и большим количеством кофе
         </div>
-        <div class="footer-meta">
-            <span>AETHER</span>
-            <span></span>
-            <span>MMXXIV</span>
-            <span></span>
-            <span>SPB</span>
+
+        <!-- Avatar -->
+        <div class="editor-group">
+            <div class="editor-label">Аватар</div>
+            <div class="avatar-picker">
+                <div class="avatar-preview" id="avatar-preview">B</div>
+                <div class="avatar-actions">
+                    <button class="btn-mini" id="avatar-upload-btn">Загрузить</button>
+                    <button class="btn-mini" id="avatar-reset-btn">Сбросить</button>
+                    <span class="hint">JPG / PNG / GIF</span>
+                </div>
+            </div>
+            <input type="file" id="avatar-file" accept="image/*" style="display:none">
         </div>
-    </footer>
+
+        <!-- Name / Handle -->
+        <div class="editor-group">
+            <div class="editor-label">Имя</div>
+            <input type="text" class="editor-input" id="input-name" placeholder="Твоё имя" maxlength="40">
+        </div>
+        <div class="editor-group">
+            <div class="editor-label">@handle</div>
+            <input type="text" class="editor-input" id="input-handle" placeholder="username" maxlength="30">
+        </div>
+
+        <!-- Bio -->
+        <div class="editor-group">
+            <div class="editor-label">Описание</div>
+            <textarea class="editor-textarea" id="input-bio" placeholder="Пара слов о себе..." maxlength="300"></textarea>
+        </div>
+
+        <!-- Tags -->
+        <div class="editor-group">
+            <div class="editor-label">Теги</div>
+            <div class="tag-input-wrap">
+                <input type="text" class="editor-input" id="input-tag" placeholder="Добавить тег..." maxlength="20">
+                <button class="btn-mini primary" id="add-tag-btn">+</button>
+            </div>
+            <div class="tags-list" id="tags-list"></div>
+        </div>
+
+        <!-- Links -->
+        <div class="editor-group">
+            <div class="editor-label">Ссылки</div>
+            <div class="links-editor-list" id="links-editor-list"></div>
+            <button class="btn-mini" id="add-link-btn" style="margin-top:8px;">+ Добавить ссылку</button>
+        </div>
+
+        <!-- Colors -->
+        <div class="editor-group">
+            <div class="editor-label">Цвета</div>
+            <div class="colors-row">
+                <label class="color-swatch">
+                    <input type="color" id="color-accent" value="#a855f7">
+                    <span>Акцент</span>
+                </label>
+                <label class="color-swatch">
+                    <input type="color" id="color-bg" value="#08080c">
+                    <span>Фон</span>
+                </label>
+                <label class="color-swatch">
+                    <input type="color" id="color-card" value="#14141c">
+                    <span>Карточки</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="sidebar-actions">
+            <button class="btn-action primary" id="save-btn">💾 Сохранить</button>
+            <button class="btn-action ghost" id="export-btn">📋 Скопировать HTML</button>
+            <button class="btn-action ghost danger" id="reset-btn">🗑 Сбросить всё</button>
+        </div>
+    </aside>
+
+    <!-- ============ PREVIEW ============ -->
+    <main class="preview">
+        <div class="preview-frame" id="preview-frame">
+            <div class="preview-banner" id="preview-banner"></div>
+            <div class="preview-body">
+                <div class="preview-avatar" id="preview-avatar">B</div>
+                <div class="preview-name" id="preview-name">Без имени</div>
+                <div class="preview-handle" id="preview-handle">@username</div>
+                <div class="preview-bio" id="preview-bio"></div>
+                <div class="preview-tags" id="preview-tags"></div>
+                <div class="preview-links" id="preview-links"></div>
+                <div class="preview-footer">BIOFORGE · PERSONAL PAGE</div>
+            </div>
+        </div>
+    </main>
 
 </div>
 
-<button id="back-to-top" aria-label="Наверх">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
-</button>
-
+<!-- ============ TOAST ============ -->
 <div class="toast" id="toast"></div>
+
+<!-- ============ MODAL (Экспорт) ============ -->
+<div class="modal-overlay" id="export-modal">
+    <div class="modal-box">
+        <h3>HTML скопирован</h3>
+        <p>Код страницы лежит в буфере обмена. Вставь его в любой <code>.html</code> файл и открой в браузере.</p>
+        <button class="btn-action primary" id="modal-close">Понятно</button>
+    </div>
+</div>
 
 <script>
 /* =========================================================
-   ТОСТ
+   ДАННЫЕ ПО УМОЛЧАНИЮ
    ========================================================= */
-function showToast(message) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => toast.classList.remove('show'), 2400);
+const DEFAULT_DATA = {
+    name: '',
+    handle: '',
+    bio: '',
+    avatar: '',
+    tags: [],
+    links: [],
+    colors: {
+        accent: '#a855f7',
+        bg: '#08080c',
+        card: '#14141c'
+    }
+};
+
+const STORAGE_KEY = 'bioforge_data';
+
+/* =========================================================
+   СОСТОЯНИЕ
+   ========================================================= */
+let state = JSON.parse(JSON.stringify(DEFAULT_DATA));
+
+/* =========================================================
+   DOM
+   ========================================================= */
+const $ = (id) => document.getElementById(id);
+
+const inputName = $('input-name');
+const inputHandle = $('input-handle');
+const inputBio = $('input-bio');
+const inputTag = $('input-tag');
+const addTagBtn = $('add-tag-btn');
+const tagsList = $('tags-list');
+const linksEditorList = $('links-editor-list');
+const addLinkBtn = $('add-link-btn');
+const avatarPreview = $('avatar-preview');
+const avatarUploadBtn = $('avatar-upload-btn');
+const avatarResetBtn = $('avatar-reset-btn');
+const avatarFile = $('avatar-file');
+const colorAccent = $('color-accent');
+const colorBg = $('color-bg');
+const colorCard = $('color-card');
+const saveBtn = $('save-btn');
+const exportBtn = $('export-btn');
+const resetBtn = $('reset-btn');
+const toast = $('toast');
+const exportModal = $('export-modal');
+const modalClose = $('modal-close');
+
+// Preview
+const previewName = $('preview-name');
+const previewHandle = $('preview-handle');
+const previewBio = $('preview-bio');
+const previewAvatar = $('preview-avatar');
+const previewTags = $('preview-tags');
+const previewLinks = $('preview-links');
+const previewFrame = $('preview-frame');
+
+/* =========================================================
+   УТИЛИТЫ
+   ========================================================= */
+function showToast(msg, type = 'info') {
+    toast.textContent = msg;
+    toast.className = 'toast show ' + type;
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toast.classList.remove('show'), 2600);
+}
+
+function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+}
+
+function getInitial() {
+    if (state.name && state.name.trim()) return state.name.trim().charAt(0).toUpperCase();
+    if (state.handle && state.handle.trim()) return state.handle.trim().charAt(0).toUpperCase();
+    return 'B';
 }
 
 /* =========================================================
-   NOW PLAYING — ротация треков
+   РЕНДЕР ТЕГОВ
    ========================================================= */
-const TRACKS = [
-    { track: 'Weightless', artist: 'Marconi Union' },
-    { track: 'An Ending (Ascent)', artist: 'Brian Eno' },
-    { track: 'Nuvole Bianche', artist: 'Ludovico Einaudi' },
-    { track: 'The Last of the Melting Snow', artist: 'The Leisure Society' },
-    { track: 'Near Light', artist: 'Ólafur Arnalds' },
-    { track: 'Avril 14th', artist: 'Aphex Twin' },
-    { track: 'Says', artist: 'Nils Frahm' },
-    { track: 'A Walk', artist: 'Tycho' },
-    { track: 'Kerala', artist: 'Bonobo' },
-    { track: 'New York', artist: 'The Album Leaf' }
-];
-
-let currentTrackIndex = 0;
-function rotateTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % TRACKS.length;
-    const t = TRACKS[currentTrackIndex];
-
-    const trackEl = document.getElementById('np-track');
-    const artistEl = document.getElementById('np-artist');
-
-    trackEl.style.opacity = '0';
-    artistEl.style.opacity = '0';
-    trackEl.style.transition = 'opacity 0.4s';
-    artistEl.style.transition = 'opacity 0.4s';
-
-    setTimeout(() => {
-        trackEl.textContent = t.track;
-        artistEl.textContent = t.artist;
-        trackEl.style.opacity = '1';
-        artistEl.style.opacity = '1';
-    }, 400);
-}
-setInterval(rotateTrack, 18000);
-
-/* =========================================================
-   BACK TO TOP
-   ========================================================= */
-const backToTop = document.getElementById('back-to-top');
-window.addEventListener('scroll', () => {
-    backToTop.classList.toggle('visible', window.scrollY > 300);
-});
-backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-/* =========================================================
-   ССЫЛКИ — копирование и тост (демо)
-   ========================================================= */
-document.querySelectorAll('.social-btn, .link-item, .project-card').forEach(el => {
-    el.addEventListener('click', (e) => {
-        e.preventDefault();
-        const title = el.getAttribute('title') || el.querySelector('.link-title, .project-title, .np-track')?.textContent || 'ссылка';
-        navigator.clipboard.writeText(window.location.href).catch(() => {});
-        showToast('Ссылка скопирована');
+function renderTags() {
+    tagsList.innerHTML = '';
+    if (!state.tags.length) {
+        tagsList.innerHTML = '<div class="tags-empty">Пока нет тегов</div>';
+        return;
+    }
+    state.tags.forEach((tag, i) => {
+        const pill = document.createElement('div');
+        pill.className = 'tag-pill';
+        pill.innerHTML = `<span>${escapeHTML(tag)}</span><button class="tag-remove" data-i="${i}">×</button>`;
+        tagsList.appendChild(pill);
     });
-});
+    tagsList.querySelectorAll('.tag-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+            state.tags.splice(parseInt(btn.dataset.i), 1);
+            renderTags();
+            renderPreview();
+            autoSave();
+        });
+    });
+}
+
+function addTag() {
+    const val = inputTag.value.trim();
+    if (!val) return;
+    if (state.tags.length >= 12) { showToast('Максимум 12 тегов', 'error'); return; }
+    if (state.tags.some(t => t.toLowerCase() === val.toLowerCase())) {
+        showToast('Такой тег уже есть', 'error');
+        return;
+    }
+    state.tags.push(val);
+    inputTag.value = '';
+    renderTags();
+    renderPreview();
+    autoSave();
+}
 
 /* =========================================================
-   ПАРАЛЛАКС — лёгкое смещение свечения за курсором
+   РЕНДЕР ССЫЛОК (РЕДАКТОР)
    ========================================================= */
-const glow1 = document.querySelector('.bg-glow-1');
-const glow2 = document.querySelector('.bg-glow-2');
+const LINK_EMOJIS = ['🔗', '🌐', '💬', '📷', '🎮', '🎵', '📺', '🐙', '📧', '💼', '🎨', '📚', '⚡', '🔥', '💎', '🚀'];
 
-document.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 2;
-    const y = (e.clientY / window.innerHeight - 0.5) * 2;
-    if (glow1) glow1.style.transform = `translateX(-50%) translate(${x * 20}px, ${y * 20}px)`;
-    if (glow2) glow2.style.transform = `translate(${x * -20}px, ${y * -20}px)`;
-});
+function renderLinksEditor() {
+    linksEditorList.innerHTML = '';
+    if (!state.links.length) {
+        linksEditorList.innerHTML = '<div class="links-empty">Добавь первую ссылку</div>';
+        return;
+    }
+    state.links.forEach((link, i) => {
+        const row = document.createElement('div');
+        row.className = 'link-edit-row';
+        row.innerHTML = `
+            <div class="link-edit-icon">${link.emoji || '🔗'}</div>
+            <div class="link-edit-fields">
+                <input type="text" placeholder="Название" value="${escapeHTML(link.title || '')}" data-field="title" data-i="${i}">
+                <input type="url" placeholder="https://..." value="${escapeHTML(link.url || '')}" data-field="url" data-i="${i}">
+            </div>
+            <button class="link-edit-del" data-i="${i}">×</button>
+        `;
+        linksEditorList.appendChild(row);
+    });
+
+    // Инпуты
+    linksEditorList.querySelectorAll('input').forEach(inp => {
+        inp.addEventListener('input', (e) => {
+            const i = parseInt(e.target.dataset.i);
+            const field = e.target.dataset.field;
+            state.links[i][field] = e.target.value;
+            renderPreview();
+            autoSave();
+        });
+    });
+
+    // Удаление
+    linksEditorList.querySelectorAll('.link-edit-del').forEach(btn => {
+        btn.addEventListener('click', () => {
+            state.links.splice(parseInt(btn.dataset.i), 1);
+            renderLinksEditor();
+            renderPreview();
+            autoSave();
+        });
+    });
+}
+
+function addLink() {
+    if (state.links.length >= 20) { showToast('Максимум 20 ссылок', 'error'); return; }
+    const emoji = LINK_EMOJIS[Math.floor(Math.random() * LINK_EMOJIS.length)];
+    state.links.push({ title: '', url: '', emoji });
+    renderLinksEditor();
+    renderPreview();
+    autoSave();
+    // Фокус на новом поле
+    const inputs = linksEditorList.querySelectorAll('input[data-field="title"]');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+}
 
 /* =========================================================
-   REVEAL секций при скролле
+   РЕНДЕР ПРЕВЬЮ
    ========================================================= */
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-            observer.unobserve(entry.target);
+function renderPreview() {
+    // Имя
+    previewName.textContent = state.name || 'Без имени';
+    // Handle
+    previewHandle.textContent = state.handle ? '@' + state.handle : '@username';
+    // Bio
+    previewBio.textContent = state.bio || '';
+    previewBio.style.display = state.bio ? '' : 'none';
+    // Avatar
+    if (state.avatar) {
+        previewAvatar.innerHTML = `<img src="${state.avatar}" alt="avatar">`;
+    } else {
+        previewAvatar.textContent = getInitial();
+    }
+    // Tags
+    previewTags.innerHTML = '';
+    state.tags.forEach(tag => {
+        const el = document.createElement('span');
+        el.className = 'preview-tag';
+        el.textContent = tag;
+        previewTags.appendChild(el);
+    });
+    // Links
+    previewLinks.innerHTML = '';
+    if (!state.links.length) {
+        previewLinks.innerHTML = '<div class="preview-empty-links">Ссылки появятся здесь</div>';
+    } else {
+        state.links.forEach(link => {
+            if (!link.title && !link.url) return;
+            const a = document.createElement('a');
+            a.className = 'preview-link';
+            a.href = link.url || '#';
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.innerHTML = `
+                <span class="link-emoji">${link.emoji || '🔗'}</span>
+                <span class="link-name">${escapeHTML(link.title || link.url || 'Ссылка')}</span>
+                <span class="link-arrow">↗</span>
+            `;
+            previewLinks.appendChild(a);
+        });
+    }
+    // Colors
+    previewFrame.style.setProperty('--accent', state.colors.accent);
+    document.documentElement.style.setProperty('--accent', state.colors.accent);
+    document.documentElement.style.setProperty('--accent-soft', state.colors.accent);
+    document.documentElement.style.setProperty('--accent-glow', state.colors.accent + '59');
+    document.documentElement.style.setProperty('--accent-dim', state.colors.accent + '26');
+    previewFrame.style.background = state.colors.card;
+    document.body.style.background = state.colors.bg;
+    // Обновляем фон превью-карточек
+    previewFrame.querySelectorAll('.preview-link').forEach(el => {
+        el.style.background = state.colors.card === '#14141c' ? '' : state.colors.card;
+    });
+}
+
+/* =========================================================
+   СОХРАНЕНИЕ / ЗАГРУЗКА
+   ========================================================= */
+function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadData() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            state = { ...DEFAULT_DATA, ...parsed, colors: { ...DEFAULT_DATA.colors, ...(parsed.colors || {}) } };
         }
-    });
-}, { threshold: 0.1 });
+    } catch (e) {}
+}
 
-document.querySelectorAll('.section').forEach(section => {
-    section.style.opacity = '0';
-    section.style.transform = 'translateY(24px)';
-    section.style.transition = 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
-    observer.observe(section);
+let autoSaveTimer = null;
+function autoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => saveData(), 500);
+}
+
+function loadIntoUI() {
+    inputName.value = state.name;
+    inputHandle.value = state.handle;
+    inputBio.value = state.bio;
+    colorAccent.value = state.colors.accent;
+    colorBg.value = state.colors.bg;
+    colorCard.value = state.colors.card;
+    renderTags();
+    renderLinksEditor();
+    renderPreview();
+}
+
+/* =========================================================
+   ЭКСПОРТ HTML
+   ========================================================= */
+function buildStandaloneHTML() {
+    const name = escapeHTML(state.name || 'Без имени');
+    const handle = escapeHTML(state.handle ? '@' + state.handle : '@username');
+    const bio = escapeHTML(state.bio || '');
+    const initial = getInitial();
+    const avatarHTML = state.avatar
+        ? `<img src="${state.avatar}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+        : escapeHTML(initial);
+
+    const tagsHTML = state.tags.length
+        ? state.tags.map(t => `<span style="padding:4px 10px;background:${state.colors.accent}26;border:1px solid ${state.colors.accent}40;border-radius:999px;font-size:10px;font-weight:600;color:${state.colors.accent};">${escapeHTML(t)}</span>`).join('')
+        : '';
+
+    const linksHTML = state.links.filter(l => l.title || l.url).map(l => `
+        <a href="${escapeHTML(l.url || '#')}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:${state.colors.card};border:1px solid ${state.colors.accent}26;border-radius:12px;text-decoration:none;color:#f5f5f8;font-size:13px;font-weight:500;transition:all .2s;" onmouseover="this.style.borderColor='${state.colors.accent}'" onmouseout="this.style.borderColor='${state.colors.accent}26'">
+            <span style="font-size:15px;">${l.emoji || '🔗'}</span>
+            <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(l.title || l.url || 'Ссылка')}</span>
+            <span style="color:${state.colors.accent};font-size:12px;">↗</span>
+        </a>
+    `).join('');
+
+    return `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${name}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:${state.colors.bg};color:#f5f5f8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.card{width:100%;max-width:420px;background:${state.colors.card};border:1px solid ${state.colors.accent}26;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.banner{height:100px;background:linear-gradient(135deg,#1a1a24,#252535);position:relative;overflow:hidden}
+.banner::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,${state.colors.accent}33,transparent 60%)}
+.body{padding:0 24px 28px;margin-top:-36px;position:relative}
+.avatar{width:72px;height:72px;border-radius:50%;background:#1c1c26;border:3px solid ${state.colors.card};display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace;color:${state.colors.accent};margin-bottom:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.name{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;word-break:break-word}
+.handle{font-family:'JetBrains Mono',monospace;font-size:12px;color:${state.colors.accent};margin-bottom:12px}
+.bio{font-size:13px;color:rgba(245,245,248,.72);margin-bottom:16px;white-space:pre-wrap;word-break:break-word}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.links{display:flex;flex-direction:column;gap:6px}
+.footer{text-align:center;margin-top:20px;font-size:10px;color:rgba(245,245,248,.28);font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="banner"></div>
+    <div class="body">
+        <div class="avatar">${avatarHTML}</div>
+        <div class="name">${name}</div>
+        <div class="handle">${handle}</div>
+        ${bio ? `<div class="bio">${bio}</div>` : ''}
+        ${tagsHTML ? `<div class="tags">${tagsHTML}</div>` : ''}
+        <div class="links">${linksHTML || '<div style="text-align:center;padding:20px;color:rgba(245,245,248,.28);font-size:12px;border:1px dashed rgba(255,255,255,.07);border-radius:12px;">Ссылки появятся здесь</div>'}</div>
+        <div class="footer">BIOFORGE · PERSONAL PAGE</div>
+    </div>
+</div>
+</body>
+</html>`;
+}
+
+/* =========================================================
+   СОБЫТИЯ
+   ========================================================= */
+// Имя / Handle / Bio
+inputName.addEventListener('input', (e) => {
+    state.name = e.target.value;
+    renderPreview();
+    autoSave();
+});
+inputHandle.addEventListener('input', (e) => {
+    state.handle = e.target.value.replace(/[^a-zA-Z0-9_.]/g, '');
+    e.target.value = state.handle;
+    renderPreview();
+    autoSave();
+});
+inputBio.addEventListener('input', (e) => {
+    state.bio = e.target.value;
+    renderPreview();
+    autoSave();
+});
+
+// Теги
+addTagBtn.addEventListener('click', addTag);
+inputTag.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); addTag(); }
+});
+
+// Ссылки
+addLinkBtn.addEventListener('click', addLink);
+
+// Аватар
+avatarUploadBtn.addEventListener('click', () => avatarFile.click());
+avatarFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 800 * 1024) {
+        showToast('Файл больше 800 KB. Выбери поменьше.', 'error');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        state.avatar = ev.target.result;
+        renderPreview();
+        autoSave();
+        showToast('Аватар обновлён', 'success');
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+});
+avatarResetBtn.addEventListener('click', () => {
+    state.avatar = '';
+    renderPreview();
+    autoSave();
+    showToast('Аватар сброшен', 'info');
+});
+
+// Цвета
+colorAccent.addEventListener('input', (e) => {
+    state.colors.accent = e.target.value;
+    renderPreview();
+    autoSave();
+});
+colorBg.addEventListener('input', (e) => {
+    state.colors.bg = e.target.value;
+    renderPreview();
+    autoSave();
+});
+colorCard.addEventListener('input', (e) => {
+    state.colors.card = e.target.value;
+    renderPreview();
+    autoSave();
+});
+
+// Сохранение
+saveBtn.addEventListener('click', () => {
+    saveData();
+    showToast('Сохранено', 'success');
+});
+
+// Экспорт
+exportBtn.addEventListener('click', () => {
+    const html = buildStandaloneHTML();
+    navigator.clipboard.writeText(html).then(() => {
+        exportModal.classList.add('open');
+    }).catch(() => {
+        showToast('Не удалось скопировать. Попробуй ещё раз.', 'error');
+    });
+});
+modalClose.addEventListener('click', () => exportModal.classList.remove('open'));
+exportModal.addEventListener('click', (e) => {
+    if (e.target === exportModal) exportModal.classList.remove('open');
+});
+
+// Сброс
+resetBtn.addEventListener('click', () => {
+    if (!confirm('Сбросить всё? Данные будут потеряны.')) return;
+    if (!confirm('Точно? Это необратимо.')) return;
+    state = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    localStorage.removeItem(STORAGE_KEY);
+    loadIntoUI();
+    showToast('Всё сброшено', 'info');
 });
 
 /* =========================================================
-   ПРИВЕТСТВИЕ В КОНСОЛИ
+   ЗАГРУЗКА
    ========================================================= */
-console.log('%c Aether Kane ', 'background: #d4a574; color: #0c0a09; font-weight: 800; font-size: 13px; padding: 4px 8px; border-radius: 4px;');
-console.log('%c Ты нашёл консоль. Уважаю.', 'color: #a3907a; font-style: italic;');
+loadData();
+loadIntoUI();
+
+// Приветствие
+setTimeout(() => {
+    showToast('Редактор готов. Меняй всё справа →', 'info');
+}, 600);
 </script>
 
 </body>
